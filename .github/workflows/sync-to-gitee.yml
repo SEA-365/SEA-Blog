@@ -3,7 +3,7 @@ name: Sync to Gitee
 on:
   push:
     branches:
-      - main # github分支名
+      - main # 根据您的分支名称进行调整
 
 jobs:
   sync:
@@ -13,9 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Push to Gitee
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H gitee.com >> ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add Gitee remote
         run: |
           git remote add gitee git@gitee.com:sea-365/sea-blog.git
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Push to Gitee
+        run: |
           git push --mirror gitee
         env:
-          GIT_SSH_COMMAND: "ssh -i ${{ secrets.GITEE_TOKEN }}"
+          GITEE_PAT: ${{ secrets.GITEE_TOKEN }}
