@@ -18,4 +18,4 @@ jobs:
           git remote add gitee git@gitee.com:sea-365/sea-blog.git
           git push --mirror gitee
         env:
-          GIT_SSH_COMMAND: "ssh -i ${{ secrets.GIT_SSH_KEY }}"
+          GIT_SSH_COMMAND: "ssh -i ${{ secrets.GITEE_TOKEN }}"
