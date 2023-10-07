@@ -7,6 +7,10 @@ jobs:
   repo-sync:
     runs-on: ubuntu-latest
     steps:
+      - uses: action/checkout@v2
+        with:
+          persist-credentials: false
+
       - name: Mirror to Gitee.
         uses: Yikun/hub-mirror-action@master
         with:
@@ -15,4 +19,3 @@ jobs:
           dst_key: ${{ secrets.SSH_PRIVATE_KEY }}
           dst_token:  ${{ secrets.GITEE_TOKEN }}
           static_list: "SEA-Blog"
-          force_update: true
