@@ -14,5 +14,5 @@ jobs:
           dst: 'gitee/SEA-365'
           dst_key: ${{ secrets.SSH_PRIVATE_KEY }}
           dst_token:  ${{ secrets.GITEE_TOKEN }}
-          static_list: "learn-typescript"
+          static_list: "SEA-Blog"
           force_update: true
