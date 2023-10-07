@@ -7,10 +7,6 @@ jobs:
   repo-sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: action/checkout@v2
-        with:
-          persist-credentials: false
-
       - name: Mirror to Gitee.
         uses: Yikun/hub-mirror-action@master
         with:
