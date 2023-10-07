@@ -7,6 +7,12 @@ jobs:
   repo-sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up SSH key
+        run: |
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Mirror to Gitee.
         uses: Yikun/hub-mirror-action@master
         with:
