@@ -15,6 +15,13 @@ jobs:
           ssh-keyscan -H gitee.com >> ~/.ssh/known_hosts
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Test SSH connection
+        run: ssh -vT git@gitee.com
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+
       - name: Mirror to Gitee.
         uses: Yikun/hub-mirror-action@master
         with:
