@@ -16,6 +16,13 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Check loaded SSH key
+        run: |
+          cat ~/.ssh/id_rsa
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+
       - name: Test SSH connection
         run: ssh -vT git@gitee.com
         env:
