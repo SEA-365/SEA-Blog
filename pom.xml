@@ -15,6 +15,8 @@
     <description>SEA-Blog</description>
     <properties>
         <java.version>1.8</java.version>
+        <druid.version>1.1.21</druid.version>
+        <mybatisplus.version>3.4.2</mybatisplus.version>
     </properties>
     <dependencies>
         <dependency>
@@ -32,12 +34,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <!--数据库连接池-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-            <version>1.1.21</version>
+            <version>${druid.version}</version>
         </dependency>
+        <!--MybatisPlus-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatisplus.version}</version>
+        </dependency>
+
 
     </dependencies>
 
