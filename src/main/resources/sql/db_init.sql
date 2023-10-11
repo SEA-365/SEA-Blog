@@ -9,19 +9,19 @@ CREATE TABLE `tb_user` (
                            `gender` char(2) DEFAULT NULL COMMENT '性别',
                            `intro` varchar(255) DEFAULT NULL COMMENT '个人简介',
                            `avatar_url` varchar(255) NOT NULL COMMENT '头像图片url',
-                           `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-                           `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-                           `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
+                           `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                           `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                           `last_login_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后登录时间',
                            PRIMARY KEY (`id`)
 ) COMMENT '用户表';
 
 
 CREATE TABLE `tb_article` (
-                              `id` int NOT NULL COMMENT '文章表主键，自增',
+                              `id` bigint NOT NULL COMMENT '文章表主键，自增',
                               `article` bigint NOT NULL COMMENT '文章id',
                               `author` varchar(128) NOT NULL COMMENT '文章作者',
-                              `tag_id` int NOT NULL COMMENT '文章标签id',
-                              `category_id` int NOT NULL COMMENT '文章分类id',
+                              `tag_id` bigint NOT NULL COMMENT '文章标签id',
+                              `category_id` bigint NOT NULL COMMENT '文章分类id',
                               `content` longtext NOT NULL COMMENT '文章内容',
                               `count_views` bigint NOT NULL COMMENT '文章浏览量',
                               `total_words` bigint NOT NULL COMMENT '文章总字数',
@@ -29,36 +29,43 @@ CREATE TABLE `tb_article` (
                               `description` varchar(255) DEFAULT NULL COMMENT '文章描述',
                               `image_url` varchar(255) NOT NULL COMMENT '文章logo',
                               `likes` int DEFAULT NULL COMMENT '文章点赞数',
-                              `create_time` datetime DEFAULT NULL COMMENT '文章创建时间',
-                              `update_time` datetime DEFAULT NULL COMMENT '文章修改时间',
+                              `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '文章创建时间',
+                              `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '文章修改时间',
                               PRIMARY KEY (`id`)
 ) COMMENT '文章表';
 
 
-
 CREATE TABLE `tb_comment` (
-                              `id` int NOT NULL COMMENT '评论表主键，自增',
+                              `id` bigint NOT NULL COMMENT '评论表主键，自增',
                               `article_id` bigint NOT NULL COMMENT '文章id',
                               `article_author` varchar(128) NOT NULL COMMENT '文章作者',
-                              `comment_create_id` int NOT NULL COMMENT '评论创建者id',
-                              `comment_reply_id` int NOT NULL COMMENT '被评论回复者id',
-                              `comment_create_time` datetime NOT NULL COMMENT '评论创建时间',
+                              `comment_create_id` bigint NOT NULL COMMENT '评论创建者id',
+                              `comment_reply_id` bigint NOT NULL COMMENT '被评论回复者id',
+                              `comment_create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论创建时间',
                               `comment_content` text NOT NULL COMMENT '评论内容',
                               PRIMARY KEY (`id`)
 ) COMMENT '评论表';
 
 
+CREATE TABLE `tb_tag` (
+                          `id` bigint NOT NULL COMMENT '标签表主键，自增',
+                          `tag_name` varchar(255) DEFAULT NULL COMMENT '标签名',
+                          `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                          `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+                          PRIMARY KEY (`id`)
+) COMMENT '标签表';
+
 CREATE TABLE `tb_category` (
-                               `id` int NOT NULL COMMENT '分类表主键，自增',
+                               `id` bigint NOT NULL COMMENT '分类表主键，自增',
                                `category_name` varbinary(128) NOT NULL COMMENT '分类名称',
-                               `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-                               `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+                               `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                PRIMARY KEY (`id`)
 ) COMMENT '分类表';
 
 
 CREATE TABLE `tb_operation_log` (
-                                    `id` int NOT NULL COMMENT '操作日志记录表主键，自增',
+                                    `id` bigint NOT NULL COMMENT '操作日志记录表主键，自增',
                                     `operation_ip` varchar(128) DEFAULT NULL COMMENT '主机IP地址',
                                     `operation_location` varchar(255) DEFAULT NULL COMMENT '操作地点',
                                     `method` text COMMENT '方法名',
@@ -66,13 +73,13 @@ CREATE TABLE `tb_operation_log` (
                                     `operation_name` varchar(50) NOT NULL COMMENT '操作 人',
                                     `operation_type` varchar(50) NOT NULL COMMENT '操作类型',
                                     `return_value` text COMMENT '返回参数',
-                                    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                     PRIMARY KEY (`id`)
 ) COMMENT '操作日志记录表';
 
 
 CREATE TABLE `tb_login_log` (
-                                `id` int NOT NULL COMMENT '登录日志记录表主键，自增',
+                                `id` bigint NOT NULL COMMENT '登录日志记录表主键，自增',
                                 `login_name` varchar(255) DEFAULT NULL COMMENT '登录账号用户名',
                                 `ip_address` varchar(128) DEFAULT NULL COMMENT '登录ip地址',
                                 `login_location` varchar(255) DEFAULT NULL COMMENT '登录地点',
@@ -80,6 +87,6 @@ CREATE TABLE `tb_login_log` (
                                 `os` varchar(50) NOT NULL COMMENT '操作系统类型',
                                 `login_status` tinyint NOT NULL DEFAULT '0' COMMENT '登录状态，默认0，0-成功，1-失败',
                                 `message` varchar(255) DEFAULT NULL COMMENT '提示消息',
-                                `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                 PRIMARY KEY (`id`)
 ) COMMENT '登录日志记录表';
