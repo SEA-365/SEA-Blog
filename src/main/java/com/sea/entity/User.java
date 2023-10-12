@@ -28,5 +28,4 @@ public class User {
     LocalDateTime createTime;//创建时间
     LocalDateTime updateTime;//更新时间
 
-
 }

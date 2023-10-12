@@ -11,7 +11,6 @@ CREATE TABLE `tb_user` (
                            `avatar_url` varchar(255) NOT NULL COMMENT '头像图片url',
                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                           `last_login_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后登录时间',
                            PRIMARY KEY (`id`)
 ) COMMENT '用户表';
 
