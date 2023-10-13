@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 /**
@@ -17,15 +20,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @TableName("tb_user")
 public class User {
-    Long id;//用户id
-    String username;//用户名
-    String password;//密码
-    String email;//邮箱
-    Long phone;//手机号码
-    String gender;//性别
-    String intro;//个人介绍
-    String avatarUrl;//头像url
-    LocalDateTime createTime;//创建时间
-    LocalDateTime updateTime;//更新时间
+    private Long id;//用户id
+    private String username;//用户名
+    private String password;//密码
+
+    @Email(message = "邮箱格式不正确！")
+    private String email;//邮箱
+
+    @NotBlank(message = "手机号码不能为空！")
+    @Pattern(regexp = "^1[3-9][0-9]{9}", message = "手机号码格式不正确！")
+    private String phone;//手机号码
+
+    private String gender;//性别
+    private String intro;//个人介绍
+    private String avatarUrl;//头像url
+    private LocalDateTime createTime;//创建时间
+    private LocalDateTime updateTime;//更新时间
 
 }

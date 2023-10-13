@@ -1,14 +1,14 @@
 -- 数据库表初始化
 
 CREATE TABLE `tb_user` (
-                           `id` int NOT NULL AUTO_INCREMENT COMMENT '用户表主键，自增',
+                           `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户表主键，自增',
                            `username` varchar(255) NOT NULL COMMENT '用户名',
                            `password` varchar(255) NOT NULL COMMENT '密码',
                            `email` varchar(64) DEFAULT NULL COMMENT '邮箱',
-                           `phone` bigint NOT NULL COMMENT '手机号码',
+                           `phone` varchar(11) NOT NULL COMMENT '手机号码',
                            `gender` char(2) DEFAULT NULL COMMENT '性别',
                            `intro` varchar(255) DEFAULT NULL COMMENT '个人简介',
-                           `avatar_url` varchar(255) NOT NULL COMMENT '头像图片url',
+                           `avatar_url` varchar(255) NOT NULL DEFAULT '' COMMENT '头像图片url',
                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                            PRIMARY KEY (`id`)

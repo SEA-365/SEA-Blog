@@ -5,11 +5,16 @@ import com.sea.service.UserService;
 import com.sea.util.ResultData;
 import com.sea.util.StatusCode;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: sea
@@ -22,12 +27,17 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    //日志打印
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final String TAG = "UserController ====> ";
+
     /**
      * 获取所有用户列表
      * @return 用户列表
      */
     @GetMapping
     public ResultData<List<User>> getAllUser(){
+        log.info(TAG + "getAllUser()");
         ResultData<List<User>> resultData = new ResultData<>();
         List<User> allUser = userService.getAllUser();
         if(allUser != null){
@@ -49,6 +59,7 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResultData<User> getUserById(@PathVariable Long userId){
+        log.info(TAG + "getUserById()");
         ResultData<User> resultData = new ResultData<>();
         User user = userService.getUserById(userId);
         if(user != null){
@@ -68,9 +79,24 @@ public class UserController {
      * @param user 待添加的用户信息
      */
     @PostMapping
-    public ResultData<Boolean> addUser(@RequestBody User user){
-        boolean result = userService.addUser(user);
-        return new ResultData<>(result ? StatusCode.SAVE_OK : StatusCode.SAVE_ERROR, result);
+    public ResultData<Boolean> addUser(@RequestBody @Valid User user, BindingResult bindingResult){
+        log.info(TAG + "addUser()");
+
+        /**
+         * 用户信息合法性验证
+         */
+        if(bindingResult.hasFieldErrors("email")){//邮箱格式合法性验证未通过
+            String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
+            return new ResultData<>(StatusCode.SAVE_ERROR, null, emailError);
+        }
+        else if(bindingResult.hasFieldErrors("phone")){//手机号码合法性验证未通过
+            String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
+            return new ResultData<>(StatusCode.SAVE_ERROR, null, phoneError);
+        }
+        else{//用户信息合法
+            boolean result = userService.addUser(user);
+            return new ResultData<>(result ? StatusCode.SAVE_OK : StatusCode.SAVE_ERROR, result);
+        }
     }
 
     /**
@@ -78,9 +104,25 @@ public class UserController {
      * @param user 新的用户信息
      */
     @PutMapping
-    public ResultData<Boolean> updateUser(@RequestBody User user){
-        boolean result = userService.updateUser(user);
-        return new ResultData<>(result ? StatusCode.UPDATE_OK : StatusCode.UPDATE_ERROR, result);
+    public ResultData<Boolean> updateUser(@RequestBody @Valid User user, BindingResult bindingResult){
+        log.info(TAG + "updateUser()");
+
+        /**
+         * 用户信息合法性验证
+         */
+        if(bindingResult.hasFieldErrors("email")){//邮箱格式合法性验证未通过
+            String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
+            return new ResultData<>(StatusCode.UPDATE_ERROR, null, emailError);
+        }
+        else if(bindingResult.hasFieldErrors("phone")){//手机号码合法性验证未通过
+            String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
+            return new ResultData<>(StatusCode.UPDATE_ERROR, null, phoneError);
+        }
+        else{//用户信息合法
+            boolean result = userService.updateUser(user);
+            return new ResultData<>(result ? StatusCode.UPDATE_OK : StatusCode.UPDATE_ERROR, result);
+        }
+
     }
 
     /**
@@ -89,6 +131,7 @@ public class UserController {
      */
     @DeleteMapping("/{userId}")
     public ResultData<Boolean> deleteUser(@PathVariable Long userId){
+        log.info(TAG + "deleteUser()");
         boolean result = userService.deleteUserById(userId);
         return new ResultData<>(result ? StatusCode.DELETE_OK : StatusCode.DELETE_ERROR, result);
     }

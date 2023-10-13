@@ -62,7 +62,7 @@
             <version>2.13.3</version>
         </dependency>
 
-        <!--Spring Security安全框架-->
+        <!--Spring Security安全框架-此处用于加密敏感数据，存储到数据库-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
@@ -71,6 +71,17 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
+
+        <!--对象属性值合法性验证，例如邮箱、手机号码的合法性-->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
 
     </dependencies>
 
