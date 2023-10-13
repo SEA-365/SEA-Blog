@@ -5,6 +5,8 @@ import com.sea.service.UserService;
 import com.sea.util.ResultData;
 import com.sea.util.StatusCode;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import java.util.Objects;
  * @author: sea
  * @date: 2023/10/11 16:14
  */
-
+@Api(tags = "用户信息管理模块")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -35,6 +37,7 @@ public class UserController {
      * 获取所有用户列表
      * @return 用户列表
      */
+    @ApiOperation(value = "获取所有用户列表")
     @GetMapping
     public ResultData<List<User>> getAllUser(){
         log.info(TAG + "getAllUser()");
@@ -57,6 +60,7 @@ public class UserController {
      * @param userId 用户id
      * @return 指定用户信息
      */
+    @ApiOperation(value = "根据id获取指定用户")
     @GetMapping("/{userId}")
     public ResultData<User> getUserById(@PathVariable Long userId){
         log.info(TAG + "getUserById()");
@@ -78,6 +82,7 @@ public class UserController {
      * 添加用户
      * @param user 待添加的用户信息
      */
+    @ApiOperation(value = "添加用户")
     @PostMapping
     public ResultData<Boolean> addUser(@RequestBody @Valid User user, BindingResult bindingResult){
         log.info(TAG + "addUser()");
@@ -103,6 +108,7 @@ public class UserController {
      * 修改用户
      * @param user 新的用户信息
      */
+    @ApiOperation(value = "修改用户")
     @PutMapping
     public ResultData<Boolean> updateUser(@RequestBody @Valid User user, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
@@ -129,6 +135,7 @@ public class UserController {
      * 删除用户
      * @param userId 待删除用户id
      */
+    @ApiOperation(value = "删除用户")
     @DeleteMapping("/{userId}")
     public ResultData<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
