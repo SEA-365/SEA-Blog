@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +21,12 @@ import java.util.Objects;
  * @author: sea
  * @date: 2023/10/11 16:14
  */
-@Api(tags = "用户信息管理模块")
-@RestController
-@RequestMapping("/users")
+@Api(tags = "用户信息管理模块") // Swagger注解，用于给接口添加标签信息
+@RestController // 声明该类是一个控制器
+@RequestMapping("/users") // 定义映射路径
 public class UserController {
-    @Autowired
+    @Autowired // 自动注入UserService对象
     UserService userService;
-
     //日志打印
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private static final String TAG = "UserController ====> ";
@@ -37,22 +35,22 @@ public class UserController {
      * 获取所有用户列表
      * @return 用户列表
      */
-    @ApiOperation(value = "获取所有用户列表")
-    @GetMapping
+    @ApiOperation(value = "获取所有用户列表") // Swagger注解，用于给接口添加描述信息
+    @GetMapping // 处理HTTP GET请求
     public ResultData<List<User>> getAllUser(){
         log.info(TAG + "getAllUser()");
-        ResultData<List<User>> resultData = new ResultData<>();
-        List<User> allUser = userService.getAllUser();
+        ResultData<List<User>> resultData = new ResultData<>(); // 创建响应数据对象
+        List<User> allUser = userService.getAllUser(); // 调用UserService的方法获取所有用户
         if(allUser != null){
-            resultData.setStatusCode(StatusCode.SELECT_OK);
-            resultData.setData(allUser);
+            resultData.setStatusCode(StatusCode.SELECT_OK); // 设置响应状态码
+            resultData.setData(allUser); // 设置响应数据
         }
         else {
             resultData.setStatusCode(StatusCode.SELECT_ERROR);
             resultData.setData(allUser);
-            resultData.setMsg("没有查询到用户列表，请检查后重试！");
+            resultData.setMsg("没有查询到用户列表，请检查后重试！"); // 设置响应消息
         }
-        return resultData;
+        return resultData; // 返回响应数据
     }
 
     /**
@@ -60,47 +58,46 @@ public class UserController {
      * @param userId 用户id
      * @return 指定用户信息
      */
-    @ApiOperation(value = "根据id获取指定用户")
-    @GetMapping("/{userId}")
+    @ApiOperation(value = "根据id获取指定用户") // Swagger注解，用于给接口添加描述信息
+    @GetMapping("/{userId}") // 处理HTTP GET请求，并将路径参数userId映射到方法参数
     public ResultData<User> getUserById(@PathVariable Long userId){
         log.info(TAG + "getUserById()");
-        ResultData<User> resultData = new ResultData<>();
-        User user = userService.getUserById(userId);
+        ResultData<User> resultData = new ResultData<>(); // 创建响应数据对象
+        User user = userService.getUserById(userId); // 调用UserService的方法根据id获取用户
         if(user != null){
-            resultData.setStatusCode(StatusCode.SELECT_OK);
-            resultData.setData(user);
+            resultData.setStatusCode(StatusCode.SELECT_OK); // 设置响应状态码
+            resultData.setData(user); // 设置响应数据
         }
         else {
             resultData.setStatusCode(StatusCode.SELECT_ERROR);
             resultData.setData(user);
-            resultData.setMsg("查询用户失败，请检查重试！");
+            resultData.setMsg("查询用户失败，请检查重试！"); // 设置响应消息
         }
-        return resultData;
+        return resultData; // 返回响应数据
     }
 
     /**
      * 添加用户
      * @param user 待添加的用户信息
      */
-    @ApiOperation(value = "添加用户")
-    @PostMapping
+    @ApiOperation(value = "添加用户") // Swagger注解，用于给接口添加描述信息
+    @PostMapping // 处理HTTP POST请求
     public ResultData<Boolean> addUser(@RequestBody @Valid User user, BindingResult bindingResult){
         log.info(TAG + "addUser()");
-
         /**
          * 用户信息合法性验证
          */
-        if(bindingResult.hasFieldErrors("email")){//邮箱格式合法性验证未通过
+        if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultData<>(StatusCode.SAVE_ERROR, null, emailError);
+            return new ResultData<>(StatusCode.SAVE_ERROR, null, emailError); // 返回带错误信息的响应数据
         }
-        else if(bindingResult.hasFieldErrors("phone")){//手机号码合法性验证未通过
+        else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultData<>(StatusCode.SAVE_ERROR, null, phoneError);
+            return new ResultData<>(StatusCode.SAVE_ERROR, null, phoneError); // 返回带错误信息的响应数据
         }
-        else{//用户信息合法
-            boolean result = userService.addUser(user);
-            return new ResultData<>(result ? StatusCode.SAVE_OK : StatusCode.SAVE_ERROR, result);
+        else{ // 用户信息合法
+            boolean result = userService.addUser(user); // 调用UserService的方法添加用户
+            return new ResultData<>(result ? StatusCode.SAVE_OK : StatusCode.SAVE_ERROR, result); // 返回响应数据
         }
     }
 
@@ -108,38 +105,36 @@ public class UserController {
      * 修改用户
      * @param user 新的用户信息
      */
-    @ApiOperation(value = "修改用户")
-    @PutMapping
+    @ApiOperation(value = "修改用户") // Swagger注解，用于给接口添加描述信息
+    @PutMapping // 处理HTTP PUT请求
     public ResultData<Boolean> updateUser(@RequestBody @Valid User user, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
-
         /**
          * 用户信息合法性验证
          */
-        if(bindingResult.hasFieldErrors("email")){//邮箱格式合法性验证未通过
+        if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultData<>(StatusCode.UPDATE_ERROR, null, emailError);
+            return new ResultData<>(StatusCode.UPDATE_ERROR, null, emailError); // 返回带错误信息的响应数据
         }
-        else if(bindingResult.hasFieldErrors("phone")){//手机号码合法性验证未通过
+        else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultData<>(StatusCode.UPDATE_ERROR, null, phoneError);
+            return new ResultData<>(StatusCode.UPDATE_ERROR, null, phoneError); // 返回带错误信息的响应数据
         }
-        else{//用户信息合法
-            boolean result = userService.updateUser(user);
-            return new ResultData<>(result ? StatusCode.UPDATE_OK : StatusCode.UPDATE_ERROR, result);
+        else{ // 用户信息合法
+            boolean result = userService.updateUser(user); // 调用UserService的方法修改用户
+            return new ResultData<>(result ? StatusCode.UPDATE_OK : StatusCode.UPDATE_ERROR, result); // 返回响应数据
         }
-
     }
 
     /**
      * 删除用户
      * @param userId 待删除用户id
      */
-    @ApiOperation(value = "删除用户")
-    @DeleteMapping("/{userId}")
+    @ApiOperation(value = "删除用户") // Swagger注解，用于给接口添加描述信息
+    @DeleteMapping("/{userId}") // 处理HTTP DELETE请求，并将路径参数userId映射到方法参数
     public ResultData<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
-        boolean result = userService.deleteUserById(userId);
-        return new ResultData<>(result ? StatusCode.DELETE_OK : StatusCode.DELETE_ERROR, result);
+        boolean result = userService.deleteUserById(userId); // 调用UserService的方法删除用户
+        return new ResultData<>(result ? StatusCode.DELETE_OK : StatusCode.DELETE_ERROR, result); // 返回响应数据
     }
 }
