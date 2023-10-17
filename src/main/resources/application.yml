@@ -14,7 +14,6 @@ server:
     context-path: /SEA-Blog
   port: 8080
 
-
 #PageHelper分页插件配置
 pagehelper:
   helperDialect: mysql #指定分页插件使用哪种方言进行数据库链接
