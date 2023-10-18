@@ -56,9 +56,9 @@ CREATE TABLE `tb_tag` (
 
 CREATE TABLE `tb_category` (
                                `id` bigint NOT NULL COMMENT '分类表主键，自增',
-                               `category_name` varbinary(128) NOT NULL COMMENT '分类名称',
+                               `category_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '分类名称',
                                `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                               `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+                               `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                PRIMARY KEY (`id`)
 ) COMMENT '分类表';
 

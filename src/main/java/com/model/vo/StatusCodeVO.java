@@ -1,11 +1,11 @@
-package com.sea.util;
+package com.model.vo;
 
 /**
  * 状态码
  * @author: SEA
  * @date: 2023/9/12
  */
-public class StatusCode {
+public class StatusCodeVO {
     public static int SAVE_OK = 1000; // 保存成功的状态码，值为1000
     public static int SAVE_ERROR = 1001; // 保存失败的状态码，值为1001
     public static int DELETE_OK = 2000; // 删除成功的状态码，值为2000

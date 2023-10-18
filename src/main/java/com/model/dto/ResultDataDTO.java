@@ -1,4 +1,4 @@
-package com.sea.util;
+package com.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultData<T> {
+public class ResultDataDTO<T> {
     private int statusCode;//结果的状态码
     private T data;//返回的数据
     private String msg;//提示信息
 
-    public ResultData(int statusCode, T data) {
+    public ResultDataDTO(int statusCode, T data) {
         this.statusCode = statusCode;
         this.data = data;
     }

@@ -2,9 +2,8 @@ package com.sea.controller;
 
 import com.sea.entity.User;
 import com.sea.service.UserService;
-import com.sea.util.ResultData;
-import com.sea.util.StatusCode;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.model.dto.ResultDataDTO;
+import com.model.vo.StatusCodeVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -37,16 +36,16 @@ public class UserController {
      */
     @ApiOperation(value = "获取所有用户列表") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultData<List<User>> getAllUser(){
+    public ResultDataDTO<List<User>> getAllUser(){
         log.info(TAG + "getAllUser()");
-        ResultData<List<User>> resultData = new ResultData<>(); // 创建响应数据对象
+        ResultDataDTO<List<User>> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         List<User> allUser = userService.getAllUser(); // 调用UserService的方法获取所有用户
         if(allUser != null){
-            resultData.setStatusCode(StatusCode.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
             resultData.setData(allUser); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCode.SELECT_ERROR);
+            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
             resultData.setData(allUser);
             resultData.setMsg("没有查询到用户列表，请检查后重试！"); // 设置响应消息
         }
@@ -60,16 +59,16 @@ public class UserController {
      */
     @ApiOperation(value = "根据id获取指定用户") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{userId}") // 处理HTTP GET请求，并将路径参数userId映射到方法参数
-    public ResultData<User> getUserById(@PathVariable Long userId){
+    public ResultDataDTO<User> getUserById(@PathVariable Long userId){
         log.info(TAG + "getUserById()");
-        ResultData<User> resultData = new ResultData<>(); // 创建响应数据对象
+        ResultDataDTO<User> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         User user = userService.getUserById(userId); // 调用UserService的方法根据id获取用户
         if(user != null){
-            resultData.setStatusCode(StatusCode.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
             resultData.setData(user); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCode.SELECT_ERROR);
+            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
             resultData.setData(user);
             resultData.setMsg("查询用户失败，请检查重试！"); // 设置响应消息
         }
@@ -82,22 +81,22 @@ public class UserController {
      */
     @ApiOperation(value = "添加用户") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultData<Boolean> addUser(@RequestBody @Valid User user, BindingResult bindingResult){
+    public ResultDataDTO<Boolean> addUser(@RequestBody @Valid User user, BindingResult bindingResult){
         log.info(TAG + "addUser()");
         /**
          * 用户信息合法性验证
          */
         if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultData<>(StatusCode.SAVE_ERROR, null, emailError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(StatusCodeVO.SAVE_ERROR, null, emailError); // 返回带错误信息的响应数据
         }
         else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultData<>(StatusCode.SAVE_ERROR, null, phoneError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(StatusCodeVO.SAVE_ERROR, null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
             boolean result = userService.addUser(user); // 调用UserService的方法添加用户
-            return new ResultData<>(result ? StatusCode.SAVE_OK : StatusCode.SAVE_ERROR, result); // 返回响应数据
+            return new ResultDataDTO<>(result ? StatusCodeVO.SAVE_OK : StatusCodeVO.SAVE_ERROR, result); // 返回响应数据
         }
     }
 
@@ -107,22 +106,22 @@ public class UserController {
      */
     @ApiOperation(value = "修改用户") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultData<Boolean> updateUser(@RequestBody @Valid User user, BindingResult bindingResult){
+    public ResultDataDTO<Boolean> updateUser(@RequestBody @Valid User user, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
         /**
          * 用户信息合法性验证
          */
         if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultData<>(StatusCode.UPDATE_ERROR, null, emailError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(StatusCodeVO.UPDATE_ERROR, null, emailError); // 返回带错误信息的响应数据
         }
         else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultData<>(StatusCode.UPDATE_ERROR, null, phoneError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(StatusCodeVO.UPDATE_ERROR, null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
             boolean result = userService.updateUser(user); // 调用UserService的方法修改用户
-            return new ResultData<>(result ? StatusCode.UPDATE_OK : StatusCode.UPDATE_ERROR, result); // 返回响应数据
+            return new ResultDataDTO<>(result ? StatusCodeVO.UPDATE_OK : StatusCodeVO.UPDATE_ERROR, result); // 返回响应数据
         }
     }
 
@@ -132,9 +131,9 @@ public class UserController {
      */
     @ApiOperation(value = "删除用户") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{userId}") // 处理HTTP DELETE请求，并将路径参数userId映射到方法参数
-    public ResultData<Boolean> deleteUser(@PathVariable Long userId){
+    public ResultDataDTO<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
         boolean result = userService.deleteUserById(userId); // 调用UserService的方法删除用户
-        return new ResultData<>(result ? StatusCode.DELETE_OK : StatusCode.DELETE_ERROR, result); // 返回响应数据
+        return new ResultDataDTO<>(result ? StatusCodeVO.DELETE_OK : StatusCodeVO.DELETE_ERROR, result); // 返回响应数据
     }
 }
