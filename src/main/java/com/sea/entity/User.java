@@ -23,14 +23,8 @@ public class User {
     private Long id;//用户id
     private String username;//用户名
     private String password;//密码
-
-    @Email(message = "邮箱格式不正确！")
     private String email;//邮箱
-
-    @NotBlank(message = "手机号码不能为空！")
-    @Pattern(regexp = "^1[3-9][0-9]{9}", message = "手机号码格式不正确！")
     private String phone;//手机号码
-
     private String gender;//性别
     private String intro;//个人介绍
     private String avatarUrl;//头像url

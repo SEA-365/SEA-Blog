@@ -2,13 +2,13 @@
 
 CREATE TABLE `tb_user` (
                            `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户表主键，自增',
-                           `username` varchar(255) NOT NULL COMMENT '用户名',
-                           `password` varchar(255) NOT NULL COMMENT '密码',
+                           `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户名',
+                           `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '密码',
                            `email` varchar(64) DEFAULT NULL COMMENT '邮箱',
-                           `phone` varchar(11) NOT NULL COMMENT '手机号码',
+                           `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '手机号码',
                            `gender` char(2) DEFAULT NULL COMMENT '性别',
                            `intro` varchar(255) DEFAULT NULL COMMENT '个人简介',
-                           `avatar_url` varchar(255) NOT NULL DEFAULT '' COMMENT '头像图片url',
+                           `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '头像图片url',
                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                            PRIMARY KEY (`id`)
@@ -36,12 +36,14 @@ CREATE TABLE `tb_article` (
 
 CREATE TABLE `tb_comment` (
                               `id` bigint NOT NULL COMMENT '评论表主键，自增',
-                              `article_id` bigint NOT NULL COMMENT '文章id',
-                              `article_author` varchar(128) NOT NULL COMMENT '文章作者',
-                              `comment_create_id` bigint NOT NULL COMMENT '评论创建者id',
-                              `comment_reply_id` bigint NOT NULL COMMENT '被评论回复者id',
+                              `article_id` bigint(20) unsigned zerofill NOT NULL COMMENT '文章id',
+                              `article_author` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章作者',
+                              `comment_create_id` bigint(20) unsigned zerofill NOT NULL COMMENT '评论创建者id',
+                              `comment_reply_id` bigint(20) unsigned zerofill DEFAULT NULL COMMENT '被评论回复者id',
                               `comment_create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论创建时间',
                               `comment_content` text NOT NULL COMMENT '评论内容',
+                              `is_delete` int NOT NULL DEFAULT '0' COMMENT '评论是否被删除，0-否，1-是',
+                              `is_review` int NOT NULL DEFAULT '0' COMMENT '评论是否审核通过，0-否，1-是',
                               PRIMARY KEY (`id`)
 ) COMMENT '评论表';
 

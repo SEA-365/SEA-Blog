@@ -1,5 +1,6 @@
 package com.sea.controller;
 
+import com.model.vo.UserVO;
 import com.sea.entity.User;
 import com.sea.service.UserService;
 import com.model.dto.ResultDataDTO;
@@ -77,11 +78,11 @@ public class UserController {
 
     /**
      * 添加用户
-     * @param user 待添加的用户信息
+     * @param userVO 待添加的用户信息
      */
     @ApiOperation(value = "添加用户") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addUser(@RequestBody @Valid User user, BindingResult bindingResult){
+    public ResultDataDTO<Boolean> addUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "addUser()");
         /**
          * 用户信息合法性验证
@@ -95,18 +96,18 @@ public class UserController {
             return new ResultDataDTO<>(StatusCodeVO.SAVE_ERROR, null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
-            boolean result = userService.addUser(user); // 调用UserService的方法添加用户
+            boolean result = userService.addUser(userVO); // 调用UserService的方法添加用户
             return new ResultDataDTO<>(result ? StatusCodeVO.SAVE_OK : StatusCodeVO.SAVE_ERROR, result); // 返回响应数据
         }
     }
 
     /**
      * 修改用户
-     * @param user 新的用户信息
+     * @param userVO 新的用户信息
      */
     @ApiOperation(value = "修改用户") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateUser(@RequestBody @Valid User user, BindingResult bindingResult){
+    public ResultDataDTO<Boolean> updateUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
         /**
          * 用户信息合法性验证
@@ -120,7 +121,7 @@ public class UserController {
             return new ResultDataDTO<>(StatusCodeVO.UPDATE_ERROR, null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
-            boolean result = userService.updateUser(user); // 调用UserService的方法修改用户
+            boolean result = userService.updateUser(userVO); // 调用UserService的方法修改用户
             return new ResultDataDTO<>(result ? StatusCodeVO.UPDATE_OK : StatusCodeVO.UPDATE_ERROR, result); // 返回响应数据
         }
     }

@@ -3,9 +3,11 @@ package com.sea.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.model.dto.PageRequestDTO;
+import com.model.vo.CategoryVO;
 import com.sea.entity.Category;
 import com.sea.service.CategoryService;
 import com.sea.dao.CategoryDao;
+import com.sea.util.BeanCopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +44,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean addCategory(Category category) {
+    public boolean addCategory(CategoryVO categoryVO) {
+        Category category = BeanCopyUtil.copyObject(categoryVO, Category.class);
         categoryDao.insert(category); // 添加分类
         return true;
     }
 
     @Override
-    public boolean updateCategory(Category category) {
-        Long id = category.getId();
+    public boolean updateCategory(CategoryVO categoryVO) {
+        Category category = BeanCopyUtil.copyObject(categoryVO, Category.class);
+        Long id = categoryVO.getId();
         // 使用条件构造器。指定更新条件
         UpdateWrapper<Category> categoryUpdateWrapper = new UpdateWrapper<>();
         // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = Category.id

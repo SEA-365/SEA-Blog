@@ -1,5 +1,6 @@
 package com.sea.service;
 
+import com.model.vo.UserVO;
 import com.sea.entity.User;
 
 import java.util.List;
@@ -25,15 +26,15 @@ public interface UserService {
 
     /**
      * 添加用户
-     * @param user 待添加的用户信息
+     * @param userVO 待添加的用户信息
      */
-    boolean addUser(User user);
+    boolean addUser(UserVO userVO);
 
     /**
      * 修改用户
-     * @param user 新的用户信息
+     * @param userVO 新的用户信息
      */
-    boolean updateUser(User user);
+    boolean updateUser(UserVO userVO);
 
     /**
      * 删除用户

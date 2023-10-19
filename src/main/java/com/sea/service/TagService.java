@@ -1,6 +1,7 @@
 package com.sea.service;
 
 import com.model.dto.PageRequestDTO;
+import com.model.vo.TagVO;
 import com.sea.entity.Tag;
 
 import java.util.List;
@@ -26,15 +27,15 @@ public interface TagService {
 
     /**
      * 添加标签
-     * @param tag 待添加的标签信息
+     * @param tagVO 待添加的标签信息
      */
-    boolean addTag(Tag tag);
+    boolean addTag(TagVO tagVO);
 
     /**
      * 修改标签
-     * @param tag 新的标签信息
+     * @param tagVO 新的标签信息
      */
-    boolean updateTag(Tag tag);
+    boolean updateTag(TagVO tagVO);
 
     /**
      * 删除标签

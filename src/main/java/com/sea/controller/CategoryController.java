@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.model.dto.PageRequestDTO;
 import com.model.dto.PageResultDTO;
 import com.model.dto.ResultDataDTO;
+import com.model.vo.CategoryVO;
 import com.model.vo.StatusCodeVO;
 import com.sea.entity.Category;
 import com.sea.service.CategoryService;
@@ -85,26 +86,26 @@ public class CategoryController {
 
     /**
      * 添加分类
-     * @param category 待添加的分类信息
+     * @param categoryVO 待添加的分类信息
      */
     @ApiOperation(value = "添加分类") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addCategory(@RequestBody @Valid Category category){
+    public ResultDataDTO<Boolean> addCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "addCategory()");
-        boolean result = categoryService.addCategory(category); // 调用CategoryService的方法添加分类
+        boolean result = categoryService.addCategory(categoryVO); // 调用CategoryService的方法添加分类
         return new ResultDataDTO<>(result ? StatusCodeVO.SAVE_OK : StatusCodeVO.SAVE_ERROR, result); // 返回响应数据
     }
 
     /**
      * 修改分类
-     * @param category 新的分类信息
+     * @param categoryVO 新的分类信息
      */
     @ApiOperation(value = "修改分类") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateCategory(@RequestBody @Valid Category category){
+    public ResultDataDTO<Boolean> updateCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "updateCategory()");
 
-        boolean result = categoryService.updateCategory(category); // 调用CategoryService的方法修改分类
+        boolean result = categoryService.updateCategory(categoryVO); // 调用CategoryService的方法修改分类
         return new ResultDataDTO<>(result ? StatusCodeVO.UPDATE_OK : StatusCodeVO.UPDATE_ERROR, result); // 返回响应数据
     }
 

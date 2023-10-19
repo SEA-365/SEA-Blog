@@ -5,7 +5,7 @@ import com.sea.entity.Category;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 分类表数据访问层
+ * 文章分类表数据访问层
  * @author: sea
  * @date: 2023/10/18 15:15
  */

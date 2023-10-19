@@ -5,6 +5,7 @@ import com.model.dto.PageRequestDTO;
 import com.model.dto.PageResultDTO;
 import com.model.dto.ResultDataDTO;
 import com.model.vo.StatusCodeVO;
+import com.model.vo.TagVO;
 import com.sea.entity.Tag;
 import com.sea.service.TagService;
 import com.sea.util.PageUtil;
@@ -85,26 +86,26 @@ public class TagController {
 
     /**
      * 添加标签
-     * @param tag 待添加的标签信息
+     * @param tagVO 待添加的标签信息
      */
     @ApiOperation(value = "添加标签") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addTag(@RequestBody @Valid Tag tag){
+    public ResultDataDTO<Boolean> addTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "addTag()");
-        boolean result = tagService.addTag(tag); // 调用TagService的方法添加标签
+        boolean result = tagService.addTag(tagVO); // 调用TagService的方法添加标签
         return new ResultDataDTO<>(result ? StatusCodeVO.SAVE_OK : StatusCodeVO.SAVE_ERROR, result); // 返回响应数据
     }
 
     /**
      * 修改标签
-     * @param tag 新的标签信息
+     * @param tagVO 新的标签信息
      */
     @ApiOperation(value = "修改标签") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateTag(@RequestBody @Valid Tag tag){
+    public ResultDataDTO<Boolean> updateTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "updateTag()");
 
-        boolean result = tagService.updateTag(tag); // 调用TagService的方法修改标签
+        boolean result = tagService.updateTag(tagVO); // 调用TagService的方法修改标签
         return new ResultDataDTO<>(result ? StatusCodeVO.UPDATE_OK : StatusCodeVO.UPDATE_ERROR, result); // 返回响应数据
     }
 

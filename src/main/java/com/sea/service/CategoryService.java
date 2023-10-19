@@ -1,6 +1,7 @@
 package com.sea.service;
 
 import com.model.dto.PageRequestDTO;
+import com.model.vo.CategoryVO;
 import com.sea.entity.Category;
 
 import java.util.List;
@@ -19,26 +20,26 @@ public interface CategoryService {
 
     /**
      * 根据id获取指定分类信息
-     * @param CategoryId 分类id
+     * @param categoryId 分类id
      * @return 指定分类信息
      */
-    Category getCategoryById(Long CategoryId);
+    Category getCategoryById(Long categoryId);
 
     /**
      * 添加分类
-     * @param Category 待添加的分类信息
+     * @param categoryVO 待添加的分类信息
      */
-    boolean addCategory(Category Category);
+    boolean addCategory(CategoryVO categoryVO);
 
     /**
      * 修改分类
-     * @param Category 新的分类信息
+     * @param categoryVO 新的分类信息
      */
-    boolean updateCategory(Category Category);
+    boolean updateCategory(CategoryVO categoryVO);
 
     /**
      * 删除分类
-     * @param CategoryId 待删除分类id
+     * @param categoryId 待删除分类id
      */
-    boolean deleteCategoryById(Long CategoryId);
+    boolean deleteCategoryById(Long categoryId);
 }

@@ -1,9 +1,13 @@
 package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.model.vo.UserVO;
 import com.sea.dao.UserDao;
 import com.sea.entity.User;
 import com.sea.service.UserService;
+import com.sea.util.BeanCopyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired // 自动注入UserDao对象
     UserDao userDao;
+    //日志打印
+    public static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    public static final String TAG = "UserServiceImpl ====> ";
 
     @Override
     public List<User> getAllUser() {
@@ -31,23 +39,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUser(User user) {
+    public boolean addUser(UserVO userVO) {
         // 密码加密存储到数据库
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // 对密码进行加密
+        userVO.setPassword(passwordEncoder.encode(userVO.getPassword())); // 对密码进行加密
+        //log.info(TAG + "addUser() ===> " + userVO);
+        User user = BeanCopyUtil.copyObject(userVO, User.class);
+        //log.info(TAG + "addUser() ===> " + user);
         userDao.insert(user); // 添加用户
         return true;
     }
 
     @Override
-    public boolean updateUser(User user) {
+    public boolean updateUser(UserVO userVO) {
         // 密码加密存储到数据库
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // 对密码进行加密
-        Long id = user.getId();
+        userVO.setPassword(passwordEncoder.encode(userVO.getPassword())); // 对密码进行加密
+        Long id = userVO.getId();
+        User user = BeanCopyUtil.copyObject(userVO, User.class);
         // 使用条件构造器。指定更新条件
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
-        // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = user.id
+        // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = userVO.id
         userUpdateWrapper.eq("id", id);
         userDao.update(user, userUpdateWrapper); // 更新用户
         return true;
