@@ -45,7 +45,8 @@ public class CategoryController {
         List<Category> categoryPage = categoryService.getCategoryList(pageRequestDTO); // 调用categoryService的方法获取全部分类信息
 
         PageInfo<Category> categoryPageInfo = new PageInfo<>(categoryPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(pageRequestDTO, categoryPageInfo);
+        //log.info(TAG + " " + categoryPageInfo);
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(pageRequestDTO, categoryPageInfo);//封装数据
 
         if(categoryPage != null){
             resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
@@ -69,14 +70,14 @@ public class CategoryController {
     public ResultDataDTO<Category> getCategoryById(@PathVariable Long categoryId){
         log.info(TAG + "getCategoryById()");
         ResultDataDTO<Category> resultData = new ResultDataDTO<>(); // 创建响应数据对象
-        Category Category = categoryService.getCategoryById(categoryId); // 调用CategoryService的方法根据id获取分类
-        if(Category != null){
+        Category category = categoryService.getCategoryById(categoryId); // 调用CategoryService的方法根据id获取分类
+        if(category != null){
             resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
-            resultData.setData(Category); // 设置响应数据
+            resultData.setData(category); // 设置响应数据
         }
         else {
             resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
-            resultData.setData(Category);
+            resultData.setData(category);
             resultData.setMsg("查询分类失败，请检查重试！"); // 设置响应消息
         }
         return resultData; // 返回响应数据

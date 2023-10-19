@@ -48,9 +48,9 @@ CREATE TABLE `tb_comment` (
 
 CREATE TABLE `tb_tag` (
                           `id` bigint NOT NULL COMMENT '标签表主键，自增',
-                          `tag_name` varchar(255) DEFAULT NULL COMMENT '标签名',
+                          `tag_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '标签名',
                           `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                          `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+                          `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                           PRIMARY KEY (`id`)
 ) COMMENT '标签表';
 
