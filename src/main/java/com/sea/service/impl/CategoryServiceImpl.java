@@ -2,8 +2,8 @@ package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
-import com.model.dto.PageRequestDTO;
-import com.model.vo.CategoryVO;
+import com.sea.model.vo.CategoryVO;
+import com.sea.model.vo.ConditionVO;
 import com.sea.entity.Category;
 import com.sea.service.CategoryService;
 import com.sea.dao.CategoryDao;
@@ -30,10 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     public static final String TAG = "CategoryServiceImpl ====> ";
 
     @Override
-    public List<Category> getCategoryList(PageRequestDTO pageRequestDTO) {
-        log.info(TAG + " " + pageRequestDTO);
+    public List<Category> getCategoryList(ConditionVO ConditionVO) {
+        log.info(TAG + " " + ConditionVO);
 
-        PageHelper.startPage(pageRequestDTO.getPageNum(), pageRequestDTO.getPageSize());//设置分页查询参数
+        PageHelper.startPage(ConditionVO.getPageNum(), ConditionVO.getPageSize());//设置分页查询参数
         List<Category> categoryList = categoryDao.selectList(null); // 此时查询的记录为所有记录
         return categoryList; // 返回分类列表
     }

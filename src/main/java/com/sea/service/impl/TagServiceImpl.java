@@ -2,8 +2,8 @@ package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
-import com.model.dto.PageRequestDTO;
-import com.model.vo.TagVO;
+import com.sea.model.vo.ConditionVO;
+import com.sea.model.vo.TagVO;
 import com.sea.dao.TagDao;
 import com.sea.entity.Tag;
 import com.sea.service.TagService;
@@ -30,10 +30,10 @@ public class TagServiceImpl implements TagService {
     public static final String TAG = "tagServiceImpl ====> ";
 
     @Override
-    public List<Tag> getTagList(PageRequestDTO pageRequestDTO) {
-        log.info(TAG + " " + pageRequestDTO);
+    public List<Tag> getTagList(ConditionVO conditionVO) {
+        log.info(TAG + " " + conditionVO);
 
-        PageHelper.startPage(pageRequestDTO.getPageNum(), pageRequestDTO.getPageSize());//设置分页查询参数
+        PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<Tag> tagList = tagDao.selectList(null); // 此时查询的记录为所有记录
         return tagList; // 返回分类列表
     }

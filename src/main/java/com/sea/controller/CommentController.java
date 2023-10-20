@@ -1,12 +1,11 @@
 package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.model.dto.PageRequestDTO;
-import com.model.dto.PageResultDTO;
-import com.model.dto.ResultDataDTO;
-import com.model.vo.CommentVO;
-import com.model.vo.StatusCodeVO;
 import com.sea.entity.Comment;
+import com.sea.model.dto.PageResultDTO;
+import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.vo.CommentVO;
+import com.sea.model.vo.ConditionVO;
 import com.sea.service.CommentService;
 import com.sea.util.PageUtil;
 import io.swagger.annotations.Api;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static com.sea.enums.StatusCodeEnum.*;
 
 /**
  * @author: sea
@@ -40,22 +41,22 @@ public class CommentController {
      */
     @ApiOperation(value = "请求指定页的评论信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<PageResultDTO> getCommentPage(@RequestBody PageRequestDTO pageRequestDTO){
+    public ResultDataDTO<PageResultDTO> getCommentPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getCommentPage()");
         ResultDataDTO<PageResultDTO> resultData = new ResultDataDTO<>(); // 创建响应数据对象
 
-        List<Comment> commentPage = commentService.getCommentList(pageRequestDTO); // 调用commentService的方法获取全部评论信息
+        List<Comment> commentPage = commentService.getCommentList(conditionVO); // 调用commentService的方法获取全部评论信息
 
         PageInfo<Comment> commentPageInfo = new PageInfo<>(commentPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
         //log.info(TAG + " " + commentPageInfo);
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(pageRequestDTO, commentPageInfo);//封装数据
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, commentPageInfo);//封装数据
 
         if(commentPage != null){
-            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
             resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
+            resultData.setStatusCode(SELECT_ERROR.getCode());
             resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到指定页面的评论信息，请检查后重试！"); // 设置响应消息
         }
@@ -74,11 +75,11 @@ public class CommentController {
         ResultDataDTO<Comment> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         Comment comment = commentService.getCommentById(commentId); // 调用CommentService的方法根据id获取评论
         if(comment != null){
-            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
             resultData.setData(comment); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
+            resultData.setStatusCode(SELECT_ERROR.getCode());
             resultData.setData(comment);
             resultData.setMsg("查询评论失败，请检查重试！"); // 设置响应消息
         }
@@ -94,7 +95,7 @@ public class CommentController {
     public ResultDataDTO<Boolean> addComment(@RequestBody @Valid CommentVO commentVO){
         log.info(TAG + "addComment()");
         boolean result = commentService.addComment(commentVO); // 调用CommentService的方法添加评论
-        return new ResultDataDTO<>(result ? StatusCodeVO.SAVE_OK : StatusCodeVO.SAVE_ERROR, result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -106,7 +107,7 @@ public class CommentController {
     public ResultDataDTO<Boolean> deleteComment(@PathVariable Long commentId){
         log.info(TAG + "deleteComment()");
         boolean result = commentService.deleteCommentById(commentId); // 调用CommentService的方法删除评论
-        return new ResultDataDTO<>(result ? StatusCodeVO.DELETE_OK : StatusCodeVO.DELETE_ERROR, result); // 返回响应数据
+        return new ResultDataDTO<>(result ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -120,11 +121,11 @@ public class CommentController {
         ResultDataDTO<List<Comment>> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         List<Comment> replyList = commentService.getReplyByCommentId(commentId);// 调用commentService的方法获取当前评论的所有回复评论
         if(replyList != null){
-            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
             resultData.setData(replyList); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
+            resultData.setStatusCode(SELECT_ERROR.getCode());
             resultData.setData(replyList);
             resultData.setMsg("没有查询到评论列表，请检查后重试！"); // 设置响应消息
         }

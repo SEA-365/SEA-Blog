@@ -1,7 +1,7 @@
 package com.sea.service;
 
-import com.model.dto.PageRequestDTO;
-import com.model.vo.CommentVO;
+import com.sea.model.vo.CommentVO;
+import com.sea.model.vo.ConditionVO;
 import com.sea.entity.Comment;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface CommentService {
      * 获取评论信息列表
      * @return 指定页的评论信息
      */
-    public List<Comment> getCommentList(PageRequestDTO pageRequestDTO);
+    public List<Comment> getCommentList(ConditionVO conditionVO);
 
     /**
      * 根据id获取指定评论信息

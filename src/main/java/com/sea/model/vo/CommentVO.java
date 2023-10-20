@@ -1,4 +1,4 @@
-package com.model.vo;
+package com.sea.model.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

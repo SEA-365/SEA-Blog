@@ -1,8 +1,8 @@
 package com.sea.util;
 
 import com.github.pagehelper.PageInfo;
-import com.model.dto.PageRequestDTO;
-import com.model.dto.PageResultDTO;
+import com.sea.model.dto.PageResultDTO;
+import com.sea.model.vo.ConditionVO;
 
 /**
  * 分页查询工具类
@@ -12,11 +12,11 @@ import com.model.dto.PageResultDTO;
 public class PageUtil {
     /**
      * 封装分页信息
-     * @param pageRequestDTO 分页请求对象，包分页参数
+     * @param conditionVO 分页请求对象，包分页参数
      * @param pageInfo PageHelper插件中的一个类
      * @return 封装好的分页信息
      */
-    public static PageResultDTO getPageResultDTO(PageRequestDTO pageRequestDTO, PageInfo<?> pageInfo){
+    public static PageResultDTO getPageResultDTO(ConditionVO conditionVO, PageInfo<?> pageInfo){
         PageResultDTO pageResultDTO = new PageResultDTO();
         pageResultDTO.setPageNum(pageInfo.getPageNum());
         pageResultDTO.setPageSize(pageInfo.getPageSize());

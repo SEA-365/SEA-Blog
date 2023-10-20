@@ -1,5 +1,6 @@
-package com.model.dto;
+package com.sea.model.dto;
 
+import com.sea.enums.StatusCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,11 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResultDataDTO<T> {
-    private int statusCode;//结果的状态码
+    private Integer statusCode;//结果的状态码
     private T data;//返回的数据
     private String msg;//提示信息
 
-    public ResultDataDTO(int statusCode, T data) {
+    public ResultDataDTO(Integer statusCode, T data) {
         this.statusCode = statusCode;
         this.data = data;
     }

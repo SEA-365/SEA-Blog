@@ -1,10 +1,9 @@
 package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
-import com.model.dto.PageRequestDTO;
-import com.model.vo.CommentVO;
+import com.sea.model.vo.CommentVO;
+import com.sea.model.vo.ConditionVO;
 import com.sea.dao.CommentDao;
 import com.sea.entity.Comment;
 import com.sea.service.CommentService;
@@ -31,10 +30,10 @@ public class CommentServiceImpl implements CommentService {
     public static final String TAG = "CommentServiceImpl ====> ";
 
     @Override
-    public List<Comment> getCommentList(PageRequestDTO pageRequestDTO) {
-        log.info(TAG + " " + pageRequestDTO);
+    public List<Comment> getCommentList(ConditionVO conditionVO) {
+        log.info(TAG + " " + conditionVO);
 
-        PageHelper.startPage(pageRequestDTO.getPageNum(), pageRequestDTO.getPageSize());//设置分页查询参数
+        PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<Comment> commentList = commentDao.selectList(null); // 此时查询的记录为所有记录
         return commentList; // 返回评论列表
     }

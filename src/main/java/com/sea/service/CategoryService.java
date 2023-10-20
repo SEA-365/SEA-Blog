@@ -1,7 +1,7 @@
 package com.sea.service;
 
-import com.model.dto.PageRequestDTO;
-import com.model.vo.CategoryVO;
+import com.sea.model.vo.CategoryVO;
+import com.sea.model.vo.ConditionVO;
 import com.sea.entity.Category;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface CategoryService {
      * 获取分类信息列表
      * @return 指定页的分类信息
      */
-    public List<Category> getCategoryList(PageRequestDTO pageRequestDTO);
+    public List<Category> getCategoryList(ConditionVO conditionVO);
 
     /**
      * 根据id获取指定分类信息

@@ -1,11 +1,11 @@
 package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.model.dto.PageRequestDTO;
-import com.model.dto.PageResultDTO;
-import com.model.dto.ResultDataDTO;
-import com.model.vo.CategoryVO;
-import com.model.vo.StatusCodeVO;
+import com.sea.model.dto.PageResultDTO;
+import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.vo.CategoryVO;
+import com.sea.model.vo.ConditionVO;
+import com.sea.enums.StatusCodeEnum;
 import com.sea.entity.Category;
 import com.sea.service.CategoryService;
 import com.sea.util.PageUtil;
@@ -17,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
+
+import static com.sea.enums.StatusCodeEnum.*;
 
 /**
  * @author: sea
@@ -39,22 +40,22 @@ public class CategoryController {
      */
     @ApiOperation(value = "请求指定页的分类信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<PageResultDTO> getCategoryPage(@RequestBody PageRequestDTO pageRequestDTO){
+    public ResultDataDTO<PageResultDTO> getCategoryPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getCategoryPage()");
         ResultDataDTO<PageResultDTO> resultData = new ResultDataDTO<>(); // 创建响应数据对象
 
-        List<Category> categoryPage = categoryService.getCategoryList(pageRequestDTO); // 调用categoryService的方法获取全部分类信息
+        List<Category> categoryPage = categoryService.getCategoryList(conditionVO); // 调用categoryService的方法获取全部分类信息
 
         PageInfo<Category> categoryPageInfo = new PageInfo<>(categoryPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
         //log.info(TAG + " " + categoryPageInfo);
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(pageRequestDTO, categoryPageInfo);//封装数据
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, categoryPageInfo);//封装数据
 
         if(categoryPage != null){
-            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
             resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
+            resultData.setStatusCode(SELECT_ERROR.getCode());
             resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到指定页面的分类信息，请检查后重试！"); // 设置响应消息
         }
@@ -73,11 +74,11 @@ public class CategoryController {
         ResultDataDTO<Category> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         Category category = categoryService.getCategoryById(categoryId); // 调用CategoryService的方法根据id获取分类
         if(category != null){
-            resultData.setStatusCode(StatusCodeVO.SELECT_OK); // 设置响应状态码
+            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
             resultData.setData(category); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(StatusCodeVO.SELECT_ERROR);
+            resultData.setStatusCode(SELECT_ERROR.getCode());
             resultData.setData(category);
             resultData.setMsg("查询分类失败，请检查重试！"); // 设置响应消息
         }
@@ -93,7 +94,7 @@ public class CategoryController {
     public ResultDataDTO<Boolean> addCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "addCategory()");
         boolean result = categoryService.addCategory(categoryVO); // 调用CategoryService的方法添加分类
-        return new ResultDataDTO<>(result ? StatusCodeVO.SAVE_OK : StatusCodeVO.SAVE_ERROR, result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -106,7 +107,7 @@ public class CategoryController {
         log.info(TAG + "updateCategory()");
 
         boolean result = categoryService.updateCategory(categoryVO); // 调用CategoryService的方法修改分类
-        return new ResultDataDTO<>(result ? StatusCodeVO.UPDATE_OK : StatusCodeVO.UPDATE_ERROR, result); // 返回响应数据
+        return new ResultDataDTO<>(result ? UPDATE_OK.getCode() : UPDATE_ERROR.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -118,6 +119,6 @@ public class CategoryController {
     public ResultDataDTO<Boolean> deleteCategory(@PathVariable Long categoryId){
         log.info(TAG + "deleteCategory()");
         boolean result = categoryService.deleteCategoryById(categoryId); // 调用CategoryService的方法删除分类
-        return new ResultDataDTO<>(result ? StatusCodeVO.DELETE_OK : StatusCodeVO.DELETE_ERROR, result); // 返回响应数据
+        return new ResultDataDTO<>(result ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
     }
 }

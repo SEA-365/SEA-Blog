@@ -1,7 +1,7 @@
 package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.model.vo.UserVO;
+import com.sea.model.vo.UserVO;
 import com.sea.dao.UserDao;
 import com.sea.entity.User;
 import com.sea.service.UserService;

@@ -1,6 +1,6 @@
 package com.sea.service;
 
-import com.model.vo.UserVO;
+import com.sea.model.vo.UserVO;
 import com.sea.entity.User;
 
 import java.util.List;

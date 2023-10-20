@@ -1,15 +1,14 @@
 package com.sea.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sea.entity.User;
+import com.sea.entity.Article;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 用户表数据访问层接口
+ * 文章表数据访问层接口
  * @author: sea
- * @date: 2023/10/11 15:44
+ * @date: 2023/10/20 18:32
  */
 @Mapper
-public interface UserDao extends BaseMapper<User> {
-
+public interface ArticleDao extends BaseMapper<Article> {
 }

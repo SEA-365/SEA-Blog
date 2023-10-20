@@ -1,7 +1,7 @@
 package com.sea.service;
 
-import com.model.dto.PageRequestDTO;
-import com.model.vo.TagVO;
+import com.sea.model.vo.ConditionVO;
+import com.sea.model.vo.TagVO;
 import com.sea.entity.Tag;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface TagService {
      * 获取标签信息列表
      * @return 指定页的标签信息
      */
-    public List<Tag> getTagList(PageRequestDTO pageRequestDTO);
+    public List<Tag> getTagList(ConditionVO conditionVO);
 
     /**
      * 根据id获取指定标签信息
