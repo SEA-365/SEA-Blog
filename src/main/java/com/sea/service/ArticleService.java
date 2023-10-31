@@ -14,6 +14,12 @@ import java.util.List;
  * @date: 2023/10/20 18:38
  */
 public interface ArticleService {
+
+    /**
+     * 初始化数据，在项目启动时，将数据放到缓存中，减少对数据库的访问次数
+     */
+
+    void initData();
     /**
      * 获取文章信息列表
      * @return 指定页的文章信息

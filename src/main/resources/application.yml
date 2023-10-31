@@ -20,3 +20,10 @@ pagehelper:
   reasonable: true #分页合理化参数，为true时，pageNum<=0时默认查询第一页，pageNum
   supportMethodsArguments: true #PageHelper 将尝试从 Mapper 接口方法的参数中解析出 pageNum 和 pageSize 参数，而不需要手动指定这些参数。
   params: count=countSql #为了支持startPage(Object params)方法，增加了该参数来配置参数映射，用于从对象中根据属性名取值
+
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml # xml文件扫描路径
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true #大小写 映射到 驼峰命名

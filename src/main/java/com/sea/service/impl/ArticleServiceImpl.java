@@ -15,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sea
@@ -31,11 +34,31 @@ public class ArticleServiceImpl implements ArticleService {
 
     public static final String TAG = "ArticleServiceImpl ====> ";
 
+    //缓存文章数据
+    Map<Long, Article> articleMap = new LinkedHashMap<>();
+
+    @Override
+    @PostConstruct //此注解用于初始化数据，在构造函数之后执行，init()方法之前执行。
+    public void initData(){
+        List<Article> articles = articleDao.selectList(null);
+        try{
+            log.info(TAG + "缓存文章信息完成！");
+        }catch (Exception e){
+            log.info(TAG + "缓存文章信息失败！" + e.getMessage());
+        }
+        for (Article article : articles) {
+            articleMap.put(article.getId(), article);
+        }
+
+    }
+
     @Override
     public List<Article> getArticleList(ConditionVO ConditionVO) {
         log.info(TAG + " " + ConditionVO);
 
         PageHelper.startPage(ConditionVO.getPageNum(), ConditionVO.getPageSize());//设置分页查询参数
+
+
         List<Article> articleList = articleDao.selectList(null); // 此时查询的记录为所有记录
         return articleList; // 返回文章列表
     }
