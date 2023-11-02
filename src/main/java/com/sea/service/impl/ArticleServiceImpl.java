@@ -53,13 +53,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getArticleList(ConditionVO ConditionVO) {
-        log.info(TAG + " " + ConditionVO);
+    public List<Article> getArticleList(ConditionVO conditionVO) {
+        log.info(TAG + " " + conditionVO);
 
-        PageHelper.startPage(ConditionVO.getPageNum(), ConditionVO.getPageSize());//设置分页查询参数
+        PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
 
-
-        List<Article> articleList = articleDao.selectList(null); // 此时查询的记录为所有记录
+        List<Article> articleList = articleDao.getArticlePage(conditionVO); // 此时查询的记录为所有记录
         return articleList; // 返回文章列表
     }
 

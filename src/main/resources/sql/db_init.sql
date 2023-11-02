@@ -30,7 +30,8 @@ CREATE TABLE `tb_article` (
                               `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章logo',
                               `is_top` int(2) unsigned zerofill NOT NULL COMMENT '是否置顶，0-否，1-是，默认0',
                               `is_delete` int(2) unsigned zerofill NOT NULL COMMENT '是否删除，逻辑删除，0-否，1-是，默认0',
-                              `status` int(2) unsigned zerofill NOT NULL COMMENT '文章状态，1-发布，2-密码，3-草稿',
+                              `status` int unsigned NOT NULL DEFAULT '1' COMMENT '文章状态，1-发布，2-密码，3-草稿，默认1',
+                              `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '文章访问密码',
                               `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '文章创建时间',
                               `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '文章修改时间',
                               PRIMARY KEY (`id`)

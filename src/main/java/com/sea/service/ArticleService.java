@@ -22,6 +22,7 @@ public interface ArticleService {
     void initData();
     /**
      * 获取文章信息列表
+     * @param conditionVO 查询条件
      * @return 指定页的文章信息
      */
     public List<Article> getArticleList(ConditionVO conditionVO);

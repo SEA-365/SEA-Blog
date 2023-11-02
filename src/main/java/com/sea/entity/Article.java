@@ -32,7 +32,7 @@ public class Article {
     private Integer isTop;//是否置顶，0-否，1-是，默认0
     @TableLogic
     private Integer isDelete;//是否删除，逻辑删除，0-否，1-是，默认0
-    private Integer status;//文章状态，1-发布，2-密码，3-草稿
+    private Integer status;//文章状态，1-发布，2-密码，3-草稿，默认1
     private String password;//文章访问密码
     private LocalDateTime createTime;//创建时间
     private LocalDateTime updateTime;//修改时间

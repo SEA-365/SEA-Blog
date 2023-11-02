@@ -59,7 +59,7 @@ public class ArticleVO {
     @ApiModelProperty(name = "isTop", value = "是否置顶，0-否，1-是，默认0", dataType = "Integer")
     private Integer isTop;//是否置顶，0-否，1-是，默认0
 
-    @ApiModelProperty(name = "status", value = "文章状态，1-发布，2-密码，3-草稿", dataType = "Integer")
+    @ApiModelProperty(name = "status", value = "文章状态，1-发布，2-密码，3-草稿，默认1", dataType = "Integer")
     private Integer status;//文章状态，1-发布，2-密码，3-草稿
 
     @ApiModelProperty(name = "password", value = "文章访问密码", dataType = "String")
