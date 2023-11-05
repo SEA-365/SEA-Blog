@@ -2,4 +2,96 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sea.dao.ArticleDao"> <!--mapper文件，用于编写一些特殊的SQL需求-->
 <!-- todo:根据条件查询文章列表 -->
+    <!--定义查询结果集-->
+    <resultMap id="BaseResultMap" type="com.sea.entity.Article">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="author" jdbcType="VARCHAR" property="author"/>
+        <result column="category_id" jdbcType="BIGINT" property="categoryId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="count_views" jdbcType="INTEGER" property="countViews"/>
+        <result column="total_words" jdbcType="INTEGER" property="totalWords"/>
+        <result column="likes" jdbcType="INTEGER" property="likes"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="image_url" jdbcType="VARCHAR" property="imageUrl"/>
+        <result column="is_top" jdbcType="INTEGER" property="isTop"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <collection property="tagList" ofType="com.sea.entity.Tag">
+            <!--此处使用<collection>，联表查询，得到该文章的所有标签list-->
+            <id column="id" property="id"/>
+            <result column="tag_name" property="tagName"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        </collection>
+    </resultMap>
+
+    <!--编写查询语句-->
+    <select id="getArticlePage" resultMap="BaseResultMap" parameterType="com.sea.model.vo.ConditionVO">
+        SELECT a.*,
+               at.article_id,
+               at.tag_id,
+               tag.id AS tid,
+               tag.tag_name AS tname,
+               c.category_name AS cname
+        FROM tb_article a
+            LEFT JOIN tb_category c ON c.id = a.category_id
+            LEFT JOIN tb_article_tag at ON at.article_id = a.id
+            LEFT JOIN tb_tag tag ON tag.id = at.tag_id
+        <where>
+            <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
+            <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
+            <if test="conditionVO.status != null">
+                and a.status = #{conditionVO.status}
+            </if>
+            <if test="conditionVO.isDelete != null">
+                and a.is_delete = #{conditionVO.isDelete}
+            </if>
+            <if test="conditionVO.keywords != null">
+                and a.title LIKE CONCAT('%', #{conditionVO.keywords}, '%')
+            </if>
+        </where>
+        <if test="conditionVO.pageNum != null">
+            <if test="conditionVO.pageSize != null">
+                LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}
+            </if>
+        </if>
+    </select>
+
+    <select id="getArticleByTagId" resultMap="BaseResultMap" parameterType="com.sea.model.vo.ConditionVO">
+        SELECT a.*,
+        at.article_id,
+        at.tag_id,
+        tag.id AS tid,
+        tag.tag_name AS tname,
+        c.category_name AS cname
+        FROM tb_article a
+        LEFT JOIN tb_category c ON c.id = a.category_id
+        LEFT JOIN tb_article_tag at ON at.article_id = a.id
+        LEFT JOIN tb_tag tag ON tag.id = at.tag_id
+        <where>
+            <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
+            <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
+            <if test="conditionVO.status != null">
+                and a.status = #{conditionVO.status}
+            </if>
+            <if test="conditionVO.isDelete != null">
+                and a.is_delete = #{conditionVO.isDelete}
+            </if>
+            <if test="conditionVO.tagId != null">
+                and a.tag_id = #{conditionVO.tagId}
+            </if>
+        </where>
+        <if test="conditionVO.pageNum != null">
+            <if test="conditionVO.pageSize != null">
+                LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}
+            </if>
+        </if>
+    </select>
+
+
 </mapper>

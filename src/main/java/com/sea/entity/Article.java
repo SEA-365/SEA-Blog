@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /** 文章表
  * @author: sea
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 public class Article {
     private Long id;//文章id
     private String author;//文章作者
-    private Long tagId;//标签id
+//    private Long tagId;//标签id,一篇文章可能有多个标签，一个标签也可能包含多篇文章，因此新建一张关联表
     private Long categoryId;//分类id
     private Long userId;//文章作者用户id
     private String content;//文章内容
@@ -36,4 +37,6 @@ public class Article {
     private String password;//文章访问密码
     private LocalDateTime createTime;//创建时间
     private LocalDateTime updateTime;//修改时间
+    private List<Tag> tagList;//文章标签list
+    private String categoryName;//方便前端展示，增加该属性，数据库表中不增加；
 }

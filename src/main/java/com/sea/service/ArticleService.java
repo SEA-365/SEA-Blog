@@ -47,13 +47,6 @@ public interface ArticleService {
     boolean updateArticle(ArticleVO articleVO);
 
     /**
-     * 根据分类id获取该分类的文章列表
-     * @param categoryId 分类id
-     * @return 该分类下的文章列表
-     */
-    List<Article> getArticleByCategoryId(Long categoryId);
-
-    /**
      * 访问加密文章
      * @param articlePasswordVO 访问加密文章需要的信息
      */

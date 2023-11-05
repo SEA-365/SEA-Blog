@@ -22,4 +22,11 @@ public interface ArticleDao extends BaseMapper<Article> {
      */
     List<Article> getArticlePage(@Param("conditionVO") ConditionVO conditionVO);
 
+    /**
+     * 根据文章标签查询文章列表
+     * @param conditionVO 查询条件
+     * @return 指定文章列表
+     */
+    List<Article> getArticleByTagId(@Param("conditionVO") ConditionVO conditionVO);
+
 }

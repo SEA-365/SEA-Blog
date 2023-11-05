@@ -12,13 +12,12 @@ CREATE TABLE `tb_user` (
                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                            PRIMARY KEY (`id`)
-) COMMENT '用户表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '用户表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `tb_article` (
                               `id` bigint NOT NULL COMMENT '文章表主键，自增',
                               `author` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章作者',
-                              `tag_id` bigint(20) unsigned zerofill NOT NULL COMMENT '文章标签id',
                               `category_id` bigint(20) unsigned zerofill NOT NULL COMMENT '文章分类id',
                               `user_id` int(10) unsigned zerofill NOT NULL COMMENT '文章作者用户id',
                               `content` longtext NOT NULL COMMENT '文章内容',
@@ -35,7 +34,7 @@ CREATE TABLE `tb_article` (
                               `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '文章创建时间',
                               `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '文章修改时间',
                               PRIMARY KEY (`id`)
-) COMMENT '文章表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '文章表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `tb_article_tag` (
                                   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '文章标签关联表id',
@@ -56,7 +55,7 @@ CREATE TABLE `tb_comment` (
                               `is_delete` int NOT NULL DEFAULT '0' COMMENT '评论是否被删除，0-否，1-是',
                               `is_review` int NOT NULL DEFAULT '0' COMMENT '评论是否审核通过，0-否，1-是',
                               PRIMARY KEY (`id`)
-) COMMENT '评论表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '评论表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `tb_tag` (
@@ -65,7 +64,7 @@ CREATE TABLE `tb_tag` (
                           `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                           `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                           PRIMARY KEY (`id`)
-) COMMENT '标签表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '标签表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `tb_category` (
                                `id` bigint NOT NULL COMMENT '分类表主键，自增',
@@ -73,7 +72,7 @@ CREATE TABLE `tb_category` (
                                `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                PRIMARY KEY (`id`)
-) COMMENT '分类表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '分类表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `tb_operation_log` (
@@ -87,7 +86,7 @@ CREATE TABLE `tb_operation_log` (
                                     `return_value` text COMMENT '返回参数',
                                     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                     PRIMARY KEY (`id`)
-) COMMENT '操作日志记录表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '操作日志记录表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `tb_login_log` (
@@ -101,4 +100,4 @@ CREATE TABLE `tb_login_log` (
                                 `message` varchar(255) DEFAULT NULL COMMENT '提示消息',
                                 `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                 PRIMARY KEY (`id`)
-) COMMENT '登录日志记录表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
+) COMMENT '登录日志记录表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

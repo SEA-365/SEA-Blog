@@ -1,9 +1,12 @@
 package com.sea.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.sea.dao.ArticleDao;
 import com.sea.entity.Article;
+import com.sea.entity.ArticleTag;
+import com.sea.exception.BizException;
 import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
 import com.sea.model.vo.ConditionVO;
@@ -19,6 +22,7 @@ import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author: sea
@@ -65,14 +69,18 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article getArticleById(Long articleId) {
         //todo: 需要鉴权
-
-        return articleDao.selectById(articleId); // 根据文章ID查询文章
+        Article article = articleMap.get(articleId);//先查缓存
+        if(article == null)//缓存没有再查数据库
+            return articleDao.selectById(articleId); // 根据文章ID查询文章
+        return article;
     }
 
     @Override
     public boolean addArticle(ArticleVO articleVO) {
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
-        articleDao.insert(article); // 添加文章
+        articleDao.insert(article);
+        log.info(TAG + "新增文章 ===> " + article);
+        articleMap.put(article.getId(), article);//缓存更新
         return true;
     }
 
@@ -85,22 +93,34 @@ public class ArticleServiceImpl implements ArticleService {
         // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = Article.id
         articleUpdateWrapper.eq("id", id);
         articleDao.update(article, articleUpdateWrapper); // 更新文章
+        articleMap.put(id, article);//缓存更新
         return true;
     }
 
     @Override
-    public List<Article> getArticleByCategoryId(Long categoryId) {
-        return null;
-    }
-
-    @Override
     public void accessArticle(ArticlePasswordVO articlePasswordVO) {
-
+        QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+        articleQueryWrapper.eq("id", articlePasswordVO.getArticleId());
+        Article article = articleDao.selectOne(articleQueryWrapper);
+        if(Objects.isNull(article)) {//文章不存在
+            throw new BizException("文章不存在！");
+        }
+        if(article.getPassword().equals(articlePasswordVO.getArticlePassword()))
+            return;
+        else
+            throw new BizException("密码错误！请重新输入！");
     }
 
     @Override
     public List<Article> getArticleByTagId(Long tagId) {
-        return null;
+        ConditionVO conditionVO = new ConditionVO();
+        conditionVO.setTagId(tagId);
+        conditionVO.setPageNum(1);
+        conditionVO.setPageNum(5);
+
+        List<Article> articleByTagId = articleDao.getArticleByTagId(conditionVO);
+
+        return articleByTagId;
     }
 
     @Override

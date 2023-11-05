@@ -18,7 +18,10 @@ public enum StatusCodeEnum {
     UPDATE_OK(3000, "修改成功！"),
     UPDATE_ERROR(3001, "修改失败！"),
     SELECT_OK(4000, "查询成功！"),
-    SELECT_ERROR(4001, "查询失败！");
+    SELECT_ERROR(4001, "查询失败！"),
+    SUCCESS(5000, "操作成功！"),
+    FAIT(5001, "操作失败！");
+
 
     private final Integer code;
     private final String description;
