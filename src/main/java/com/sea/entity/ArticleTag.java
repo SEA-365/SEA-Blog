@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 /**
- * 文章id关联表
+ * 文章标签关联表
  * @author: sea
  * @date: 2023/11/5 14:33
  */

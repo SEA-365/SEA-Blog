@@ -71,8 +71,10 @@ public interface ArticleService {
 
     /**
      * 物理删除文章
+     *
      * @param articleIds
+     * @return
      */
-    void deleteArticles(List<Long> articleIds);
+    Integer deleteArticles(List<Long> articleIds);
 
 }

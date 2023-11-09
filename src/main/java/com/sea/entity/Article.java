@@ -1,5 +1,6 @@
 package com.sea.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,10 @@ public class Article {
     private String password;//文章访问密码
     private LocalDateTime createTime;//创建时间
     private LocalDateTime updateTime;//修改时间
+
+    @TableField(exist = false)//仅方便前端展示，数据库中并不存在该字段
     private List<Tag> tagList;//文章标签list
+
+    @TableField(exist = false)
     private String categoryName;//方便前端展示，增加该属性，数据库表中不增加；
 }

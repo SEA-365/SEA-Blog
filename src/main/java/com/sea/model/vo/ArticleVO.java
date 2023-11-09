@@ -31,9 +31,8 @@ public class ArticleVO {
 //      (1)标签id可能会有多个，需要根据前端给出的tagList进行：1.未出现过的标签=>新建标签；2.标签名=>标签id的转换 3.文章与标签之间的关联;
 //      (2)分类id一般是一个：1.未出现过得分类=>新建分类；2.分类名=>分类id的转换；
 //    todo: (3)文章作者，需要获取当前登录用户的信息【这个等登录注册模块写完就能做了！！】
-//    private Long tagId;//标签id
-//    private Long categoryId;//分类id
-//    private Long userId;//文章作者用户id
+    private String categoryName;//分类名称
+    private Long userId;//文章作者用户id
     @ApiModelProperty(name = "tagNames", value = "文章标签", dataType = "List<Integer>")
     private List<String> tagNames;//文章标签List
 

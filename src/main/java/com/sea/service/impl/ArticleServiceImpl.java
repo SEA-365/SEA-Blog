@@ -1,17 +1,25 @@
 package com.sea.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.github.pagehelper.PageHelper;
 import com.sea.dao.ArticleDao;
+import com.sea.dao.ArticleTagDao;
+import com.sea.dao.CategoryDao;
 import com.sea.entity.Article;
+import com.sea.entity.Tag;
 import com.sea.entity.ArticleTag;
+import com.sea.entity.Category;
 import com.sea.exception.BizException;
 import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
 import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.DeleteVO;
 import com.sea.service.ArticleService;
+import com.sea.service.ArticleTagService;
+import com.sea.service.TagService;
 import com.sea.util.BeanCopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.sea.enums.ArticleStatusEnum.DRAFT;
 
 /**
  * @author: sea
@@ -32,6 +40,18 @@ import java.util.Objects;
 public class ArticleServiceImpl implements ArticleService {
     @Autowired // 自动注入ArticleDao对象
     ArticleDao articleDao;
+
+    @Autowired // 自动注入ArticleTagDao对象
+    ArticleTagDao articleTagDao;
+
+    @Autowired // 自动注入CategoryDao对象
+    CategoryDao categoryDao;
+
+    @Autowired
+    TagService tagService;
+
+    @Autowired
+    ArticleTagService articleTagService;
 
     //日志打印
     public static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
@@ -60,6 +80,9 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> getArticleList(ConditionVO conditionVO) {
         log.info(TAG + " " + conditionVO);
 
+        if(conditionVO == null){
+            return null;
+        }
         PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
 
         List<Article> articleList = articleDao.getArticlePage(conditionVO); // 此时查询的记录为所有记录
@@ -77,8 +100,15 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean addArticle(ArticleVO articleVO) {
+        //
+        Category category = saveArticleCategory(articleVO);
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
+        if (Objects.nonNull(category)) {
+            article.setCategoryId(category.getId());
+        }
         articleDao.insert(article);
+        saveArticleTag(articleVO, article.getId());
+
         log.info(TAG + "新增文章 ===> " + article);
         articleMap.put(article.getId(), article);//缓存更新
         return true;
@@ -129,7 +159,73 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void deleteArticles(List<Long> articleIds) {
+    public Integer deleteArticles(List<Long> articleIds) {
+        //构造查询条件，查询集合articleIds包含的article_id，并删除；
+        QueryWrapper<ArticleTag> articleTagQueryWrapper = new QueryWrapper<>();
+        articleTagQueryWrapper.in("article_id", articleIds);
 
+        articleTagDao.delete(articleTagQueryWrapper);
+
+        return articleDao.deleteBatchIds(articleIds);
     }
+
+    private Category saveArticleCategory(ArticleVO articleVO) {
+        //1.未出现过得分类=>新建分类；2.出现过的直接返回
+        Category category = categoryDao.selectOne(new QueryWrapper<Category>().eq("category_name", articleVO.getCategoryName()));
+        if (Objects.isNull(category) && !articleVO.getStatus().equals(DRAFT.getCode())) {
+            category = new Category();
+            category.setCategoryName(articleVO.getCategoryName());
+            categoryDao.insert(category);
+        }
+        return category;
+    }
+
+
+    public void saveArticleTag(ArticleVO articleVO, Long articleId) {
+        if (Objects.nonNull(articleVO.getId())) {//1.文章不存在，则删除文章标签关联表中的记录
+            articleTagDao.delete(new QueryWrapper<ArticleTag>()
+                    .eq("article_id", articleVO.getId()));
+        }
+        List<String> tagNames = articleVO.getTagNames();
+        if (CollectionUtils.isNotEmpty(tagNames)) {
+            //获取已存在的标签
+            List<Tag> existTags = tagService.list(new QueryWrapper<Tag>().in("tag_name", tagNames));
+            //获取已存在的标签名称
+            List<String> existTagNames = existTags.stream()
+                    .map(Tag::getTagName)
+                    .collect(Collectors.toList());
+            //获取已存在的标签id
+            List<Long> existTagIds = existTags.stream()
+                    .map(Tag::getId)
+                    .collect(Collectors.toList());
+            //移除请求数据中，已存在的标签名称
+            tagNames.removeAll(existTagNames);
+            //第一次出现的标签，新建
+            if (CollectionUtils.isNotEmpty(tagNames)) {
+                ArrayList<Tag> tags = new ArrayList<>();
+                for (int i = 0; i < tagNames.size(); i++) {
+                    Tag tag = new Tag();
+                    tag.setTagName(tagNames.get(i));
+                    tags.add(tag);
+                }
+                //新建标签
+                tagService.saveBatch(tags);
+                //新建标签后得到标签的id，用于新建文章标签关联表
+                List<Long> tagIds = tags.stream()
+                        .map(Tag::getId)
+                        .collect(Collectors.toList());
+                existTagIds.addAll(tagIds);
+            }
+            //新建文章标签关联表
+            List<ArticleTag> articleTags = new ArrayList<>();
+            for (int i = 0; i < existTagIds.size(); i++) {
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(articleId);
+                articleTag.setTagId(existTagIds.get(i));
+            }
+
+            articleTagService.saveBatch(articleTags);
+        }
+    }
+
 }

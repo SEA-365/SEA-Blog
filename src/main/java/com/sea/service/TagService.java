@@ -1,5 +1,6 @@
 package com.sea.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.TagVO;
 import com.sea.entity.Tag;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author: sea
  * @date: 2023/10/19 11:10
  */
-public interface TagService {
+public interface TagService extends IService<Tag> {
     /**
      * 获取标签信息列表
      * @return 指定页的标签信息

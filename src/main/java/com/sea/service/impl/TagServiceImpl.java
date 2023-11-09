@@ -1,6 +1,7 @@
 package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.TagVO;
@@ -20,7 +21,7 @@ import java.util.List;
  * @date: 2023/10/19 11:15
  */
 @Service // 表示这是一个服务类
-public class TagServiceImpl implements TagService {
+public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements TagService {
     @Autowired // 自动注入TagDao对象
     TagDao tagDao;
 
