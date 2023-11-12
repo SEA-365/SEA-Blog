@@ -1,17 +1,17 @@
 package com.sea.service.impl;
 
+import cn.hutool.extra.mail.MailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.github.pagehelper.PageHelper;
+import com.sea.config.mail.MailInfo;
+import com.sea.config.mail.SendMailConfig;
 import com.sea.dao.ArticleDao;
 import com.sea.dao.ArticleTagDao;
 import com.sea.dao.CategoryDao;
-import com.sea.entity.Article;
-import com.sea.entity.Tag;
-import com.sea.entity.ArticleTag;
-import com.sea.entity.Category;
+import com.sea.entity.*;
 import com.sea.exception.BizException;
 import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
@@ -20,6 +20,7 @@ import com.sea.model.vo.DeleteVO;
 import com.sea.service.ArticleService;
 import com.sea.service.ArticleTagService;
 import com.sea.service.TagService;
+import com.sea.service.UserService;
 import com.sea.util.BeanCopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     ArticleTagService articleTagService;
+
+    @Autowired
+    UserService userService;
 
     //日志打印
     public static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
@@ -118,6 +123,24 @@ public class ArticleServiceImpl implements ArticleService {
         saveArticleTag(articleVO, article.getId());
 
         log.info(TAG + "新增文章 ===> " + article);
+
+
+
+        //新增文章后，邮件提示功能
+        String mailContent = "【{0}】您好：\n" +
+                "您已经成功发布了标题为：【{1}】 的文章\n" +
+                "请注意查收！\n";
+        //新增文章的作者
+        User curUser = userService.getUserById(articleDao.selectById(article.getId()).getUserId());
+        if(curUser != null){
+            MailInfo mailInfo = MailInfo.builder().receiveMail(curUser.getEmail())
+                    .title("test文章发布")
+                    .content(MessageFormat.format(mailContent, curUser.getUsername(), article.getTitle()))
+                    .build();
+            SendMailConfig.sendMail(mailInfo);
+        }
+
+
         articleMap.put(article.getId(), article);//缓存更新
         return true;
     }
@@ -125,14 +148,24 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public boolean updateArticle(ArticleVO articleVO) {
         log.info(TAG + "修改文章 ===> " + articleVO);
+        if(articleVO.getTagNames() == null){
+            ArrayList<String> tagNames = new ArrayList<>();
+            tagNames.add(tagService.getTagById(0L).getTagName());
+            articleVO.setTagNames(tagNames);
+        }
+
+        Category category = saveArticleCategory(articleVO);
+
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
-        Long id = articleVO.getId();
-        // 使用条件构造器。指定更新条件
-        UpdateWrapper<Article> articleUpdateWrapper = new UpdateWrapper<>();
-        // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = Article.id
-        articleUpdateWrapper.eq("id", id);
-        articleDao.update(article, articleUpdateWrapper); // 更新文章
-        articleMap.put(id, article);//缓存更新
+        if (Objects.nonNull(category)) {
+            article.setCategoryId(category.getId());
+        }
+        QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+        articleQueryWrapper.eq("id", articleVO.getId());
+        articleDao.update(article, articleQueryWrapper);
+        saveArticleTag(articleVO, article.getId());
+
+        articleMap.put(article.getId(), article);//缓存更新
         return true;
     }
 
@@ -166,14 +199,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Integer deleteArticles(List<Long> articleIds) {
-        log.info(TAG + "删除文章 ===> " + articleIds);
+        log.info(TAG + "逻辑删除文章 ===> " + articleIds);
         //构造查询条件，查询集合articleIds包含的article_id，并删除；
         QueryWrapper<ArticleTag> articleTagQueryWrapper = new QueryWrapper<>();
         articleTagQueryWrapper.in("article_id", articleIds);
 
-        articleTagDao.delete(articleTagQueryWrapper);
+        articleTagDao.delete(articleTagQueryWrapper);//删除关联表的记录
 
-        return articleDao.deleteBatchIds(articleIds);
+        return articleDao.deleteBatchIds(articleIds);//删除文章
     }
 
     private Category saveArticleCategory(ArticleVO articleVO) {
@@ -209,6 +242,7 @@ public class ArticleServiceImpl implements ArticleService {
             List<Tag> existTags = tagService.list(new QueryWrapper<Tag>().in("tag_name", tagNames));
             log.info(TAG + "existTags: " + existTags);
             //获取已存在的标签名称
+            //Java8新增用法
             List<String> existTagNames = existTags.stream()
                     .map(Tag::getTagName)
                     .collect(Collectors.toList());
