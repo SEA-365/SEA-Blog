@@ -19,7 +19,7 @@ public class SendMailConfig {
             //设置QQ邮箱的SMTP服务器地址
             account.setHost("smtp.qq.com");
             //设置邮件服务器端口号
-            account.setPort(465);
+            account.setPort(465);//这个端口号，QQ邮箱一般是465或587
             //设置发送方邮箱地址
             account.setFrom("2472767932@qq.com");
             //设置发送方的授权码
