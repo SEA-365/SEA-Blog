@@ -86,6 +86,7 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
 
         List<Article> articleList = articleDao.getArticlePage(conditionVO); // 此时查询的记录为所有记录
+        log.info(TAG + "获取文章列表 ===> " + articleList);
         return articleList; // 返回文章列表
     }
 
@@ -95,13 +96,20 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMap.get(articleId);//先查缓存
         if(article == null)//缓存没有再查数据库
             return articleDao.selectById(articleId); // 根据文章ID查询文章
+        log.info(TAG + "根据id获取文章 ===> " + article);
         return article;
     }
 
     @Override
     public boolean addArticle(ArticleVO articleVO) {
-        //
+        if(articleVO.getTagNames() == null){
+            ArrayList<String> tagNames = new ArrayList<>();
+            tagNames.add(tagService.getTagById(0L).getTagName());
+            articleVO.setTagNames(tagNames);
+        }
+
         Category category = saveArticleCategory(articleVO);
+
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
         if (Objects.nonNull(category)) {
             article.setCategoryId(category.getId());
@@ -116,6 +124,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean updateArticle(ArticleVO articleVO) {
+        log.info(TAG + "修改文章 ===> " + articleVO);
         Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
         Long id = articleVO.getId();
         // 使用条件构造器。指定更新条件
@@ -129,6 +138,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void accessArticle(ArticlePasswordVO articlePasswordVO) {
+        log.info(TAG + "访问加密文章 ===> " + articlePasswordVO);
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
         articleQueryWrapper.eq("id", articlePasswordVO.getArticleId());
         Article article = articleDao.selectOne(articleQueryWrapper);
@@ -150,16 +160,13 @@ public class ArticleServiceImpl implements ArticleService {
 
         List<Article> articleByTagId = articleDao.getArticleByTagId(conditionVO);
 
+        log.info(TAG + "根据标签获取文章 ===> " + articleByTagId);
         return articleByTagId;
     }
 
     @Override
-    public void updateArticleDeleteStatus(DeleteVO deleteVO) {
-
-    }
-
-    @Override
     public Integer deleteArticles(List<Long> articleIds) {
+        log.info(TAG + "删除文章 ===> " + articleIds);
         //构造查询条件，查询集合articleIds包含的article_id，并删除；
         QueryWrapper<ArticleTag> articleTagQueryWrapper = new QueryWrapper<>();
         articleTagQueryWrapper.in("article_id", articleIds);
@@ -170,36 +177,51 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private Category saveArticleCategory(ArticleVO articleVO) {
+        log.info(TAG + "文章分类保存 ===> " + articleVO);
         //1.未出现过得分类=>新建分类；2.出现过的直接返回
         Category category = categoryDao.selectOne(new QueryWrapper<Category>().eq("category_name", articleVO.getCategoryName()));
+        log.info(TAG + category + " === " + articleVO + " === ");
         if (Objects.isNull(category) && !articleVO.getStatus().equals(DRAFT.getCode())) {
             category = new Category();
-            category.setCategoryName(articleVO.getCategoryName());
-            categoryDao.insert(category);
+            if(articleVO.getCategoryName() != null) {
+                category.setCategoryName(articleVO.getCategoryName());
+                log.info(TAG + category + " === new");
+                categoryDao.insert(category);
+            }
+            else { //未指定分类名称，则使用默认分类名称
+                return categoryDao.selectById(0);
+            }
         }
         return category;
     }
 
 
     public void saveArticleTag(ArticleVO articleVO, Long articleId) {
-        if (Objects.nonNull(articleVO.getId())) {//1.文章不存在，则删除文章标签关联表中的记录
+        log.info(TAG + "文章标签关联关系保存 ===> " + articleVO + "====" + articleId);
+        if (Objects.nonNull(articleVO.getId())) {//1.文章标签关联表已存在该文章的一些记录，则先删除
             articleTagDao.delete(new QueryWrapper<ArticleTag>()
                     .eq("article_id", articleVO.getId()));
         }
         List<String> tagNames = articleVO.getTagNames();
+        log.info(TAG + "tagNames: " + tagNames);
         if (CollectionUtils.isNotEmpty(tagNames)) {
             //获取已存在的标签
             List<Tag> existTags = tagService.list(new QueryWrapper<Tag>().in("tag_name", tagNames));
+            log.info(TAG + "existTags: " + existTags);
             //获取已存在的标签名称
             List<String> existTagNames = existTags.stream()
                     .map(Tag::getTagName)
                     .collect(Collectors.toList());
+            log.info(TAG + "existTagNames: " + existTagNames);
             //获取已存在的标签id
             List<Long> existTagIds = existTags.stream()
                     .map(Tag::getId)
                     .collect(Collectors.toList());
-            //移除请求数据中，已存在的标签名称
+            log.info(TAG + "existTagIds: " + existTagIds);
+
+            //移除请求数据中已存在的标签名称
             tagNames.removeAll(existTagNames);
+            log.info(TAG + "tagNames: " + tagNames);
             //第一次出现的标签，新建
             if (CollectionUtils.isNotEmpty(tagNames)) {
                 ArrayList<Tag> tags = new ArrayList<>();
@@ -216,15 +238,22 @@ public class ArticleServiceImpl implements ArticleService {
                         .collect(Collectors.toList());
                 existTagIds.addAll(tagIds);
             }
+            log.info(TAG + "existTagIds: " + existTagIds);
             //新建文章标签关联表
             List<ArticleTag> articleTags = new ArrayList<>();
             for (int i = 0; i < existTagIds.size(); i++) {
                 ArticleTag articleTag = new ArticleTag();
                 articleTag.setArticleId(articleId);
                 articleTag.setTagId(existTagIds.get(i));
+                articleTags.add(articleTag);
             }
+            log.info(TAG + "articleTags: " + articleTags);
 
-            articleTagService.saveBatch(articleTags);
+            boolean isSave = articleTagService.saveBatch(articleTags);
+            log.info(TAG + "isSave: " + isSave);
+        }
+        else {
+
         }
     }
 

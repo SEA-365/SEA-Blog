@@ -18,22 +18,22 @@ CREATE TABLE `tb_user` (
 CREATE TABLE `tb_article` (
                               `id` bigint NOT NULL COMMENT '文章表主键，自增',
                               `author` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章作者',
-                              `category_id` bigint(20) unsigned zerofill NOT NULL COMMENT '文章分类id',
-                              `user_id` int(10) unsigned zerofill NOT NULL COMMENT '文章作者用户id',
+                              `category_id` bigint unsigned NOT NULL DEFAULT '0' COMMENT '文章分类id',
+                              `user_id` bigint unsigned NOT NULL DEFAULT '0' COMMENT '文章作者用户id',
                               `content` longtext NOT NULL COMMENT '文章内容',
-                              `count_views` int(10) unsigned zerofill NOT NULL COMMENT '文章浏览量',
-                              `total_words` int(10) unsigned zerofill NOT NULL COMMENT '文章总字数',
-                              `likes` int(10) unsigned zerofill NOT NULL COMMENT '文章点赞数',
+                              `count_views` int unsigned NOT NULL DEFAULT '0' COMMENT '文章浏览量',
+                              `total_words` int unsigned NOT NULL DEFAULT '0' COMMENT '文章总字数',
+                              `likes` int unsigned NOT NULL DEFAULT '0' COMMENT '文章点赞数',
                               `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章标题',
                               `description` varchar(255) DEFAULT NULL COMMENT '文章描述',
                               `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章logo',
-                              `is_top` int(2) unsigned zerofill NOT NULL COMMENT '是否置顶，0-否，1-是，默认0',
-                              `is_delete` int(2) unsigned zerofill NOT NULL COMMENT '是否删除，逻辑删除，0-否，1-是，默认0',
+                              `is_top` int unsigned NOT NULL DEFAULT '0' COMMENT '是否置顶，0-否，1-是，默认0',
+                              `is_delete` int unsigned NOT NULL DEFAULT '0' COMMENT '是否删除，逻辑删除，0-否，1-是，默认0',
                               `status` int unsigned NOT NULL DEFAULT '1' COMMENT '文章状态，1-发布，2-密码，3-草稿，默认1',
                               `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '文章访问密码',
                               `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '文章创建时间',
                               `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '文章修改时间',
-                              PRIMARY KEY (`id`)
+                              PRIMARY KEY (`id`,`status`) USING BTREE
 ) COMMENT '文章表'  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `tb_article_tag` (

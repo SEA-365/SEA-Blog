@@ -32,7 +32,9 @@ public class ArticleVO {
 //      (2)分类id一般是一个：1.未出现过得分类=>新建分类；2.分类名=>分类id的转换；
 //    todo: (3)文章作者，需要获取当前登录用户的信息【这个等登录注册模块写完就能做了！！】
     private String categoryName;//分类名称
+
     private Long userId;//文章作者用户id
+
     @ApiModelProperty(name = "tagNames", value = "文章标签", dataType = "List<Integer>")
     private List<String> tagNames;//文章标签List
 

@@ -33,15 +33,15 @@
     <!--编写查询语句-->
     <select id="getArticlePage" resultMap="BaseResultMap" parameterType="com.sea.model.vo.ConditionVO">
         SELECT a.*,
-               at.article_id,
-               at.tag_id,
+               atag.article_id,
+               atag.tag_id,
                tag.id AS tid,
                tag.tag_name AS tname,
                c.category_name AS cname
         FROM tb_article a
             LEFT JOIN tb_category c ON c.id = a.category_id
-            LEFT JOIN tb_article_tag at ON at.article_id = a.id
-            LEFT JOIN tb_tag tag ON tag.id = at.tag_id
+            LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
+            LEFT JOIN tb_tag tag ON tag.id = atag.tag_id
         <where>
             <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
             <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
@@ -55,11 +55,14 @@
                 and a.title LIKE CONCAT('%', #{conditionVO.keywords}, '%')
             </if>
         </where>
-        <if test="conditionVO.pageNum != null">
-            <if test="conditionVO.pageSize != null">
-                LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}
-            </if>
-        </if>
+        <!--分页参数由MyBatis自动指定-->
+        <!--<choose>-->
+        <!--    <when test="conditionVO.pageNum != null and conditionVO.pageSize != null">-->
+        <!--        LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}-->
+        <!--    </when>-->
+        <!--</choose>-->
+        <!-- 处理没有分页参数的情况，可以根据实际需求决定是否添加空白字符串或其他逻辑 -->
+        <!-- <otherwise></otherwise> -->
     </select>
 
     <select id="getArticleByTagId" resultMap="BaseResultMap" parameterType="com.sea.model.vo.ConditionVO">
@@ -86,11 +89,7 @@
                 and a.tag_id = #{conditionVO.tagId}
             </if>
         </where>
-        <if test="conditionVO.pageNum != null">
-            <if test="conditionVO.pageSize != null">
-                LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}
-            </if>
-        </if>
+
     </select>
 
 

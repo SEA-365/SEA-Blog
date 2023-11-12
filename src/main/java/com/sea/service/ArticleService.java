@@ -64,13 +64,7 @@ public interface ArticleService {
      */
 
     /**
-     * 逻辑删除/取消删除
-    * @param deleteVO 逻辑删除/取消删除 操作需要的信息
-     */
-    void updateArticleDeleteStatus(DeleteVO deleteVO);
-
-    /**
-     * 物理删除文章
+     * 逻辑删除文章
      *
      * @param articleIds
      * @return
