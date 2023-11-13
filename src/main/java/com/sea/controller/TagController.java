@@ -50,11 +50,11 @@ public class TagController {
         PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, tagPageInfo);//封装数据
 
         if(tagPage != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到指定页面的标签信息，请检查后重试！"); // 设置响应消息
         }
@@ -73,11 +73,11 @@ public class TagController {
         ResultDataDTO<Tag> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         Tag Category = tagService.getTagById(tagId); // 调用TagService的方法根据id获取标签
         if(Category != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(Category); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(Category);
             resultData.setMsg("查询标签失败，请检查重试！"); // 设置响应消息
         }
@@ -93,7 +93,7 @@ public class TagController {
     public ResultDataDTO<Boolean> addTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "addTag()");
         boolean result = tagService.addTag(tagVO); // 调用TagService的方法添加标签
-        return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -106,7 +106,7 @@ public class TagController {
         log.info(TAG + "updateTag()");
 
         boolean result = tagService.updateTag(tagVO); // 调用TagService的方法修改标签
-        return new ResultDataDTO<>(result ? UPDATE_OK.getCode() : UPDATE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -118,6 +118,6 @@ public class TagController {
     public ResultDataDTO<Boolean> deleteTag(@PathVariable Long tagId){
         log.info(TAG + "deleteTag()");
         boolean result = tagService.deleteTagById(tagId); // 调用TagService的方法删除标签
-        return new ResultDataDTO<>(result ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

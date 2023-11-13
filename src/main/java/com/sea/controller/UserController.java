@@ -42,11 +42,11 @@ public class UserController {
         ResultDataDTO<List<User>> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         List<User> allUser = userService.getAllUser(); // 调用UserService的方法获取所有用户
         if(allUser != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(allUser); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(allUser);
             resultData.setMsg("没有查询到用户列表，请检查后重试！"); // 设置响应消息
         }
@@ -65,11 +65,11 @@ public class UserController {
         ResultDataDTO<User> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         User user = userService.getUserById(userId); // 调用UserService的方法根据id获取用户
         if(user != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(user); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(user);
             resultData.setMsg("查询用户失败，请检查重试！"); // 设置响应消息
         }
@@ -89,15 +89,15 @@ public class UserController {
          */
         if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultDataDTO<>(SAVE_ERROR.getCode(), null, emailError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(FAIL.getCode(), null, emailError); // 返回带错误信息的响应数据
         }
         else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultDataDTO<>(SAVE_ERROR.getCode(), null, phoneError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(FAIL.getCode(), null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
             boolean result = userService.addUser(userVO); // 调用UserService的方法添加用户
-            return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
+            return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
         }
     }
 
@@ -114,15 +114,15 @@ public class UserController {
          */
         if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultDataDTO<>(UPDATE_ERROR.getCode(), null, emailError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(FAIL.getCode(), null, emailError); // 返回带错误信息的响应数据
         }
         else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultDataDTO<>(UPDATE_ERROR.getCode(), null, phoneError); // 返回带错误信息的响应数据
+            return new ResultDataDTO<>(FAIL.getCode(), null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
             boolean result = userService.updateUser(userVO); // 调用UserService的方法修改用户
-            return new ResultDataDTO<>(result ? UPDATE_OK.getCode() : UPDATE_ERROR.getCode(), result); // 返回响应数据
+            return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
         }
     }
 
@@ -135,6 +135,6 @@ public class UserController {
     public ResultDataDTO<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
         boolean result = userService.deleteUserById(userId); // 调用UserService的方法删除用户
-        return new ResultDataDTO<>(result ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

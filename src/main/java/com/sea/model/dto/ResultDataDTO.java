@@ -1,6 +1,5 @@
 package com.sea.model.dto;
 
-import com.sea.enums.StatusCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -51,11 +51,11 @@ public class ArticleController {
         PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, articlePageInfo);//封装数据
 
         if(articlePage != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到指定页面的文章信息，请检查后重试！"); // 设置响应消息
         }
@@ -74,11 +74,11 @@ public class ArticleController {
         ResultDataDTO<Article> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         Article article = articleService.getArticleById(articleId); // 调用ArticleService的方法根据id获取文章
         if(article != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(article); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(article);
             resultData.setMsg("查询文章失败，请检查重试！"); // 设置响应消息
         }
@@ -94,7 +94,7 @@ public class ArticleController {
     public ResultDataDTO<Boolean> addArticle(@RequestBody @Valid ArticleVO articleVO){
         log.info(TAG + "addArticle()");
         boolean result = articleService.addArticle(articleVO); // 调用ArticleService的方法添加文章
-        return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -107,7 +107,7 @@ public class ArticleController {
         log.info(TAG + "updateArticle()");
 
         boolean result = articleService.updateArticle(articleVO); // 调用ArticleService的方法修改文章
-        return new ResultDataDTO<>(result ? UPDATE_OK.getCode() : UPDATE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -119,6 +119,6 @@ public class ArticleController {
     public ResultDataDTO<Integer> deleteArticles(@RequestBody List<Long> articleIds){
         log.info(TAG + "deleteArticles()");
         Integer result = articleService.deleteArticles(articleIds); // 调用ArticleService的方法删除文章
-        return new ResultDataDTO<>(result >= 0 ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result >= 0 ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BizException extends RuntimeException {
-    private Integer code = StatusCodeEnum.FAIT.getCode();
+    private Integer code = StatusCodeEnum.FAIL.getCode();
     private String message;
 
     public BizException(String message) {

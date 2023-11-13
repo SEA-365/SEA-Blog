@@ -5,7 +5,6 @@ import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResultDataDTO;
 import com.sea.model.vo.CategoryVO;
 import com.sea.model.vo.ConditionVO;
-import com.sea.enums.StatusCodeEnum;
 import com.sea.entity.Category;
 import com.sea.service.CategoryService;
 import com.sea.util.PageUtil;
@@ -51,11 +50,11 @@ public class CategoryController {
         PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, categoryPageInfo);//封装数据
 
         if(categoryPage != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到指定页面的分类信息，请检查后重试！"); // 设置响应消息
         }
@@ -74,11 +73,11 @@ public class CategoryController {
         ResultDataDTO<Category> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         Category category = categoryService.getCategoryById(categoryId); // 调用CategoryService的方法根据id获取分类
         if(category != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(category); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(category);
             resultData.setMsg("查询分类失败，请检查重试！"); // 设置响应消息
         }
@@ -94,7 +93,7 @@ public class CategoryController {
     public ResultDataDTO<Boolean> addCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "addCategory()");
         boolean result = categoryService.addCategory(categoryVO); // 调用CategoryService的方法添加分类
-        return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -107,7 +106,7 @@ public class CategoryController {
         log.info(TAG + "updateCategory()");
 
         boolean result = categoryService.updateCategory(categoryVO); // 调用CategoryService的方法修改分类
-        return new ResultDataDTO<>(result ? UPDATE_OK.getCode() : UPDATE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -119,6 +118,6 @@ public class CategoryController {
     public ResultDataDTO<Boolean> deleteCategory(@PathVariable Long categoryId){
         log.info(TAG + "deleteCategory()");
         boolean result = categoryService.deleteCategoryById(categoryId); // 调用CategoryService的方法删除分类
-        return new ResultDataDTO<>(result ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

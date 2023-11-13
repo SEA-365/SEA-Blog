@@ -52,11 +52,11 @@ public class CommentController {
         PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, commentPageInfo);//封装数据
 
         if(commentPage != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到指定页面的评论信息，请检查后重试！"); // 设置响应消息
         }
@@ -75,11 +75,11 @@ public class CommentController {
         ResultDataDTO<Comment> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         Comment comment = commentService.getCommentById(commentId); // 调用CommentService的方法根据id获取评论
         if(comment != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(comment); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(comment);
             resultData.setMsg("查询评论失败，请检查重试！"); // 设置响应消息
         }
@@ -95,7 +95,7 @@ public class CommentController {
     public ResultDataDTO<Boolean> addComment(@RequestBody @Valid CommentVO commentVO){
         log.info(TAG + "addComment()");
         boolean result = commentService.addComment(commentVO); // 调用CommentService的方法添加评论
-        return new ResultDataDTO<>(result ? SAVE_OK.getCode() : SAVE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -107,7 +107,7 @@ public class CommentController {
     public ResultDataDTO<Boolean> deleteComment(@PathVariable Long commentId){
         log.info(TAG + "deleteComment()");
         boolean result = commentService.deleteCommentById(commentId); // 调用CommentService的方法删除评论
-        return new ResultDataDTO<>(result ? DELETE_OK.getCode() : DELETE_ERROR.getCode(), result); // 返回响应数据
+        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -121,11 +121,11 @@ public class CommentController {
         ResultDataDTO<List<Comment>> resultData = new ResultDataDTO<>(); // 创建响应数据对象
         List<Comment> replyList = commentService.getReplyByCommentId(commentId);// 调用commentService的方法获取当前评论的所有回复评论
         if(replyList != null){
-            resultData.setStatusCode(SELECT_OK.getCode()); // 设置响应状态码
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
             resultData.setData(replyList); // 设置响应数据
         }
         else {
-            resultData.setStatusCode(SELECT_ERROR.getCode());
+            resultData.setStatusCode(FAIL.getCode());
             resultData.setData(replyList);
             resultData.setMsg("没有查询到评论列表，请检查后重试！"); // 设置响应消息
         }
