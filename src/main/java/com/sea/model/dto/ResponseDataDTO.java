@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultDataDTO<T> {
+public class ResponseDataDTO<T> {
     private Integer statusCode;//结果的状态码
     private T data;//返回的数据
     private String msg;//提示信息
 
-    public ResultDataDTO(Integer statusCode, T data) {
+    public ResponseDataDTO(Integer statusCode, T data) {
         this.statusCode = statusCode;
         this.data = data;
     }

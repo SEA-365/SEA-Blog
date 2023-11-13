@@ -3,7 +3,7 @@ package com.sea.controller;
 import com.github.pagehelper.PageInfo;
 import com.sea.entity.Article;
 import com.sea.model.dto.PageResultDTO;
-import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.ArticleVO;
 import com.sea.model.vo.ConditionVO;
 import com.sea.service.ArticleService;
@@ -40,9 +40,9 @@ public class ArticleController {
      */
     @ApiOperation(value = "请求指定页的文章信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<PageResultDTO> getArticlePage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getArticlePage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getArticlePage()");
-        ResultDataDTO<PageResultDTO> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
         List<Article> articlePage = articleService.getArticleList(conditionVO); // 调用articleService的方法获取全部文章信息
 
@@ -69,9 +69,9 @@ public class ArticleController {
      */
     @ApiOperation(value = "根据id获取指定文章") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{articleId}") // 处理HTTP GET请求，并将路径参数articleId映射到方法参数
-    public ResultDataDTO<Article> getArticleById(@PathVariable Long articleId){
+    public ResponseDataDTO<Article> getArticleById(@PathVariable Long articleId){
         log.info(TAG + "getArticleById()");
-        ResultDataDTO<Article> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<Article> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         Article article = articleService.getArticleById(articleId); // 调用ArticleService的方法根据id获取文章
         if(article != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
@@ -91,10 +91,10 @@ public class ArticleController {
      */
     @ApiOperation(value = "添加文章") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addArticle(@RequestBody @Valid ArticleVO articleVO){
+    public ResponseDataDTO<Boolean> addArticle(@RequestBody @Valid ArticleVO articleVO){
         log.info(TAG + "addArticle()");
         boolean result = articleService.addArticle(articleVO); // 调用ArticleService的方法添加文章
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -103,11 +103,11 @@ public class ArticleController {
      */
     @ApiOperation(value = "修改文章") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateArticle(@RequestBody @Valid ArticleVO articleVO){
+    public ResponseDataDTO<Boolean> updateArticle(@RequestBody @Valid ArticleVO articleVO){
         log.info(TAG + "updateArticle()");
 
         boolean result = articleService.updateArticle(articleVO); // 调用ArticleService的方法修改文章
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -116,9 +116,9 @@ public class ArticleController {
      */
     @ApiOperation(value = "物理删除文章") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping
-    public ResultDataDTO<Integer> deleteArticles(@RequestBody List<Long> articleIds){
+    public ResponseDataDTO<Integer> deleteArticles(@RequestBody List<Long> articleIds){
         log.info(TAG + "deleteArticles()");
         Integer result = articleService.deleteArticles(articleIds); // 调用ArticleService的方法删除文章
-        return new ResultDataDTO<>(result >= 0 ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result >= 0 ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

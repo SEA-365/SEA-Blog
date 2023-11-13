@@ -1,9 +1,10 @@
 package com.sea.controller;
 
+import com.sea.model.vo.UserLoginVO;
 import com.sea.model.vo.UserVO;
 import com.sea.entity.User;
 import com.sea.service.UserService;
-import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.dto.ResponseDataDTO;
 import static com.sea.enums.StatusCodeEnum.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,9 +38,9 @@ public class UserController {
      */
     @ApiOperation(value = "获取所有用户列表") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<List<User>> getAllUser(){
+    public ResponseDataDTO<List<User>> getAllUser(){
         log.info(TAG + "getAllUser()");
-        ResultDataDTO<List<User>> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<List<User>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         List<User> allUser = userService.getAllUser(); // 调用UserService的方法获取所有用户
         if(allUser != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
@@ -60,9 +61,9 @@ public class UserController {
      */
     @ApiOperation(value = "根据id获取指定用户") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{userId}") // 处理HTTP GET请求，并将路径参数userId映射到方法参数
-    public ResultDataDTO<User> getUserById(@PathVariable Long userId){
+    public ResponseDataDTO<User> getUserById(@PathVariable Long userId){
         log.info(TAG + "getUserById()");
-        ResultDataDTO<User> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<User> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         User user = userService.getUserById(userId); // 调用UserService的方法根据id获取用户
         if(user != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
@@ -82,22 +83,22 @@ public class UserController {
      */
     @ApiOperation(value = "添加用户") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
+    public ResponseDataDTO<Boolean> addUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "addUser()");
         /**
          * 用户信息合法性验证
          */
         if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultDataDTO<>(FAIL.getCode(), null, emailError); // 返回带错误信息的响应数据
+            return new ResponseDataDTO<>(FAIL.getCode(), null, emailError); // 返回带错误信息的响应数据
         }
         else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultDataDTO<>(FAIL.getCode(), null, phoneError); // 返回带错误信息的响应数据
+            return new ResponseDataDTO<>(FAIL.getCode(), null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
             boolean result = userService.addUser(userVO); // 调用UserService的方法添加用户
-            return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+            return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
         }
     }
 
@@ -107,22 +108,22 @@ public class UserController {
      */
     @ApiOperation(value = "修改用户") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
+    public ResponseDataDTO<Boolean> updateUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
         /**
          * 用户信息合法性验证
          */
         if(bindingResult.hasFieldErrors("email")){ // 判断是否存在email字段的验证错误
             String emailError = Objects.requireNonNull(bindingResult.getFieldError("email")).getDefaultMessage();
-            return new ResultDataDTO<>(FAIL.getCode(), null, emailError); // 返回带错误信息的响应数据
+            return new ResponseDataDTO<>(FAIL.getCode(), null, emailError); // 返回带错误信息的响应数据
         }
         else if(bindingResult.hasFieldErrors("phone")){ // 判断是否存在phone字段的验证错误
             String phoneError = Objects.requireNonNull(bindingResult.getFieldError("phone")).getDefaultMessage();
-            return new ResultDataDTO<>(FAIL.getCode(), null, phoneError); // 返回带错误信息的响应数据
+            return new ResponseDataDTO<>(FAIL.getCode(), null, phoneError); // 返回带错误信息的响应数据
         }
         else{ // 用户信息合法
             boolean result = userService.updateUser(userVO); // 调用UserService的方法修改用户
-            return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+            return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
         }
     }
 
@@ -132,9 +133,29 @@ public class UserController {
      */
     @ApiOperation(value = "删除用户") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{userId}") // 处理HTTP DELETE请求，并将路径参数userId映射到方法参数
-    public ResultDataDTO<Boolean> deleteUser(@PathVariable Long userId){
+    public ResponseDataDTO<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
         boolean result = userService.deleteUserById(userId); // 调用UserService的方法删除用户
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+    }
+
+    /**
+     * 用户登录
+     * @param userLoginVO 前端发送的用户登录信息
+     * @return 返回请求登录结果
+     */
+    public ResponseDataDTO<Object> login(@RequestBody UserLoginVO userLoginVO){
+        log.info(TAG + "用户" + userLoginVO.getUsername() + "请求登录！");
+
+        return new ResponseDataDTO<>(SUCCESS.getCode(), true, "登录成功!");
+    }
+
+    /**
+     * 获取登录信息
+     * @return 登录信息
+     */
+    public ResponseDataDTO<Object> info(){
+
+        return new ResponseDataDTO<>(SUCCESS.getCode(), true);
     }
 }

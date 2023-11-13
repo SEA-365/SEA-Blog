@@ -41,4 +41,11 @@ public interface UserService {
      * @param userId 待删除用户id
      */
     boolean deleteUserById(Long userId);
+
+    /**
+     * 根据用户名获取用户
+     * @param username 用户名
+     * @return 指定用户
+     */
+    User getUserByUsername(String username);
 }

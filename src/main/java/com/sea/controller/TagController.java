@@ -2,7 +2,7 @@ package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sea.model.dto.PageResultDTO;
-import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.ConditionVO;
 import static com.sea.enums.StatusCodeEnum.*;
 import com.sea.model.vo.TagVO;
@@ -39,9 +39,9 @@ public class TagController {
      */
     @ApiOperation(value = "请求指定页的标签信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<PageResultDTO> getTagPage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getTagPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getTagPage()");
-        ResultDataDTO<PageResultDTO> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
         List<Tag> tagPage = tagService.getTagList(conditionVO); // 调用tagService的方法获取全部标签信息
 
@@ -68,9 +68,9 @@ public class TagController {
      */
     @ApiOperation(value = "根据id获取指定标签") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{tagId}") // 处理HTTP GET请求，并将路径参数tagId映射到方法参数
-    public ResultDataDTO<Tag> getTagById(@PathVariable Long tagId){
+    public ResponseDataDTO<Tag> getTagById(@PathVariable Long tagId){
         log.info(TAG + "getTagById()");
-        ResultDataDTO<Tag> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<Tag> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         Tag Category = tagService.getTagById(tagId); // 调用TagService的方法根据id获取标签
         if(Category != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
@@ -90,10 +90,10 @@ public class TagController {
      */
     @ApiOperation(value = "添加标签") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addTag(@RequestBody @Valid TagVO tagVO){
+    public ResponseDataDTO<Boolean> addTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "addTag()");
         boolean result = tagService.addTag(tagVO); // 调用TagService的方法添加标签
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -102,11 +102,11 @@ public class TagController {
      */
     @ApiOperation(value = "修改标签") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateTag(@RequestBody @Valid TagVO tagVO){
+    public ResponseDataDTO<Boolean> updateTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "updateTag()");
 
         boolean result = tagService.updateTag(tagVO); // 调用TagService的方法修改标签
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -115,9 +115,9 @@ public class TagController {
      */
     @ApiOperation(value = "删除标签") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{tagId}") // 处理HTTP DELETE请求，并将路径参数tagId映射到方法参数
-    public ResultDataDTO<Boolean> deleteTag(@PathVariable Long tagId){
+    public ResponseDataDTO<Boolean> deleteTag(@PathVariable Long tagId){
         log.info(TAG + "deleteTag()");
         boolean result = tagService.deleteTagById(tagId); // 调用TagService的方法删除标签
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

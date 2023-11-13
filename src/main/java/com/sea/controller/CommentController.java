@@ -3,7 +3,7 @@ package com.sea.controller;
 import com.github.pagehelper.PageInfo;
 import com.sea.entity.Comment;
 import com.sea.model.dto.PageResultDTO;
-import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.CommentVO;
 import com.sea.model.vo.ConditionVO;
 import com.sea.service.CommentService;
@@ -41,9 +41,9 @@ public class CommentController {
      */
     @ApiOperation(value = "请求指定页的评论信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<PageResultDTO> getCommentPage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getCommentPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getCommentPage()");
-        ResultDataDTO<PageResultDTO> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
         List<Comment> commentPage = commentService.getCommentList(conditionVO); // 调用commentService的方法获取全部评论信息
 
@@ -70,9 +70,9 @@ public class CommentController {
      */
     @ApiOperation(value = "根据id获取指定评论") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{commentId}") // 处理HTTP GET请求，并将路径参数commentId映射到方法参数
-    public ResultDataDTO<Comment> getCommentById(@PathVariable Long commentId){
+    public ResponseDataDTO<Comment> getCommentById(@PathVariable Long commentId){
         log.info(TAG + "getCommentById()");
-        ResultDataDTO<Comment> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<Comment> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         Comment comment = commentService.getCommentById(commentId); // 调用CommentService的方法根据id获取评论
         if(comment != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
@@ -92,10 +92,10 @@ public class CommentController {
      */
     @ApiOperation(value = "添加评论") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addComment(@RequestBody @Valid CommentVO commentVO){
+    public ResponseDataDTO<Boolean> addComment(@RequestBody @Valid CommentVO commentVO){
         log.info(TAG + "addComment()");
         boolean result = commentService.addComment(commentVO); // 调用CommentService的方法添加评论
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -104,10 +104,10 @@ public class CommentController {
      */
     @ApiOperation(value = "删除评论-逻辑删除") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{commentId}") // 处理HTTP DELETE请求，并将路径参数commentId映射到方法参数
-    public ResultDataDTO<Boolean> deleteComment(@PathVariable Long commentId){
+    public ResponseDataDTO<Boolean> deleteComment(@PathVariable Long commentId){
         log.info(TAG + "deleteComment()");
         boolean result = commentService.deleteCommentById(commentId); // 调用CommentService的方法删除评论
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -116,9 +116,9 @@ public class CommentController {
      */
     @ApiModelProperty(value = "获取当前评论的所有回复评论")
     @GetMapping("/getReply/{commentId}")
-    public ResultDataDTO<List<Comment>> getReplyByCommentId(@PathVariable Long commentId){
+    public ResponseDataDTO<List<Comment>> getReplyByCommentId(@PathVariable Long commentId){
         log.info(TAG + "getReplyByCommentId()");
-        ResultDataDTO<List<Comment>> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<List<Comment>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         List<Comment> replyList = commentService.getReplyByCommentId(commentId);// 调用commentService的方法获取当前评论的所有回复评论
         if(replyList != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码

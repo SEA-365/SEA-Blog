@@ -2,7 +2,7 @@ package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sea.model.dto.PageResultDTO;
-import com.sea.model.dto.ResultDataDTO;
+import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.CategoryVO;
 import com.sea.model.vo.ConditionVO;
 import com.sea.entity.Category;
@@ -39,9 +39,9 @@ public class CategoryController {
      */
     @ApiOperation(value = "请求指定页的分类信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
-    public ResultDataDTO<PageResultDTO> getCategoryPage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getCategoryPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getCategoryPage()");
-        ResultDataDTO<PageResultDTO> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
         List<Category> categoryPage = categoryService.getCategoryList(conditionVO); // 调用categoryService的方法获取全部分类信息
 
@@ -68,9 +68,9 @@ public class CategoryController {
      */
     @ApiOperation(value = "根据id获取指定分类") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{categoryId}") // 处理HTTP GET请求，并将路径参数categoryId映射到方法参数
-    public ResultDataDTO<Category> getCategoryById(@PathVariable Long categoryId){
+    public ResponseDataDTO<Category> getCategoryById(@PathVariable Long categoryId){
         log.info(TAG + "getCategoryById()");
-        ResultDataDTO<Category> resultData = new ResultDataDTO<>(); // 创建响应数据对象
+        ResponseDataDTO<Category> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         Category category = categoryService.getCategoryById(categoryId); // 调用CategoryService的方法根据id获取分类
         if(category != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
@@ -90,10 +90,10 @@ public class CategoryController {
      */
     @ApiOperation(value = "添加分类") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
-    public ResultDataDTO<Boolean> addCategory(@RequestBody @Valid CategoryVO categoryVO){
+    public ResponseDataDTO<Boolean> addCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "addCategory()");
         boolean result = categoryService.addCategory(categoryVO); // 调用CategoryService的方法添加分类
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -102,11 +102,11 @@ public class CategoryController {
      */
     @ApiOperation(value = "修改分类") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
-    public ResultDataDTO<Boolean> updateCategory(@RequestBody @Valid CategoryVO categoryVO){
+    public ResponseDataDTO<Boolean> updateCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "updateCategory()");
 
         boolean result = categoryService.updateCategory(categoryVO); // 调用CategoryService的方法修改分类
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
     /**
@@ -115,9 +115,9 @@ public class CategoryController {
      */
     @ApiOperation(value = "删除分类") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{categoryId}") // 处理HTTP DELETE请求，并将路径参数categoryId映射到方法参数
-    public ResultDataDTO<Boolean> deleteCategory(@PathVariable Long categoryId){
+    public ResponseDataDTO<Boolean> deleteCategory(@PathVariable Long categoryId){
         log.info(TAG + "deleteCategory()");
         boolean result = categoryService.deleteCategoryById(categoryId); // 调用CategoryService的方法删除分类
-        return new ResultDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

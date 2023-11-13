@@ -1,5 +1,6 @@
 package com.sea.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sea.model.vo.UserVO;
 import com.sea.dao.UserDao;
@@ -69,5 +70,15 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUserById(Long userId) {
         userDao.deleteById(userId); // 根据用户ID删除用户
         return true;
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        if(username == null)
+            return null;
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username", username);//构造查询条件
+        User user = userDao.selectOne(userQueryWrapper);
+        return user;
     }
 }
