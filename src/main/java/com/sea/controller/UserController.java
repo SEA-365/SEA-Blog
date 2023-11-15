@@ -8,6 +8,12 @@ import com.sea.model.dto.ResponseDataDTO;
 import static com.sea.enums.StatusCodeEnum.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +21,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -144,18 +152,82 @@ public class UserController {
      * @param userLoginVO 前端发送的用户登录信息
      * @return 返回请求登录结果
      */
+    @ApiOperation(value = "用户登录")
+    @PostMapping("/login")
     public ResponseDataDTO<Object> login(@RequestBody UserLoginVO userLoginVO){
-        log.info(TAG + "用户" + userLoginVO.getUsername() + "请求登录！");
+        log.info(TAG + "用户 " + userLoginVO.getUsername() + " 请求登录！");
 
-        return new ResponseDataDTO<>(SUCCESS.getCode(), true, "登录成功!");
+        //1.获得当前用户的登录对象【未认证】
+        Subject subject = SecurityUtils.getSubject();
+
+        //2.获得待验证的用户名密码
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userLoginVO.getUsername(), userLoginVO.getPassword());
+
+        //3.进行身份验证
+        try {
+            subject.login(usernamePasswordToken);
+            HashMap<String, Object> responseData = new HashMap<>();
+            responseData.put("token", subject.getSession().getId());
+            log.info(TAG + "{} login success!", userLoginVO.getUsername());
+
+            return new ResponseDataDTO<>(SUCCESS.getCode(), responseData, "登录成功!");
+        } catch (IncorrectCredentialsException e) {
+            log.info("login fail: " + e.getMessage());
+            return new ResponseDataDTO<>(NO_LOGIN.getCode());
+        } catch (LockedAccountException e) {
+            log.info("login fail: " + e.getMessage());
+            return new ResponseDataDTO<>(SYSTEM_ERROR.getCode());
+        } catch (AuthenticationException e) {
+            log.info("login fail: " + e.getMessage());
+            return new ResponseDataDTO<>(USERNAME_NOT_EXIST.getCode());
+        } catch (Exception e) {
+            log.info("login fail: " + e.getMessage());
+            return new ResponseDataDTO<>(FAIL.getCode());
+        }
     }
 
     /**
-     * 获取登录信息
-     * @return 登录信息
+     * 获取用户登录信息
+     * @return 用户登录信息
      */
+    @ApiOperation(value = "获取用户登录信息")
+    @GetMapping("/info")
     public ResponseDataDTO<Object> info(){
+        Map<String, Object> responseData = new HashMap<>(3);
 
-        return new ResponseDataDTO<>(SUCCESS.getCode(), true);
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isAuthenticated()){
+            User principal = (User) subject.getPrincipal();
+
+            responseData.put("role", "admin");//todo：先写死，后续增加权限机制
+            responseData.put("username", principal.getUsername());
+            responseData.put("avatar",principal.getAvatarUrl());
+            return new ResponseDataDTO<>(SUCCESS.getCode(), responseData);
+        }
+        return new ResponseDataDTO<>(FAIL.getCode(), "用户未登录或身份未认证！");
+
     }
+
+    /**
+     * 登出操作
+     */
+    @ApiOperation(value = "登出操作")
+    @PostMapping("/logout")
+    public ResponseDataDTO<Object> logout(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return new ResponseDataDTO<>(SUCCESS.getCode(), "登出成功！");
+    }
+
+    /**
+     * 未登录/登录错误重定向到这个接口
+     */
+    @ApiOperation(value = "登出操作")
+    @PostMapping("/unAuth")
+    public ResponseDataDTO<Object> unauth(){
+
+        return new ResponseDataDTO<>(NO_LOGIN.getCode());
+    }
+
+
 }
