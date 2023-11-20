@@ -3,7 +3,6 @@ package com.sea.shiro;
 import com.sea.entity.User;
 import com.sea.exception.BizException;
 import com.sea.service.UserService;
-import com.sea.service.impl.UserServiceImpl;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -14,7 +13,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
@@ -61,24 +59,21 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     /**
      * 获取身份验证信息
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info(TAG + "获取用户的身份验证信息：doGetAuthenticationInfo()");
+
         //1.获取待验证的用户信息
         String username = (String) authenticationToken.getPrincipal();
         String password = new String((char[]) authenticationToken.getCredentials());
+        log.info(TAG + username + " ===== " + password);
 
         //2.通过username查询数据库
         User user = userService.getUserByUsername(username);
 
         //3.验证用户名和密码是否匹配
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String s = passwordEncoder.encode(password);
-        if(user == null || !user.getPassword().equals(s)){
+        if(user == null || !manualPasswordCheck(password, user.getPassword())){
             throw new BizException("用户名或密码不正确！");
         }
         //4.验证成功后，构建身份验证信息，包括：用户名【身份信息】，加密的密码【凭证信息】，盐值，Realm名称
@@ -87,8 +82,15 @@ public class MyShiroRealm extends AuthorizingRealm {
                 user.getPassword(),
                 null,
                 getName()
-        );
+        );//内部还有一次验证操作
+        log.info(TAG + "验证成功！");
 
         return authenticationInfo;
+    }
+
+    // 手动验证密码的方法
+    private boolean manualPasswordCheck(String rawPassword, String hashedPassword) {
+        // 在这里使用 BCrypt 进行密码比较
+        return new BCryptPasswordEncoder().matches(rawPassword, hashedPassword);
     }
 }

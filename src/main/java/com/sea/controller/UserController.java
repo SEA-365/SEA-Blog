@@ -32,6 +32,7 @@ import java.util.Objects;
  */
 @Api(tags = "用户信息管理模块") // Swagger注解，用于给接口添加标签信息
 @RestController // 声明该类是一个控制器
+//@CrossOrigin(origins = "http://localhost:7070")
 @RequestMapping("/users") // 定义映射路径
 public class UserController {
     @Autowired // 自动注入UserService对象
@@ -173,16 +174,16 @@ public class UserController {
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData, "登录成功!");
         } catch (IncorrectCredentialsException e) {
             log.info("login fail: " + e.getMessage());
-            return new ResponseDataDTO<>(NO_LOGIN.getCode());
+            return new ResponseDataDTO<>(NO_LOGIN.getCode(), "未登录成功，检查密码是否正确！！");
         } catch (LockedAccountException e) {
             log.info("login fail: " + e.getMessage());
-            return new ResponseDataDTO<>(SYSTEM_ERROR.getCode());
+            return new ResponseDataDTO<>(SYSTEM_ERROR.getCode(), "登录异常！！");
         } catch (AuthenticationException e) {
             log.info("login fail: " + e.getMessage());
-            return new ResponseDataDTO<>(USERNAME_NOT_EXIST.getCode());
+            return new ResponseDataDTO<>(USERNAME_NOT_EXIST.getCode(), "用户名或密码不存在！！");
         } catch (Exception e) {
             log.info("login fail: " + e.getMessage());
-            return new ResponseDataDTO<>(FAIL.getCode());
+            return new ResponseDataDTO<>(FAIL.getCode(), "其他错误！！");
         }
     }
 
@@ -193,6 +194,7 @@ public class UserController {
     @ApiOperation(value = "获取用户登录信息")
     @GetMapping("/info")
     public ResponseDataDTO<Object> info(){
+        log.info(TAG + "获取用户登录信息");
         Map<String, Object> responseData = new HashMap<>(3);
 
         Subject subject = SecurityUtils.getSubject();
@@ -211,9 +213,10 @@ public class UserController {
     /**
      * 登出操作
      */
-    @ApiOperation(value = "登出操作")
+    @ApiOperation(value = "操作")
     @PostMapping("/logout")
     public ResponseDataDTO<Object> logout(){
+        log.info(TAG + "登出操作");
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return new ResponseDataDTO<>(SUCCESS.getCode(), "登出成功！");
@@ -222,10 +225,10 @@ public class UserController {
     /**
      * 未登录/登录错误重定向到这个接口
      */
-    @ApiOperation(value = "登出操作")
+    @ApiOperation(value = "未登录/登录错误重定向到这个接口")
     @PostMapping("/unAuth")
-    public ResponseDataDTO<Object> unauth(){
-
+    public ResponseDataDTO<Object> unAuth(){
+        log.info(TAG + "未登录/登录错误重定向到这个接口");
         return new ResponseDataDTO<>(NO_LOGIN.getCode());
     }
 

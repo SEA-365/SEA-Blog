@@ -1,11 +1,12 @@
 package com.sea;
 
 import com.sea.shiro.MyShiroRealm;
+import com.sea.shiro.SpringSecurityBCryptMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -25,12 +26,25 @@ public class ShiroConfig {
     private static final Logger log = LoggerFactory.getLogger(ShiroConfig.class);
     private static final String TAG = "ShiroConfig ====> ";
 
+
+    // 在 Shiro 配置中配置 CredentialsMatcher
+    @Bean
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        //由于框架之间的算法实现不一致，在Shiro中仍然需要使用Spring Security的BCrypt实现
+        SpringSecurityBCryptMatcher matcher = new SpringSecurityBCryptMatcher();
+        matcher.setHashAlgorithmName("BCrypt");
+        return matcher;
+    }
+
+
     /**
      * 配置自定义Realm：实现了自定义的身份认证和授权逻辑
      */
     @Bean
     public MyShiroRealm getMyShiroRealm(){
-        return new MyShiroRealm();
+        MyShiroRealm realm = new MyShiroRealm();
+        realm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return realm;
     }
 
     /**
@@ -38,10 +52,10 @@ public class ShiroConfig {
      */
     @Bean
     public SecurityManager getSecurityManager(){
-        DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager();
-        defaultSecurityManager.setRealm(getMyShiroRealm());
+        DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+        defaultWebSecurityManager.setRealm(getMyShiroRealm());
 
-        return defaultSecurityManager;
+        return defaultWebSecurityManager;
     }
 
 

@@ -27,3 +27,8 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true #大小写 映射到 驼峰命名
+
+#日志调试级别：此处仅配了Shiro安全框架的日志输出级别
+logging:
+  level:
+    org.apache.shiro: DEBUG
