@@ -51,7 +51,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
         //todo:目前没有实现权限机制，模拟获得admin权限，后续完善！
         //3.从数据源（库）中获取用户的权限信息
-        String rolePermission = "admin";
+        String rolePermission = "[admin]";
 
         authorizationInfo.addStringPermission(rolePermission);
         return authorizationInfo;

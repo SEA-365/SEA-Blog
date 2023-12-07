@@ -13,6 +13,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,11 +168,17 @@ public class UserController {
         //3.进行身份验证
         try {
             subject.login(usernamePasswordToken);
-            HashMap<String, Object> responseData = new HashMap<>();
-            responseData.put("token", subject.getSession().getId());
-            log.info(TAG + "{} login success!", userLoginVO.getUsername());
+            log.info(TAG + "subject.isAuthenticated() ==> " + subject.isAuthenticated());
+            if(subject.isAuthenticated()){
+                HashMap<String, Object> responseData = new HashMap<>();
+                responseData.put("token", subject.getSession().getId());
+                log.info(TAG + "{} login success!", userLoginVO.getUsername());
 
-            return new ResponseDataDTO<>(SUCCESS.getCode(), responseData, "登录成功!");
+                return new ResponseDataDTO<>(SUCCESS.getCode(), responseData, "登录成功!");
+            }
+            else{
+                return new ResponseDataDTO<>(FAIL.getCode(), "用户身份未认证！");
+            }
         } catch (IncorrectCredentialsException e) {
             log.info("login fail: " + e.getMessage());
             return new ResponseDataDTO<>(NO_LOGIN.getCode(), "未登录成功，检查密码是否正确！！");
@@ -198,16 +205,18 @@ public class UserController {
         Map<String, Object> responseData = new HashMap<>(3);
 
         Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        log.info(TAG + "session: " + session.getAttribute("password"));
+        log.info(TAG + "subject.isAuthenticated() ==> " + subject.isAuthenticated());
         if(subject.isAuthenticated()){
             User principal = (User) subject.getPrincipal();
 
-            responseData.put("role", "admin");//todo：先写死，后续增加权限机制
+            responseData.put("role", "[admin]");//todo：先写死，后续增加权限机制
             responseData.put("username", principal.getUsername());
             responseData.put("avatar",principal.getAvatarUrl());
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData);
         }
         return new ResponseDataDTO<>(FAIL.getCode(), "用户未登录或身份未认证！");
-
     }
 
     /**
