@@ -189,7 +189,9 @@ public class UserController {
             log.info("login fail: " + e.getMessage());
             return new ResponseDataDTO<>(USERNAME_NOT_EXIST.getCode(), "用户名或密码不存在！！");
         } catch (Exception e) {
-            log.info("login fail: " + e.getMessage());
+
+            log.info("login fail: " + e.getMessage() + "   ");
+            e.printStackTrace();
             return new ResponseDataDTO<>(FAIL.getCode(), "其他错误！！");
         }
     }
@@ -202,21 +204,23 @@ public class UserController {
     @GetMapping("/info")
     public ResponseDataDTO<Object> info(){
         log.info(TAG + "获取用户登录信息");
+        //存放用户信息
         Map<String, Object> responseData = new HashMap<>(3);
 
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         log.info(TAG + "session: " + session.getAttribute("password"));
         log.info(TAG + "subject.isAuthenticated() ==> " + subject.isAuthenticated());
-        if(subject.isAuthenticated()){
-            User principal = (User) subject.getPrincipal();
+//        if(subject.isAuthenticated()){
+            String principal = (String) subject.getPrincipal();
+            log.info(TAG + "user: " + principal);
 
             responseData.put("role", "[admin]");//todo：先写死，后续增加权限机制
-            responseData.put("username", principal.getUsername());
-            responseData.put("avatar",principal.getAvatarUrl());
+            responseData.put("username", principal);
+            responseData.put("avatar","http://test07");
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData);
-        }
-        return new ResponseDataDTO<>(FAIL.getCode(), "用户未登录或身份未认证！");
+//        }
+//        return new ResponseDataDTO<>(FAIL.getCode(), "用户未登录或身份未认证！");
     }
 
     /**

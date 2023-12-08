@@ -8,6 +8,15 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #解决Swagger2 和 SpringBoot版本之间的冲突
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 1800
+    password:
+  data:
+    redis:
+      repositories:
+        enabled: false
 
 server:
   servlet:
@@ -32,3 +41,4 @@ mybatis-plus:
 logging:
   level:
     org.apache.shiro: DEBUG
+

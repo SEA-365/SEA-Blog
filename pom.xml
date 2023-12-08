@@ -122,6 +122,14 @@
             <artifactId>shiro-spring</artifactId>
             <version>1.8.0</version>
         </dependency>
+
+        <!--shiro安全框架整合redis依赖-->
+        <dependency>
+            <groupId>org.crazycake</groupId>
+            <artifactId>shiro-redis</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
