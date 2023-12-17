@@ -224,7 +224,7 @@ public class UserController {
             String principal = (String) subject.getPrincipal();
             log.info(TAG + "user: " + principal);
 
-            responseData.put("role", "[admin]");//todo：先写死，后续增加权限机制
+            responseData.put("roles", "[admin]");//todo：先写死，后续增加权限机制
             responseData.put("username", principal);
             responseData.put("avatar", "http://test07");
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData);
