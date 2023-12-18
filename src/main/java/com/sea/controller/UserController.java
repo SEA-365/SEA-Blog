@@ -226,7 +226,7 @@ public class UserController {
 
             responseData.put("roles", "[admin]");//todo：先写死，后续增加权限机制
             responseData.put("username", principal);
-            responseData.put("avatar", "http://test07");
+            responseData.put("avatar", userService.getUserByUsername(principal).getAvatarUrl());
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData);
         }
         else{
@@ -238,11 +238,14 @@ public class UserController {
      * 登出操作
      */
     @ApiOperation(value = "操作")
-    @PostMapping("/logout")
+    @RequestMapping("/logout")
     public ResponseDataDTO<Object> logout(){
-        log.info(TAG + "登出操作");
+        log.info(TAG + "users/logout: 登出操作");
         Subject subject = SecurityUtils.getSubject();
-        subject.logout();
+        if(subject.isAuthenticated())
+            subject.logout();
+        else
+            return new ResponseDataDTO<>(FAIL.getCode(), TAG + " /users/logout: " + ((User)subject.getPrincipal()).getUsername() + " 未登录/未认证！");
         return new ResponseDataDTO<>(SUCCESS.getCode(), "登出成功！");
     }
 
@@ -250,20 +253,20 @@ public class UserController {
      * 未登录/登录错误重定向到这个接口
      */
     @ApiOperation(value = "未登录/登录错误重定向到这个接口")
-    @PostMapping("/unLogin")
+    @RequestMapping("/unLogin")
     public ResponseDataDTO<Object> unLogin(){
         log.info(TAG + "未登录/登录错误重定向到这个接口");
-        return new ResponseDataDTO<>(NO_LOGIN.getCode());
+        return new ResponseDataDTO<>(NO_LOGIN.getCode(), NO_LOGIN.getDescription());
     }
 
     /**
      * 无权限时重定向到这个接口
      */
     @ApiOperation(value = "无权限时重定向到这个接口")
-    @PostMapping("/unAuth")
+    @RequestMapping("/unAuth")
     public ResponseDataDTO<Object> unAuth(){
         log.info(TAG + "无权限时重定向到这个接口");
-        return new ResponseDataDTO<>(AUTHORIZED.getCode());
+        return new ResponseDataDTO<>(AUTHORIZED.getCode(), AUTHORIZED.getDescription());
     }
 
 
