@@ -8,7 +8,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #解决Swagger2 和 SpringBoot版本之间的冲突
-  redis:
+  redis: # Redis数据库连接配置
     host: 127.0.0.1
     port: 6379
     timeout: 1800

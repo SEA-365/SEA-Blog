@@ -1,7 +1,9 @@
 package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sea.annotation.OperationLogSys;
 import com.sea.entity.Article;
+import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.ArticleVO;
@@ -40,6 +42,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "请求指定页的文章信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
+    @OperationLogSys(description = "请求指定页的文章信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getArticlePage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getArticlePage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -69,6 +72,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "根据id获取指定文章") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{articleId}") // 处理HTTP GET请求，并将路径参数articleId映射到方法参数
+    @OperationLogSys(description = "根据id获取指定文章", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<Article> getArticleById(@PathVariable Long articleId){
         log.info(TAG + "getArticleById()");
         ResponseDataDTO<Article> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -91,6 +95,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "添加文章") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
+    @OperationLogSys(description = "添加文章", operationType = OperationTypeEnum.INSERT)
     public ResponseDataDTO<Boolean> addArticle(@RequestBody @Valid ArticleVO articleVO){
         log.info(TAG + "addArticle()");
         boolean result = articleService.addArticle(articleVO); // 调用ArticleService的方法添加文章
@@ -103,6 +108,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "修改文章") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
+    @OperationLogSys(description = "修改文章", operationType = OperationTypeEnum.UPDATE)
     public ResponseDataDTO<Boolean> updateArticle(@RequestBody @Valid ArticleVO articleVO){
         log.info(TAG + "updateArticle()");
 
@@ -116,6 +122,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "物理删除文章") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping
+    @OperationLogSys(description = "物理删除文章", operationType = OperationTypeEnum.DELETE)
     public ResponseDataDTO<Integer> deleteArticles(@RequestBody List<Long> articleIds){
         log.info(TAG + "deleteArticles()");
         Integer result = articleService.deleteArticles(articleIds); // 调用ArticleService的方法删除文章

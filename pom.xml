@@ -130,6 +130,19 @@
             <version>2.4.2.1-RELEASE</version>
         </dependency>
 
+        <!--Aspect切面需要的坐标-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
+        <!--JSON相关库，例如可以与map进行转换等-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.80</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

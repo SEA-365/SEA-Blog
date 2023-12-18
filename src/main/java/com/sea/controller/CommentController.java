@@ -1,7 +1,9 @@
 package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sea.annotation.OperationLogSys;
 import com.sea.entity.Comment;
+import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.CommentVO;
@@ -41,6 +43,7 @@ public class CommentController {
      */
     @ApiOperation(value = "请求指定页的评论信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
+    @OperationLogSys(description = "请求指定页的评论信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getCommentPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getCommentPage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -70,6 +73,7 @@ public class CommentController {
      */
     @ApiOperation(value = "根据id获取指定评论") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{commentId}") // 处理HTTP GET请求，并将路径参数commentId映射到方法参数
+    @OperationLogSys(description = "根据id获取指定分类", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<Comment> getCommentById(@PathVariable Long commentId){
         log.info(TAG + "getCommentById()");
         ResponseDataDTO<Comment> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -92,6 +96,7 @@ public class CommentController {
      */
     @ApiOperation(value = "添加评论") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
+    @OperationLogSys(description = "添加评论", operationType = OperationTypeEnum.INSERT)
     public ResponseDataDTO<Boolean> addComment(@RequestBody @Valid CommentVO commentVO){
         log.info(TAG + "addComment()");
         boolean result = commentService.addComment(commentVO); // 调用CommentService的方法添加评论
@@ -104,6 +109,7 @@ public class CommentController {
      */
     @ApiOperation(value = "删除评论-逻辑删除") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{commentId}") // 处理HTTP DELETE请求，并将路径参数commentId映射到方法参数
+    @OperationLogSys(description = "删除评论-逻辑删除", operationType = OperationTypeEnum.DELETE)
     public ResponseDataDTO<Boolean> deleteComment(@PathVariable Long commentId){
         log.info(TAG + "deleteComment()");
         boolean result = commentService.deleteCommentById(commentId); // 调用CommentService的方法删除评论
@@ -116,6 +122,7 @@ public class CommentController {
      */
     @ApiModelProperty(value = "获取当前评论的所有回复评论")
     @GetMapping("/getReply/{commentId}")
+    @OperationLogSys(description = "获取当前评论的所有回复评论", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<List<Comment>> getReplyByCommentId(@PathVariable Long commentId){
         log.info(TAG + "getReplyByCommentId()");
         ResponseDataDTO<List<Comment>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象

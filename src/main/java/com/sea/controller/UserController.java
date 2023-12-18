@@ -1,5 +1,7 @@
 package com.sea.controller;
 
+import com.sea.annotation.OperationLogSys;
+import com.sea.enums.OperationTypeEnum;
 import com.sea.model.vo.UserLoginVO;
 import com.sea.model.vo.UserVO;
 import com.sea.entity.User;
@@ -49,6 +51,7 @@ public class UserController {
      */
     @ApiOperation(value = "获取所有用户列表") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
+    @OperationLogSys(description = "获取所有用户列表", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<List<User>> getAllUser(){
         log.info(TAG + "getAllUser()");
         ResponseDataDTO<List<User>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -72,6 +75,7 @@ public class UserController {
      */
     @ApiOperation(value = "根据id获取指定用户") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{userId}") // 处理HTTP GET请求，并将路径参数userId映射到方法参数
+    @OperationLogSys(description = "根据id获取指定用户", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<User> getUserById(@PathVariable Long userId){
         log.info(TAG + "getUserById()");
         ResponseDataDTO<User> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -94,6 +98,7 @@ public class UserController {
      */
     @ApiOperation(value = "添加用户") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
+    @OperationLogSys(description = "添加用户", operationType = OperationTypeEnum.INSERT)
     public ResponseDataDTO<Boolean> addUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "addUser()");
         /**
@@ -119,6 +124,7 @@ public class UserController {
      */
     @ApiOperation(value = "修改用户") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
+    @OperationLogSys(description = "修改用户", operationType = OperationTypeEnum.UPDATE)
     public ResponseDataDTO<Boolean> updateUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
         /**
@@ -144,6 +150,7 @@ public class UserController {
      */
     @ApiOperation(value = "删除用户") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{userId}") // 处理HTTP DELETE请求，并将路径参数userId映射到方法参数
+    @OperationLogSys(description = "删除用户", operationType = OperationTypeEnum.DELETE)
     public ResponseDataDTO<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
         boolean result = userService.deleteUserById(userId); // 调用UserService的方法删除用户
@@ -157,6 +164,7 @@ public class UserController {
      */
     @ApiOperation(value = "用户登录")
     @PostMapping("/login")
+    @OperationLogSys(description = "用户登录", operationType = OperationTypeEnum.LOGIN)
     public ResponseDataDTO<Object> login(@RequestBody UserLoginVO userLoginVO){
         log.info(TAG + "用户 " + userLoginVO.getUsername() + " 请求登录！");
 
@@ -205,6 +213,7 @@ public class UserController {
      */
     @ApiOperation(value = "获取用户登录信息")
     @GetMapping("/info")
+    @OperationLogSys(description = "获取用户登录信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<Object> info(){
         log.info(TAG + "获取用户登录信息");
         //存放用户信息
@@ -237,8 +246,9 @@ public class UserController {
     /**
      * 登出操作
      */
-    @ApiOperation(value = "操作")
+    @ApiOperation(value = "登出操作")
     @RequestMapping("/logout")
+    @OperationLogSys(description = "登出操作", operationType = OperationTypeEnum.LOGOUT)
     public ResponseDataDTO<Object> logout(){
         log.info(TAG + "users/logout: 登出操作");
         Subject subject = SecurityUtils.getSubject();
@@ -254,6 +264,7 @@ public class UserController {
      */
     @ApiOperation(value = "未登录/登录错误重定向到这个接口")
     @RequestMapping("/unLogin")
+    @OperationLogSys(description = "未登录/登录错误重定向到这个接口", operationType = OperationTypeEnum.SYSTEM)
     public ResponseDataDTO<Object> unLogin(){
         log.info(TAG + "未登录/登录错误重定向到这个接口");
         return new ResponseDataDTO<>(NO_LOGIN.getCode(), NO_LOGIN.getDescription());
@@ -264,6 +275,7 @@ public class UserController {
      */
     @ApiOperation(value = "无权限时重定向到这个接口")
     @RequestMapping("/unAuth")
+    @OperationLogSys(description = "无权限时重定向到这个接口", operationType = OperationTypeEnum.SYSTEM)
     public ResponseDataDTO<Object> unAuth(){
         log.info(TAG + "无权限时重定向到这个接口");
         return new ResponseDataDTO<>(AUTHORIZED.getCode(), AUTHORIZED.getDescription());

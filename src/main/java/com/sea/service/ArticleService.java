@@ -25,7 +25,7 @@ public interface ArticleService {
      * @param conditionVO 查询条件
      * @return 指定页的文章信息
      */
-    public List<Article> getArticleList(ConditionVO conditionVO);
+    List<Article> getArticleList(ConditionVO conditionVO);
 
     /**
      * 根据id获取指定文章信息

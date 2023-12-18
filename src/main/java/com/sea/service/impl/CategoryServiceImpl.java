@@ -30,10 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     public static final String TAG = "CategoryServiceImpl ====> ";
 
     @Override
-    public List<Category> getCategoryList(ConditionVO ConditionVO) {
-        log.info(TAG + " " + ConditionVO);
+    public List<Category> getCategoryList(ConditionVO conditionVO) {
+        log.info(TAG + " " + conditionVO);
 
-        PageHelper.startPage(ConditionVO.getPageNum(), ConditionVO.getPageSize());//设置分页查询参数
+        PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<Category> categoryList = categoryDao.selectList(null); // 此时查询的记录为所有记录
         return categoryList; // 返回分类列表
     }

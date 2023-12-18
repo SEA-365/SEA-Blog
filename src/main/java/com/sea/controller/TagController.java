@@ -1,6 +1,8 @@
 package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sea.annotation.OperationLogSys;
+import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.ConditionVO;
@@ -39,6 +41,7 @@ public class TagController {
      */
     @ApiOperation(value = "请求指定页的标签信息") // Swagger注解，用于给接口添加描述信息
     @GetMapping // 处理HTTP GET请求
+    @OperationLogSys(description = "请求指定页的标签信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getTagPage(@RequestBody ConditionVO conditionVO){
         log.info(TAG + "getTagPage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -68,6 +71,7 @@ public class TagController {
      */
     @ApiOperation(value = "根据id获取指定标签") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{tagId}") // 处理HTTP GET请求，并将路径参数tagId映射到方法参数
+    @OperationLogSys(description = "根据id获取指定标签", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<Tag> getTagById(@PathVariable Long tagId){
         log.info(TAG + "getTagById()");
         ResponseDataDTO<Tag> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
@@ -90,6 +94,7 @@ public class TagController {
      */
     @ApiOperation(value = "添加标签") // Swagger注解，用于给接口添加描述信息
     @PostMapping // 处理HTTP POST请求
+    @OperationLogSys(description = "添加标签", operationType = OperationTypeEnum.INSERT)
     public ResponseDataDTO<Boolean> addTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "addTag()");
         boolean result = tagService.addTag(tagVO); // 调用TagService的方法添加标签
@@ -102,6 +107,7 @@ public class TagController {
      */
     @ApiOperation(value = "修改标签") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
+    @OperationLogSys(description = "修改标签", operationType = OperationTypeEnum.UPDATE)
     public ResponseDataDTO<Boolean> updateTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "updateTag()");
 
@@ -115,6 +121,7 @@ public class TagController {
      */
     @ApiOperation(value = "删除标签") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{tagId}") // 处理HTTP DELETE请求，并将路径参数tagId映射到方法参数
+    @OperationLogSys(description = "删除标签", operationType = OperationTypeEnum.DELETE)
     public ResponseDataDTO<Boolean> deleteTag(@PathVariable Long tagId){
         log.info(TAG + "deleteTag()");
         boolean result = tagService.deleteTagById(tagId); // 调用TagService的方法删除标签
