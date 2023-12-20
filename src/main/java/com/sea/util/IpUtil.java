@@ -1,5 +1,6 @@
 package com.sea.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.util.StringUtil;
@@ -79,6 +80,14 @@ public class IpUtil {
                 ip = ip.substring(0, ip.indexOf(","));
             }
         }
+
+        String xRealIp = httpServletRequest.getHeader("Origin");
+        if (StrUtil.isNotBlank(xRealIp) && !"unknown".equalsIgnoreCase(xRealIp)) {
+            ip = xRealIp.split(":")[1].substring(2);
+        }
+        if("localhost".equals(ip)){
+            ip = "127.0.0.1";
+        }
         log.info(TAG + "getIp() => return ip: " + ip);
         return ip;
     }
@@ -91,7 +100,7 @@ public class IpUtil {
      */
     public static String getIpInfo(String ip) {
         log.info(TAG + " ip: " + ip);
-        if ("127.0.0.1".equals(ip)) {
+        if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
             ip = "127.0.0.1";
         }
         String info = null;

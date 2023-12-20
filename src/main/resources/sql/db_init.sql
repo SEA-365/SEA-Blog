@@ -95,9 +95,8 @@ CREATE TABLE `tb_login_log` (
                                 `ip_address` varchar(128) DEFAULT NULL COMMENT '登录ip地址',
                                 `login_location` varchar(255) DEFAULT NULL COMMENT '登录地点',
                                 `browser_type` varchar(50) DEFAULT NULL COMMENT '浏览器类型',
-                                `os` varchar(50) NOT NULL COMMENT '操作系统类型',
-                                `login_status` tinyint NOT NULL DEFAULT '0' COMMENT '登录状态，默认0，0-成功，1-失败',
-                                `message` varchar(255) DEFAULT NULL COMMENT '提示消息',
+                                `os` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '操作系统类型',
+                                `login_status` tinyint DEFAULT '0' COMMENT '登录状态，默认0，0-成功，1-失败',
                                 `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                 PRIMARY KEY (`id`)
 ) COMMENT '登录日志记录表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

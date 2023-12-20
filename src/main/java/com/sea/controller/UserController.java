@@ -1,13 +1,19 @@
 package com.sea.controller;
 
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.sea.annotation.OperationLogSys;
 import com.sea.enums.OperationTypeEnum;
+import com.sea.model.vo.LoginLogVO;
 import com.sea.model.vo.UserLoginVO;
 import com.sea.model.vo.UserVO;
 import com.sea.entity.User;
+import com.sea.service.LoginLogService;
 import com.sea.service.UserService;
 import com.sea.model.dto.ResponseDataDTO;
 import static com.sea.enums.StatusCodeEnum.*;
+
+import com.sea.util.IpUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -17,13 +23,15 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +49,10 @@ import java.util.Objects;
 public class UserController {
     @Autowired // 自动注入UserService对象
     UserService userService;
+
+    @Autowired // 自动注入LoginLogService对象
+    LoginLogService loginLogService;
+
     //日志打印
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private static final String TAG = "UserController ====> ";
@@ -189,6 +201,8 @@ public class UserController {
             log.info(TAG + "login() + username: " + subject.getSession().getAttribute("username"));
             log.info(TAG + "login() + password: " + subject.getSession().getAttribute("password"));
 
+            saveLoginLog(userLoginVO, 0);
+
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData, "登录成功!");
         } catch (IncorrectCredentialsException e) {
             log.info("login fail: " + e.getMessage());
@@ -200,9 +214,9 @@ public class UserController {
             log.info("login fail: " + e.getMessage());
             return new ResponseDataDTO<>(USERNAME_NOT_EXIST.getCode(), "用户名或密码不存在！！");
         } catch (Exception e) {
-
             log.info("login fail: " + e.getMessage() + "   ");
             e.printStackTrace();
+            saveLoginLog(userLoginVO, 1);
             return new ResponseDataDTO<>(FAIL.getCode(), "其他错误！！");
         }
     }
@@ -279,6 +293,32 @@ public class UserController {
     public ResponseDataDTO<Object> unAuth(){
         log.info(TAG + "无权限时重定向到这个接口");
         return new ResponseDataDTO<>(AUTHORIZED.getCode(), AUTHORIZED.getDescription());
+    }
+
+    public void saveLoginLog(UserLoginVO userLoginVO, Integer status){
+        // 获取当前线程的请求属性RequestAttributes
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        // 从请求属性中解析出 HttpServletRequest 对象，通常用于获取 HTTP 请求相关的信息，如请求头、请求参数等。
+        HttpServletRequest httpServletRequest = (HttpServletRequest) Objects.requireNonNull(requestAttributes).resolveReference(RequestAttributes.REFERENCE_REQUEST);
+
+        assert httpServletRequest != null;
+        UserAgent userAgent = UserAgentUtil.parse(httpServletRequest.getHeader("User-Agent"));
+
+        LoginLogVO loginLogVO = new LoginLogVO();
+
+        loginLogVO.setLoginName(userLoginVO.getUsername());
+
+        String ipAddr = IpUtil.getIpAddr(httpServletRequest);
+        loginLogVO.setIpAddress(ipAddr);
+        loginLogVO.setLoginLocation(IpUtil.getIpInfo(ipAddr));
+
+        loginLogVO.setBrowserType(userAgent.getBrowser().getName());
+
+        loginLogVO.setOs(userAgent.getOs().getName());
+
+        loginLogVO.setLoginStatus(status);
+
+        loginLogService.addLoginLog(loginLogVO);
     }
 
 

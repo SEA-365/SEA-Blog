@@ -62,12 +62,16 @@ public class OperationLogAspect {
     @Transactional(rollbackFor = Exception.class)
     @AfterReturning(value = "operationLogPointCut()", returning = "result")
     public void afterReturning(JoinPoint joinPoint, Object result){
-        // 获取RequestAttributes
+        // 获取当前线程的请求属性RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        // 从请求属性中解析出 HttpServletRequest 对象，通常用于获取 HTTP 请求相关的信息，如请求头、请求参数等。
         HttpServletRequest httpServletRequest = (HttpServletRequest) Objects.requireNonNull(requestAttributes).resolveReference(RequestAttributes.REFERENCE_REQUEST);
+        // 从连接点（joinPoint）中获取方法签名（MethodSignature），可以通过方法签名获取方法名、参数等信息。
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        OperationLogSys annotation = signature.getMethod().getAnnotation(OperationLogSys.class);
+        // 从方法签名中获取方法
         Method method = signature.getMethod();
+        // 获取 OperationLogSys 注解。用于提取方法上标注的 OperationLogSys 注解的信息。
+        OperationLogSys annotation = method.getAnnotation(OperationLogSys.class);
 
         OperationLogVO operationLogVO = new OperationLogVO();
 
