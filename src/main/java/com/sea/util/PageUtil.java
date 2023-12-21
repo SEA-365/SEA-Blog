@@ -20,7 +20,7 @@ public class PageUtil {
         PageResultDTO pageResultDTO = new PageResultDTO();
         pageResultDTO.setPageNum(pageInfo.getPageNum());
         pageResultDTO.setPageSize(pageInfo.getPageSize());
-        pageResultDTO.setTotalSize(pageInfo.getSize());
+        pageResultDTO.setTotalSize(pageInfo.getTotal());
         pageResultDTO.setTotalPages(pageInfo.getPages());
         pageResultDTO.setResult(pageInfo.getList());
         return pageResultDTO;

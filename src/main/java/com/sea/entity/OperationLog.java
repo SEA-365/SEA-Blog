@@ -19,12 +19,12 @@ import java.time.LocalDateTime;
 @TableName("tb_operation_log")
 public class OperationLog {
     private Long id;//操作日志记录id
-    private String operation_ip;//主机ip
-    private String operation_location;//操作地点
+    private String operationIp;//主机ip
+    private String operationLocation;//操作地点
     private String method;//方法名
     private String args;//方法参数
-    private String operation_name;//操作人
-    private String operation_type;//操作类型
-    private String return_value;//返回参数
-    private LocalDateTime create_time;//创建时间
+    private String operationName;//操作人
+    private String operationType;//操作类型
+    private String returnValue;//返回参数
+    private LocalDateTime createTime;//创建时间
 }

@@ -78,20 +78,20 @@ public class OperationLogAspect {
         if(annotation != null){
             // 操作类型
             String operationType = annotation.operationType().getValue();
-            operationLogVO.setOperation_type(operationType);
+            operationLogVO.setOperationType(operationType);
 
             // ip地址
             String ipAddr = IpUtil.getIpAddr(httpServletRequest);
-            operationLogVO.setOperation_ip(ipAddr);
+            operationLogVO.setOperationIp(ipAddr);
 
             // ip来源
             String ipInfo = IpUtil.getIpInfo(ipAddr);
-            operationLogVO.setOperation_location(ipInfo);
+            operationLogVO.setOperationLocation(ipInfo);
 
             // 操作人
             assert httpServletRequest != null;
             String username = httpServletRequest.getRemoteUser();
-            operationLogVO.setOperation_name(username);
+            operationLogVO.setOperationName(username);
 
             //操作方法名称
             String className = joinPoint.getClass().getName();
@@ -105,7 +105,7 @@ public class OperationLogAspect {
 
             //返回结果
             String returnResult = JSON.toJSONString(result);
-            operationLogVO.setReturn_value(returnResult);
+            operationLogVO.setReturnValue(returnResult);
 
             operationLogService.addOperationLog(operationLogVO);
         }

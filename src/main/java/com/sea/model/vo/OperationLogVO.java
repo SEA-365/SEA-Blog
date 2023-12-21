@@ -25,10 +25,10 @@ public class OperationLogVO {
     private Long id;
 
     @ApiModelProperty(name = "operation_ip", value = "主机ip", dataType = "String")
-    private String operation_ip;
+    private String operationIp;
 
     @ApiModelProperty(name = "operation_location", value = "操作地点", dataType = "String")
-    private String operation_location;
+    private String operationLocation;
 
     @ApiModelProperty(name = "method", value = "方法名", dataType = "String")
     private String method;
@@ -38,14 +38,14 @@ public class OperationLogVO {
 
     @NotBlank(message = "操作人不能为空！")
     @ApiModelProperty(name = "operation_name", value = "操作人", dataType = "String")
-    private String operation_name;
+    private String operationName;
 
     @NotBlank(message = "操作类型不能为空！")
     @ApiModelProperty(name = "operation_type", value = "操作类型", dataType = "String")
-    private String operation_type;
+    private String operationType;
 
     @ApiModelProperty(name = "return_value", value = "返回参数", dataType = "String")
-    private String return_value;
+    private String returnValue;
 
 
 

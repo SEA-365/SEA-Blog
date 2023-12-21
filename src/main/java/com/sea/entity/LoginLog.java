@@ -24,6 +24,6 @@ public class LoginLog {
     private String browserType;//浏览器类型
     private String os;//操作系统
     private Integer loginStatus;//登录状态，默认0，0-成功，1-失败
-    private LocalDateTime create_time;//创建时间
+    private LocalDateTime createTime;//创建时间
 
 }
