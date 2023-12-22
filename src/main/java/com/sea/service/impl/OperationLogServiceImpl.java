@@ -36,7 +36,6 @@ public class OperationLogServiceImpl implements OperationLogService {
 
         PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<OperationLog> operationLogList = operationLogDao.selectList(null); // 此时查询的记录为所有记录
-        log.info(TAG + " 查询到的全部数据：" + operationLogList);
         return operationLogList; // 返回操作日志记录列表
     }
 

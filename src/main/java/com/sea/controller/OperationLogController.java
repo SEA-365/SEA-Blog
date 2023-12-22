@@ -55,7 +55,6 @@ public class OperationLogController {
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>();
 
         List<OperationLog> operationLogListByPage = operationLogService.getOperationLogList(conditionVO.getBody());
-        log.info(TAG + " 分页操作日志数据：" + operationLogListByPage);
 
         PageInfo<OperationLog> operationLogPageInfo = new PageInfo<>(operationLogListByPage);
         PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO.getBody(), operationLogPageInfo);
