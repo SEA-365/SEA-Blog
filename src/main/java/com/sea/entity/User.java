@@ -1,6 +1,8 @@
 package com.sea.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @TableName("tb_user")
 public class User {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//用户id
     private String username;//用户名
     private String password;//密码

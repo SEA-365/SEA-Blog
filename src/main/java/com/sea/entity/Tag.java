@@ -1,6 +1,8 @@
 package com.sea.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @TableName("tb_tag")
 public class Tag {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//标签id
     private String tagName;//标签名称
     private LocalDateTime createTime;//标签创建时间

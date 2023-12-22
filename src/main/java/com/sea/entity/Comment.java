@@ -2,6 +2,8 @@ package com.sea.entity;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @TableName("tb_comment")
 public class Comment {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//评论id
     private Long articleId;//文章id
     private String articleAuthor;//文章作者

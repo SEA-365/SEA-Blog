@@ -22,6 +22,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -100,8 +101,8 @@ public class OperationLogAspect {
             operationLogVO.setMethod(methodName);
 
             // 方法参数
-            String args = JSON.toJSONString(joinPoint.getArgs());
-            operationLogVO.setArgs(args);
+            Object[] args = joinPoint.getArgs();
+            operationLogVO.setArgs(Arrays.toString(args));
 
             //返回结果
             String returnResult = JSON.toJSONString(result);

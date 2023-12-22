@@ -3,6 +3,8 @@ package com.sea.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @TableName("tb_article")
 public class Article {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//文章id
     private String author;//文章作者
 //    private Long tagId;//标签id,一篇文章可能有多个标签，一个标签也可能包含多篇文章，因此新建一张关联表

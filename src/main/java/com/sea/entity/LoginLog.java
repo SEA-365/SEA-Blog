@@ -1,6 +1,8 @@
 package com.sea.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @TableName("tb_login_log")
 public class LoginLog {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//登录日志id
     private String loginName;//登录账号用户名
     private String ipAddress;//登录ip地址

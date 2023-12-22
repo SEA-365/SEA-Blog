@@ -110,12 +110,10 @@ public class IpUtil {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream(), StandardCharsets.UTF_8));
             StringBuilder result = new StringBuilder();
             while ((info = reader.readLine()) != null) {
-                log.info(TAG  + " ipInfo: " + info);
                 result.append(info);
             }
             reader.close();
             Map map = JSON.parseObject(result.toString(), Map.class);
-            log.info(TAG + " result: " + result.toString());
             List<Map<String, String>> data = (List) map.get("data");
             return data.get(0).get("location");
         } catch (Exception e) {
