@@ -8,7 +8,7 @@ CREATE TABLE `tb_user` (
                            `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '手机号码',
                            `gender` char(2) DEFAULT NULL COMMENT '性别',
                            `intro` varchar(255) DEFAULT NULL COMMENT '个人简介',
-                           `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '头像图片url',
+                           `avatar_url` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '头像图片url',
                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                            PRIMARY KEY (`id`)
@@ -79,11 +79,11 @@ CREATE TABLE `tb_operation_log` (
                                     `id` bigint NOT NULL COMMENT '操作日志记录表主键，自增',
                                     `operation_ip` varchar(128) DEFAULT NULL COMMENT '主机IP地址',
                                     `operation_location` varchar(255) DEFAULT NULL COMMENT '操作地点',
-                                    `method` text COMMENT '方法名',
-                                    `args` text COMMENT '参数',
+                                    `method` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '方法名',
+                                    `args` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '参数',
                                     `operation_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '操作 人',
                                     `operation_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '操作类型',
-                                    `return_value` text COMMENT '返回参数',
+                                    `return_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '返回参数',
                                     `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
                                     PRIMARY KEY (`id`)
 ) COMMENT '操作日志记录表' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
