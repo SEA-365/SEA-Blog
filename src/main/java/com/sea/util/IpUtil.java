@@ -115,7 +115,7 @@ public class IpUtil {
             reader.close();
             Map map = JSON.parseObject(result.toString(), Map.class);
             List<Map<String, String>> data = (List) map.get("data");
-            if(data != null && data.get(0) != null)
+            if(data != null && data.size() > 0)
                 return data.get(0).get("location");
             else
                 return "";

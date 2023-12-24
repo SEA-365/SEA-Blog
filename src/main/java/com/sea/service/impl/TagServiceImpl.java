@@ -46,6 +46,7 @@ public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements TagServi
 
     @Override
     public boolean addTag(TagVO tagVO) {
+        //todo: 分类已存在时，不添加
         Tag tag = BeanCopyUtil.copyObject(tagVO, Tag.class);
         tagDao.insert(tag); // 添加分类
         return true;
