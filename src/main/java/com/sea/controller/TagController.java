@@ -41,7 +41,7 @@ public class TagController {
      * @return 指定页的标签信息
      */
     @ApiOperation(value = "请求指定页的标签信息") // Swagger注解，用于给接口添加描述信息
-    @PostMapping("list") // 处理HTTP GET请求
+    @PostMapping("list") // 需要换成Post请求
     @OperationLogSys(description = "请求指定页的标签信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getTagPage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getTagPage()");
