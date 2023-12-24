@@ -2,6 +2,7 @@ package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
+import com.sea.common.PageRequestApi;
 import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResponseDataDTO;
@@ -40,17 +41,17 @@ public class TagController {
      * @return 指定页的标签信息
      */
     @ApiOperation(value = "请求指定页的标签信息") // Swagger注解，用于给接口添加描述信息
-    @GetMapping // 处理HTTP GET请求
+    @PostMapping("list") // 处理HTTP GET请求
     @OperationLogSys(description = "请求指定页的标签信息", operationType = OperationTypeEnum.SELECT)
-    public ResponseDataDTO<PageResultDTO> getTagPage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getTagPage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getTagPage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
-        List<Tag> tagPage = tagService.getTagList(conditionVO); // 调用tagService的方法获取全部标签信息
+        List<Tag> tagPage = tagService.getTagList(conditionVO.getBody()); // 调用tagService的方法获取全部标签信息
 
         PageInfo<Tag> tagPageInfo = new PageInfo<>(tagPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
         //log.info(TAG + " " + tagPageInfo);
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, tagPageInfo);//封装数据
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO.getBody(), tagPageInfo);//封装数据
 
         if(tagPage != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码

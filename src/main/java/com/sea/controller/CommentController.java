@@ -2,6 +2,7 @@ package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
+import com.sea.common.PageRequestApi;
 import com.sea.entity.Comment;
 import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
@@ -42,17 +43,17 @@ public class CommentController {
      * @return 指定页的评论信息
      */
     @ApiOperation(value = "请求指定页的评论信息") // Swagger注解，用于给接口添加描述信息
-    @GetMapping // 处理HTTP GET请求
+    @PostMapping("list") // 处理HTTP GET请求
     @OperationLogSys(description = "请求指定页的评论信息", operationType = OperationTypeEnum.SELECT)
-    public ResponseDataDTO<PageResultDTO> getCommentPage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getCommentPage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getCommentPage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
-        List<Comment> commentPage = commentService.getCommentList(conditionVO); // 调用commentService的方法获取全部评论信息
+        List<Comment> commentPage = commentService.getCommentList(conditionVO.getBody()); // 调用commentService的方法获取全部评论信息
 
         PageInfo<Comment> commentPageInfo = new PageInfo<>(commentPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
         //log.info(TAG + " " + commentPageInfo);
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, commentPageInfo);//封装数据
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO.getBody(), commentPageInfo);//封装数据
 
         if(commentPage != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码

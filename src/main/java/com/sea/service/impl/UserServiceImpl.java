@@ -2,6 +2,8 @@ package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.github.pagehelper.PageHelper;
+import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.UserVO;
 import com.sea.dao.UserDao;
 import com.sea.entity.User;
@@ -29,7 +31,10 @@ public class UserServiceImpl implements UserService {
     public static final String TAG = "UserServiceImpl ====> ";
 
     @Override
-    public List<User> getAllUser() {
+    public List<User> getUserList(ConditionVO conditionVO) {
+        log.info(TAG + " " + conditionVO);
+
+        PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<User> userList = userDao.selectList(null); // 查询所有用户
         return userList; // 返回用户列表
     }

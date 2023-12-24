@@ -48,7 +48,7 @@ public class OperationLogController {
      * @return 分页查询信息列表
      */
     @ApiOperation(value = "请求指定页操作日志列表")
-    @PostMapping("/list")
+    @PostMapping("/list") // 这里需要使用Post请求
     @OperationLogSys(description = "请求指定页操作日志列表", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getOperationLogByPage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getOperationLogByPage()  ---> " + conditionVO.getBody());

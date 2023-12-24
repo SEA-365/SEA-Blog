@@ -115,7 +115,10 @@ public class IpUtil {
             reader.close();
             Map map = JSON.parseObject(result.toString(), Map.class);
             List<Map<String, String>> data = (List) map.get("data");
-            return data.get(0).get("location");
+            if(data != null && data.get(0) != null)
+                return data.get(0).get("location");
+            else
+                return "";
         } catch (Exception e) {
             log.error(TAG + " getIpInfo exception: ", e);
             return "";

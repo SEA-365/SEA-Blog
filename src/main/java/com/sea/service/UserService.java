@@ -1,5 +1,6 @@
 package com.sea.service;
 
+import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.UserVO;
 import com.sea.entity.User;
 
@@ -15,7 +16,7 @@ public interface UserService {
      * 获取所有用户列表
      * @return 用户列表
      */
-    List<User> getAllUser();
+    List<User> getUserList(ConditionVO conditionVO);
 
     /**
      * 根据id获取指定用户

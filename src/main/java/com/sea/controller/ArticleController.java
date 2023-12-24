@@ -2,6 +2,7 @@ package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
+import com.sea.common.PageRequestApi;
 import com.sea.entity.Article;
 import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
@@ -41,17 +42,17 @@ public class ArticleController {
      * @return 指定页的文章信息
      */
     @ApiOperation(value = "请求指定页的文章信息") // Swagger注解，用于给接口添加描述信息
-    @GetMapping // 处理HTTP GET请求
+    @PostMapping("list") // 处理HTTP GET请求
     @OperationLogSys(description = "请求指定页的文章信息", operationType = OperationTypeEnum.SELECT)
-    public ResponseDataDTO<PageResultDTO> getArticlePage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getArticlePage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getArticlePage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
-        List<Article> articlePage = articleService.getArticleList(conditionVO); // 调用articleService的方法获取全部文章信息
+        List<Article> articlePage = articleService.getArticleList(conditionVO.getBody()); // 调用articleService的方法获取全部文章信息
 
         PageInfo<Article> articlePageInfo = new PageInfo<>(articlePage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
         //log.info(TAG + " " + articlePageInfo);
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, articlePageInfo);//封装数据
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO.getBody(), articlePageInfo);//封装数据
 
         if(articlePage != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码

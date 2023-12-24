@@ -2,6 +2,7 @@ package com.sea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
+import com.sea.common.PageRequestApi;
 import com.sea.enums.OperationTypeEnum;
 import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResponseDataDTO;
@@ -40,17 +41,17 @@ public class CategoryController {
      * @return 指定页的分类信息
      */
     @ApiOperation(value = "请求指定页的分类信息") // Swagger注解，用于给接口添加描述信息
-    @GetMapping // 处理HTTP GET请求
+    @PostMapping("list") // 需要换成
     @OperationLogSys(description = "请求指定页的分类信息", operationType = OperationTypeEnum.SELECT)
-    public ResponseDataDTO<PageResultDTO> getCategoryPage(@RequestBody ConditionVO conditionVO){
+    public ResponseDataDTO<PageResultDTO> getCategoryPage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getCategoryPage()");
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
-        List<Category> categoryPage = categoryService.getCategoryList(conditionVO); // 调用categoryService的方法获取全部分类信息
+        List<Category> categoryPage = categoryService.getCategoryList(conditionVO.getBody()); // 调用categoryService的方法获取全部分类信息
 
         PageInfo<Category> categoryPageInfo = new PageInfo<>(categoryPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
         //log.info(TAG + " " + categoryPageInfo);
-        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, categoryPageInfo);//封装数据
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO.getBody(), categoryPageInfo);//封装数据
 
         if(categoryPage != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码

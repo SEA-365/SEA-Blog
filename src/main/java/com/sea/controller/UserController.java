@@ -2,8 +2,13 @@ package com.sea.controller;
 
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
+import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
+import com.sea.common.PageRequestApi;
+import com.sea.entity.User;
 import com.sea.enums.OperationTypeEnum;
+import com.sea.model.dto.PageResultDTO;
+import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.LoginLogVO;
 import com.sea.model.vo.UserLoginVO;
 import com.sea.model.vo.UserVO;
@@ -14,6 +19,7 @@ import com.sea.model.dto.ResponseDataDTO;
 import static com.sea.enums.StatusCodeEnum.*;
 
 import com.sea.util.IpUtil;
+import com.sea.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -58,23 +64,28 @@ public class UserController {
     private static final String TAG = "UserController ====> ";
 
     /**
-     * 获取所有用户列表
+     * 获取指定页用户列表
      * @return 用户列表
      */
-    @ApiOperation(value = "获取所有用户列表") // Swagger注解，用于给接口添加描述信息
-    @GetMapping // 处理HTTP GET请求
-    @OperationLogSys(description = "获取所有用户列表", operationType = OperationTypeEnum.SELECT)
-    public ResponseDataDTO<List<User>> getAllUser(){
-        log.info(TAG + "getAllUser()");
-        ResponseDataDTO<List<User>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
-        List<User> allUser = userService.getAllUser(); // 调用UserService的方法获取所有用户
-        if(allUser != null){
+    @ApiOperation(value = "获取指定页用户列表") // Swagger注解，用于给接口添加描述信息
+    @PostMapping("/list")// 需要使用Post请求
+    @OperationLogSys(description = "获取指定页用户列表", operationType = OperationTypeEnum.SELECT)
+    public ResponseDataDTO<PageResultDTO> getUserList(@RequestBody PageRequestApi<ConditionVO> conditionVO){
+        log.info(TAG + "getUserList()" + conditionVO.getBody());
+        ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
+
+        List<User> userPage = userService.getUserList(conditionVO.getBody()); // 调用userService的方法获取全部评论信息
+
+        PageInfo<User> userPageInfo = new PageInfo<>(userPage);//这一步，会计算出相关的参数，例如总页数，总记录数等；
+        //log.info(TAG + " " + userPageInfo);
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO.getBody(), userPageInfo);//封装数据
+        if(userPageInfo != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
-            resultData.setData(allUser); // 设置响应数据
+            resultData.setData(pageResultDTO); // 设置响应数据
         }
         else {
             resultData.setStatusCode(FAIL.getCode());
-            resultData.setData(allUser);
+            resultData.setData(pageResultDTO);
             resultData.setMsg("没有查询到用户列表，请检查后重试！"); // 设置响应消息
         }
         return resultData; // 返回响应数据
