@@ -99,7 +99,7 @@ public class TagController {
     public ResponseDataDTO<Boolean> addTag(@RequestBody @Valid TagVO tagVO){
         log.info(TAG + "addTag()");
         boolean result = tagService.addTag(tagVO); // 调用TagService的方法添加标签
-        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result, result ? "添加标签成功！" : "已存在该标签！"); // 返回响应数据
     }
 
     /**
@@ -113,7 +113,7 @@ public class TagController {
         log.info(TAG + "updateTag()");
 
         boolean result = tagService.updateTag(tagVO); // 调用TagService的方法修改标签
-        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result, result ? "更新标签成功！" : "已存在该标签！"); // 返回响应数据
     }
 
     /**

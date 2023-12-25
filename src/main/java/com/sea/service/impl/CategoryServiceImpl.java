@@ -1,7 +1,9 @@
 package com.sea.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
+import com.sea.entity.Tag;
 import com.sea.model.vo.CategoryVO;
 import com.sea.model.vo.ConditionVO;
 import com.sea.entity.Category;
@@ -45,6 +47,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean addCategory(CategoryVO categoryVO) {
+        //todo: 分类已存在时，不重复添加
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getCategoryName, categoryVO.getCategoryName());
+        if(categoryDao.selectList(queryWrapper).size() != 0)
+            return false;
+
         Category category = BeanCopyUtil.copyObject(categoryVO, Category.class);
         categoryDao.insert(category); // 添加分类
         return true;

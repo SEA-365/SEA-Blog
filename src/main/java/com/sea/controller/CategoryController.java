@@ -99,7 +99,7 @@ public class CategoryController {
     public ResponseDataDTO<Boolean> addCategory(@RequestBody @Valid CategoryVO categoryVO){
         log.info(TAG + "addCategory()");
         boolean result = categoryService.addCategory(categoryVO); // 调用CategoryService的方法添加分类
-        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result, result ? "添加分类成功！" : "已存在该分类！"); // 返回响应数据
     }
 
     /**
@@ -113,7 +113,7 @@ public class CategoryController {
         log.info(TAG + "updateCategory()");
 
         boolean result = categoryService.updateCategory(categoryVO); // 调用CategoryService的方法修改分类
-        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+        return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result, result ? "添加分类成功！" : "已存在该分类！"); // 返回响应数据
     }
 
     /**

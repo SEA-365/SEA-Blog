@@ -1,8 +1,10 @@
 package com.sea.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.sea.exception.BizException;
 import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.TagVO;
 import com.sea.dao.TagDao;
@@ -46,7 +48,11 @@ public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements TagServi
 
     @Override
     public boolean addTag(TagVO tagVO) {
-        //todo: 分类已存在时，不添加
+        //todo: 标签已存在时，不重复添加
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Tag::getTagName, tagVO.getTagName());
+        if(tagDao.selectList(queryWrapper).size() != 0)
+            return false;
         Tag tag = BeanCopyUtil.copyObject(tagVO, Tag.class);
         tagDao.insert(tag); // 添加分类
         return true;
