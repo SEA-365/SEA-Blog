@@ -1,6 +1,7 @@
 package com.sea.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,8 @@ public class Tag {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//标签id
     private String tagName;//标签名称
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//标签创建时间
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;//标签修改时间
 }

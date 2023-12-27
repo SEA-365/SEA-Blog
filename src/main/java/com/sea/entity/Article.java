@@ -3,6 +3,7 @@ package com.sea.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,9 @@ public class Article {
     private Integer isDelete;//是否删除，逻辑删除，0-否，1-是，默认0
     private Integer status;//文章状态，1-发布，2-密码，3-草稿，默认1
     private String password;//文章访问密码
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;//修改时间
 
     @TableField(exist = false)//仅方便前端展示，数据库中并不存在该字段

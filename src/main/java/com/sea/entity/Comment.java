@@ -2,6 +2,7 @@ package com.sea.entity;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class Comment {
     private Long commentCreateId;//评论创建者id
     @JsonSerialize(using = ToStringSerializer.class)
     private Long commentReplyId;//被评论回复者id
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime commentCreateTime;//评论创建时间
     private String commentContent;//评论内容
 
