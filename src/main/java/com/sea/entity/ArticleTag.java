@@ -29,6 +29,10 @@ public class ArticleTag {
     @TableId(value = "id", type = IdType.AUTO)
     @JsonSerialize(using = ToStringSerializer.class)
     Long id;//关联表id
+
+    @JsonSerialize(using = ToStringSerializer.class)
     Long articleId;//文章id
+
+    @JsonSerialize(using = ToStringSerializer.class)
     Long tagId;//标签id
 }

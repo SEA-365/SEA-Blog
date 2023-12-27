@@ -24,8 +24,12 @@ public class Article {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;//文章id
     private String author;//文章作者
-//    private Long tagId;//标签id,一篇文章可能有多个标签，一个标签也可能包含多篇文章，因此新建一张关联表
+
+    //    private Long tagId;//标签id,一篇文章可能有多个标签，一个标签也可能包含多篇文章，因此新建一张关联表
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long categoryId;//分类id
+
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;//文章作者用户id
     private String content;//文章内容
     private Integer countViews;//浏览量

@@ -25,7 +25,9 @@ public class Comment {
     private Long id;//评论id
     private Long articleId;//文章id
     private String articleAuthor;//文章作者
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long commentCreateId;//评论创建者id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long commentReplyId;//被评论回复者id
     private LocalDateTime commentCreateTime;//评论创建时间
     private String commentContent;//评论内容
