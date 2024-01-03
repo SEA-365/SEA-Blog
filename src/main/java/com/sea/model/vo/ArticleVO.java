@@ -30,7 +30,7 @@ public class ArticleVO {
 //    这三个参数在转换为文章信息时需要进行一些处理，其中:
 //      (1)标签id可能会有多个，需要根据前端给出的tagList进行：1.未出现过的标签=>新建标签；2.标签名=>标签id的转换 3.文章与标签之间的关联;
 //      (2)分类id一般是一个：1.未出现过得分类=>新建分类；2.分类名=>分类id的转换；
-//    todo: (3)文章作者，需要获取当前登录用户的信息【这个等登录注册模块写完就能做了！！】
+//    todo: (3)文章作者，需要获取当前登录用户的信息【前端完成了】
     private String categoryName;//分类名称
 
     private Long userId;//文章作者用户id
@@ -59,6 +59,9 @@ public class ArticleVO {
 
     @ApiModelProperty(name = "isTop", value = "是否置顶，0-否，1-是，默认0", dataType = "Integer")
     private Integer isTop;//是否置顶，0-否，1-是，默认0
+
+    @ApiModelProperty(name = "isDelete", value = "是否删除，0-否，1-是，默认0", dataType = "Integer")
+    private Integer isDelete;//是否删除，0-否，1-是，默认0
 
     @ApiModelProperty(name = "status", value = "文章状态，1-发布，2-密码，3-草稿，默认1", dataType = "Integer")
     private Integer status;//文章状态，1-发布，2-密码，3-草稿

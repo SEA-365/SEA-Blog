@@ -69,14 +69,18 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @PostConstruct //此注解用于初始化数据，在构造函数之后执行，init()方法之前执行。
     public void initData(){
-        List<Article> articles = articleDao.selectList(null);
+
+        List<Article> articles = articleDao.getAllArticle();
+
+        log.info(TAG + " articles: " + articles.size());
         try{
-            log.info(TAG + "缓存文章信息完成！");
+            for (Article article : articles) {
+                articleMap.put(article.getId(), article);
+            }
+
+            log.info(TAG + "缓存文章信息完成！size:" + articleMap.size());
         }catch (Exception e){
             log.info(TAG + "缓存文章信息失败！" + e.getMessage());
-        }
-        for (Article article : articles) {
-            articleMap.put(article.getId(), article);
         }
 
     }
@@ -99,6 +103,8 @@ public class ArticleServiceImpl implements ArticleService {
     public Article getArticleById(Long articleId) {
         //todo: 需要鉴权
         Article article = articleMap.get(articleId);//先查缓存
+        log.info(TAG + " articleMap: " + articleMap.size());
+        log.info(TAG + " article: " + article);
         if(article == null)//缓存没有再查数据库
             return articleDao.selectById(articleId); // 根据文章ID查询文章
         log.info(TAG + "根据id获取文章 ===> " + article);
@@ -132,6 +138,7 @@ public class ArticleServiceImpl implements ArticleService {
                 "请注意查收！\n";
         //新增文章的作者
         User curUser = userService.getUserById(articleDao.selectById(article.getId()).getUserId());
+        log.info(TAG + " curUser: " + curUser);
         if(curUser != null){
             MailInfo mailInfo = MailInfo.builder().receiveMail(curUser.getEmail())
                     .title("test文章发布")
@@ -164,7 +171,6 @@ public class ArticleServiceImpl implements ArticleService {
         articleQueryWrapper.eq("id", articleVO.getId());
         articleDao.update(article, articleQueryWrapper);
         saveArticleTag(articleVO, article.getId());
-
         articleMap.put(article.getId(), article);//缓存更新
         return true;
     }
@@ -198,7 +204,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Integer deleteArticles(List<Long> articleIds) {
+    public Integer deleteArticles_logic(List<Long> articleIds) {
         log.info(TAG + "逻辑删除文章 ===> " + articleIds);
         //构造查询条件，查询集合articleIds包含的article_id，并删除；
         QueryWrapper<ArticleTag> articleTagQueryWrapper = new QueryWrapper<>();
@@ -206,15 +212,46 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleTagDao.delete(articleTagQueryWrapper);//删除关联表的记录
 
-        return articleDao.deleteBatchIds(articleIds);//删除文章
+
+        for (Long articleId : articleIds) {
+            Article article = articleDao.selectById(articleId);
+            article.setIsDelete(1);
+            //缓存更新
+            articleMap.put(articleId, article);
+
+            //数据库更新
+            QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+            articleQueryWrapper.eq("id", articleId);
+            articleDao.update(article, articleQueryWrapper);
+        }
+
+        return 0;//删除文章
     }
 
+
+    @Override
+    public Integer deleteArticles_real(List<Long> articleIds) {
+        log.info(TAG + "物理删除文章 ===> " + articleIds);
+        //构造查询条件，查询集合articleIds包含的article_id，并删除；
+        QueryWrapper<ArticleTag> articleTagQueryWrapper = new QueryWrapper<>();
+        articleTagQueryWrapper.in("article_id", articleIds);
+
+        articleTagDao.delete(articleTagQueryWrapper);//删除关联表的记录
+
+
+        for (Long articleId : articleIds) {
+            //缓存更新
+            articleMap.remove(articleId);
+        }
+
+        return articleDao.deleteBatchIds(articleIds);//删除文章
+    }
     private Category saveArticleCategory(ArticleVO articleVO) {
         log.info(TAG + "文章分类保存 ===> " + articleVO);
         //1.未出现过得分类=>新建分类；2.出现过的直接返回
         Category category = categoryDao.selectOne(new QueryWrapper<Category>().eq("category_name", articleVO.getCategoryName()));
         log.info(TAG + category + " === " + articleVO + " === ");
-        if (Objects.isNull(category) && !articleVO.getStatus().equals(DRAFT.getCode())) {
+        if (Objects.isNull(category) ) {//&& !articleVO.getStatus().equals(DRAFT.getCode())
             category = new Category();
             if(articleVO.getCategoryName() != null) {
                 category.setCategoryName(articleVO.getCategoryName());

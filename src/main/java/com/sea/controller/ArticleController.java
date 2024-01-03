@@ -113,6 +113,9 @@ public class ArticleController {
     public ResponseDataDTO<Boolean> updateArticle(@RequestBody @Valid ArticleVO articleVO){
         log.info(TAG + "updateArticle()");
 
+        //修改文章后，点击发布，逻辑删除字段默认更新为未删除状态
+        articleVO.setIsDelete(0);
+
         boolean result = articleService.updateArticle(articleVO); // 调用ArticleService的方法修改文章
         return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
@@ -122,11 +125,24 @@ public class ArticleController {
      * @param articleIds 待删除文章id列表
      */
     @ApiOperation(value = "物理删除文章") // Swagger注解，用于给接口添加描述信息
-    @DeleteMapping
+    @DeleteMapping("/real")
     @OperationLogSys(description = "物理删除文章", operationType = OperationTypeEnum.DELETE)
-    public ResponseDataDTO<Integer> deleteArticles(@RequestBody List<Long> articleIds){
-        log.info(TAG + "deleteArticles()");
-        Integer result = articleService.deleteArticles(articleIds); // 调用ArticleService的方法删除文章
+    public ResponseDataDTO<Integer> deleteArticles_real(@RequestBody List<Long> articleIds){
+        log.info(TAG + "deleteArticles_real()");
+        Integer result = articleService.deleteArticles_real(articleIds); // 调用ArticleService的方法删除文章
+        return new ResponseDataDTO<>(result >= 0 ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+    }
+
+    /**
+     * 逻辑删除文章
+     * @param articleIds 待删除文章id列表
+     */
+    @ApiOperation(value = "逻辑删除文章") // Swagger注解，用于给接口添加描述信息
+    @DeleteMapping("/logic")
+    @OperationLogSys(description = "物理删除文章", operationType = OperationTypeEnum.DELETE)
+    public ResponseDataDTO<Integer> deleteArticles_logic(@RequestBody List<Long> articleIds){
+        log.info(TAG + "deleteArticles_logic()");
+        Integer result = articleService.deleteArticles_logic(articleIds); // 调用ArticleService的方法删除文章
         return new ResponseDataDTO<>(result >= 0 ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 }

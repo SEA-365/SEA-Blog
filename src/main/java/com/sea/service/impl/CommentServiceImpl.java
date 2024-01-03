@@ -51,12 +51,27 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean deleteCommentById(Long commentId) {
+    public boolean deleteCommentById_logic(Long commentId) {
+        Comment comment = commentDao.selectById(commentId);
+        comment.setIsDelete(1);//逻辑删除
+
         QueryWrapper<Comment> commentQueryWrapper = new QueryWrapper<>();
         commentQueryWrapper.eq("id", commentId);
-        commentDao.delete(commentQueryWrapper); // 根据评论ID删除评论
+
+        commentDao.update(comment, commentQueryWrapper);
         return true;
     }
+
+    @Override
+    public boolean deleteCommentById_real(Long commentId) {
+
+        QueryWrapper<Comment> commentQueryWrapper = new QueryWrapper<>();
+        commentQueryWrapper.eq("id", commentId);
+
+        commentDao.delete(commentQueryWrapper);
+        return true;
+    }
+
 
     @Override
     public List<Comment> getReplyByCommentId(Long commentId) {

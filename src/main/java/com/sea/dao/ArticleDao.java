@@ -5,6 +5,7 @@ import com.sea.entity.Article;
 import com.sea.model.vo.ConditionVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -28,5 +29,9 @@ public interface ArticleDao extends BaseMapper<Article> {
      * @return 指定文章列表
      */
     List<Article> getArticleByTagId(@Param("conditionVO") ConditionVO conditionVO);
+
+
+    @Select("SELECT * FROM tb_article")
+    List<Article> getAllArticle();
 
 }

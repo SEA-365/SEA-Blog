@@ -41,7 +41,13 @@ public interface CommentService {
      * 删除评论-逻辑删除
      * @param commentId 待删除评论id
      */
-    boolean deleteCommentById(Long commentId);
+    boolean deleteCommentById_logic(Long commentId);
+
+    /**
+     * 删除评论-物理删除
+     * @param commentId 待删除评论id
+     */
+    boolean deleteCommentById_real(Long commentId);
 
 //    /**
 //     * 统计当前文章的评论数【似乎不应该在这里实现。。】

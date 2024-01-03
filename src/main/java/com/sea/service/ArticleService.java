@@ -69,6 +69,14 @@ public interface ArticleService {
      * @param articleIds
      * @return
      */
-    Integer deleteArticles(List<Long> articleIds);
+    Integer deleteArticles_logic(List<Long> articleIds);
+
+    /**
+     * 物理删除文章
+     *
+     * @param articleIds
+     * @return
+     */
+    Integer deleteArticles_real(List<Long> articleIds);
 
 }

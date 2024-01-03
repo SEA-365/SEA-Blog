@@ -33,8 +33,6 @@ public class Comment {
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime commentCreateTime;//评论创建时间
     private String commentContent;//评论内容
-
-    @TableLogic //在调用CommentDao.delete()执行删除操作时，进行逻辑删除，将该字段置1；
     private Integer isDelete;//评论是否被删除
     private Integer isReview;//评论是否通过审核
 }

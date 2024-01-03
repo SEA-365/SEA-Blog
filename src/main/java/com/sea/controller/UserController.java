@@ -258,6 +258,7 @@ public class UserController {
             log.info(TAG + "user: " + principal);
 
             responseData.put("roles", "[admin]");//todo：先写死，后续增加权限机制
+            responseData.put("id", userService.getUserByUsername(principal).getId().toString());//todo：先写死，后续增加权限机制
             responseData.put("username", principal);
             responseData.put("avatar", userService.getUserByUsername(principal).getAvatarUrl());
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData);

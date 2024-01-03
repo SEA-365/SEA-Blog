@@ -113,7 +113,7 @@ public class CommentController {
     @OperationLogSys(description = "删除评论-逻辑删除", operationType = OperationTypeEnum.DELETE)
     public ResponseDataDTO<Boolean> deleteComment(@PathVariable Long commentId){
         log.info(TAG + "deleteComment()");
-        boolean result = commentService.deleteCommentById(commentId); // 调用CommentService的方法删除评论
+        boolean result = commentService.deleteCommentById_logic(commentId); // 调用CommentService的方法删除评论
         return new ResponseDataDTO<>(result ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
     }
 
