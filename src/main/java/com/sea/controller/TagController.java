@@ -76,14 +76,38 @@ public class TagController {
     public ResponseDataDTO<Tag> getTagById(@PathVariable Long tagId){
         log.info(TAG + "getTagById()");
         ResponseDataDTO<Tag> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
-        Tag Category = tagService.getTagById(tagId); // 调用TagService的方法根据id获取标签
-        if(Category != null){
+        Tag tag = tagService.getTagById(tagId); // 调用TagService的方法根据id获取标签
+        if(tag != null){
             resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
-            resultData.setData(Category); // 设置响应数据
+            resultData.setData(tag); // 设置响应数据
         }
         else {
             resultData.setStatusCode(FAIL.getCode());
-            resultData.setData(Category);
+            resultData.setData(null);
+            resultData.setMsg("查询标签失败，请检查重试！"); // 设置响应消息
+        }
+        return resultData; // 返回响应数据
+    }
+
+    /**
+     * 根据标签名称获取标签
+     * @param  conditionVO 查询条件
+     * @return 标签信息
+     */
+    @ApiOperation(value = "根据标签名称获取标签") // Swagger注解，用于给接口添加描述信息
+    @PostMapping("/getTagByName") //
+    @OperationLogSys(description = "根据id获取指定标签", operationType = OperationTypeEnum.SELECT)
+    public ResponseDataDTO<List<Tag>> getTagByName(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
+        log.info(TAG + "getTagById()");
+        ResponseDataDTO<List<Tag>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
+        List<Tag> tags = tagService.getTagByName(conditionVO.getBody()); // 调用TagService的方法根据id获取标签
+        if(tags != null){
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
+            resultData.setData(tags); // 设置响应数据
+        }
+        else {
+            resultData.setStatusCode(FAIL.getCode());
+            resultData.setData(null);
             resultData.setMsg("查询标签失败，请检查重试！"); // 设置响应消息
         }
         return resultData; // 返回响应数据

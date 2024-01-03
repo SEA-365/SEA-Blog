@@ -31,8 +31,14 @@ public class ConditionVO {
     @ApiModelProperty(name = "categoryId", value = "分类id", dataType = "Integer")
     private Integer categoryId;
 
+    @ApiModelProperty(name = "categoryName", value = "分类名称", dataType = "String")
+    private Integer categoryName;
+
     @ApiModelProperty(name = "tagId", value = "标签id", dataType = "Integer")
     private Long tagId;
+
+    @ApiModelProperty(name = "tagName", value = "标签名称", dataType = "String")
+    private Long tagName;
 
     @ApiModelProperty(name = "status", value = "文章状态", dataType = "Integer")
     private Integer status;

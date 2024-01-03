@@ -83,7 +83,32 @@ public class CategoryController {
         }
         else {
             resultData.setStatusCode(FAIL.getCode());
-            resultData.setData(category);
+            resultData.setData(null);
+            resultData.setMsg("查询分类失败，请检查重试！"); // 设置响应消息
+        }
+        return resultData; // 返回响应数据
+    }
+
+
+    /**
+     * 根据分类名称获取分类
+     * @param conditionVO 查询条件
+     * @return 指定分类信息
+     */
+    @ApiOperation(value = "根据分类名称获取分类") // Swagger注解，用于给接口添加描述信息
+    @PostMapping("/getCategoryByName")
+    @OperationLogSys(description = "根据分类名称获取分类", operationType = OperationTypeEnum.SELECT)
+    public ResponseDataDTO<List<Category>> getCategoryByName(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
+        log.info(TAG + "getCategoryByName()");
+        ResponseDataDTO<List<Category>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
+        List<Category> categories = categoryService.getCategoryByName(conditionVO.getBody()); // 调用CategoryService的方法根据分类名称获取分类
+        if(categories != null){
+            resultData.setStatusCode(SUCCESS.getCode()); // 设置响应状态码
+            resultData.setData(categories); // 设置响应数据
+        }
+        else {
+            resultData.setStatusCode(FAIL.getCode());
+            resultData.setData(null);
             resultData.setMsg("查询分类失败，请检查重试！"); // 设置响应消息
         }
         return resultData; // 返回响应数据

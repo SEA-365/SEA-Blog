@@ -26,6 +26,13 @@ public interface CategoryService {
     Category getCategoryById(Long categoryId);
 
     /**
+     * 根据名称查询分类
+     * @param conditionVO 查询条件
+     * @return 查询结果
+     */
+    List<Category> getCategoryByName(ConditionVO conditionVO);
+
+    /**
      * 添加分类
      * @param categoryVO 待添加的分类信息
      */

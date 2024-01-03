@@ -1,6 +1,7 @@
 package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -44,6 +45,21 @@ public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements TagServi
     @Override
     public Tag getTagById(Long tagId) {
         return tagDao.selectById(tagId); // 根据分类ID查询分类
+    }
+
+
+    @Override
+    public List<Tag> getTagByName(ConditionVO conditionVO) {
+        if(conditionVO.getTagName() != null){
+            QueryWrapper<Tag> tagQueryWrapper = new QueryWrapper<>();
+            tagQueryWrapper.like("tag_name", "%"+conditionVO.getTagName()+"%");
+            return tagDao.selectList(tagQueryWrapper);
+        }
+        else{
+            log.info(TAG + " 查询条件为空！");
+            return null;
+        }
+
     }
 
     @Override

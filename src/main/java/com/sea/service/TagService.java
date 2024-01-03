@@ -27,6 +27,13 @@ public interface TagService extends IService<Tag> {
     Tag getTagById(Long tagId);
 
     /**
+     * 根据名称查询标签
+     * @param conditionVO 查询条件
+     * @return 查询结果
+     */
+    List<Tag> getTagByName(ConditionVO conditionVO);
+
+    /**
      * 添加标签
      * @param tagVO 待添加的标签信息
      */

@@ -1,6 +1,7 @@
 package com.sea.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.sea.entity.Tag;
@@ -43,6 +44,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getCategoryById(Long categoryId) {
         return categoryDao.selectById(categoryId); // 根据分类ID查询分类
+    }
+
+
+    @Override
+    public List<Category> getCategoryByName(ConditionVO conditionVO) {
+        QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
+        categoryQueryWrapper.like("category_name", "%"+conditionVO.getCategoryName()+"%");
+        List<Category> categories = categoryDao.selectList(categoryQueryWrapper);
+        return categories;
     }
 
     @Override
