@@ -23,7 +23,7 @@ public class SendMailConfig {
             //设置发送方邮箱地址
             account.setFrom("2472767932@qq.com");
             //设置发送方的授权码
-            account.setPass("aknwcohmuqwodifj");
+            account.setPass("aknwcohmuqwodifj");//qq邮箱授权码
             //是否启用 SSL 加密
             account.setSslEnable(true);
 
