@@ -38,7 +38,7 @@ public class ConditionVO {
     private Long tagId;
 
     @ApiModelProperty(name = "tagName", value = "标签名称", dataType = "String")
-    private Long tagName;
+    private String tagName;
 
     @ApiModelProperty(name = "status", value = "文章状态", dataType = "Integer")
     private Integer status;

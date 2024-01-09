@@ -1,6 +1,7 @@
 package com.sea.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.sea.entity.Tag;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,7 @@ public class ArticleVO {
     private Long userId;//文章作者用户id
 
     @ApiModelProperty(name = "tagNames", value = "文章标签", dataType = "List<Integer>")
-    private List<String> tagNames;//文章标签List
+    private List<Tag> tagList;//文章标签List
 
     @NotBlank(message = "文章内容不能为空！")
     @ApiModelProperty(name = "content", value = "文章内容", dataType = "String")

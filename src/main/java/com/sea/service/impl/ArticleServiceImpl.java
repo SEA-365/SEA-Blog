@@ -70,7 +70,10 @@ public class ArticleServiceImpl implements ArticleService {
     @PostConstruct //此注解用于初始化数据，在构造函数之后执行，init()方法之前执行。
     public void initData(){
 
-        List<Article> articles = articleDao.getAllArticle();
+        ConditionVO conditionVO = new ConditionVO();
+        conditionVO.setPageNum(1);
+        conditionVO.setPageSize(10);
+        List<Article> articles = articleDao.getArticlePage(conditionVO);
 
         log.info(TAG + " articles: " + articles.size());
         try{
@@ -109,17 +112,17 @@ public class ArticleServiceImpl implements ArticleService {
         log.info(TAG + " articleMap: " + articleMap.size());
         log.info(TAG + " article: " + article);
         if(article == null)//缓存没有再查数据库
-            return articleDao.selectById(articleId); // 根据文章ID查询文章
+            return articleDao.getArticleById(articleId); // 根据文章ID查询文章
         log.info(TAG + "根据id获取文章 ===> " + article);
         return article;
     }
 
     @Override
     public boolean addArticle(ArticleVO articleVO) {
-        if(articleVO.getTagNames() == null){
-            ArrayList<String> tagNames = new ArrayList<>();
-            tagNames.add(tagService.getTagById(0L).getTagName());
-            articleVO.setTagNames(tagNames);
+        if(articleVO.getTagList() == null){
+            ArrayList<Tag> tagList = new ArrayList<>();
+            tagList.add(tagService.getTagById(0L));
+            articleVO.setTagList(tagList);
         }
 
         Category category = saveArticleCategory(articleVO);
@@ -158,10 +161,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public boolean updateArticle(ArticleVO articleVO) {
         log.info(TAG + "修改文章 ===> " + articleVO);
-        if(articleVO.getTagNames() == null){
-            ArrayList<String> tagNames = new ArrayList<>();
-            tagNames.add(tagService.getTagById(0L).getTagName());
-            articleVO.setTagNames(tagNames);
+        if(articleVO.getTagList() == null){
+            ArrayList<Tag> tagList = new ArrayList<>();
+            tagList.add(tagService.getTagById(0L));
+            articleVO.setTagList(tagList);
         }
 
         Category category = saveArticleCategory(articleVO);
@@ -275,18 +278,22 @@ public class ArticleServiceImpl implements ArticleService {
             articleTagDao.delete(new QueryWrapper<ArticleTag>()
                     .eq("article_id", articleVO.getId()));
         }
-        List<String> tagNames = articleVO.getTagNames();
-        log.info(TAG + "tagNames: " + tagNames);
-        if (CollectionUtils.isNotEmpty(tagNames)) {
+        List<String> tagNameList = new ArrayList<>();
+        for (Tag tag : articleVO.getTagList()) {
+            tagNameList.add(tag.getTagName());
+        }
+
+        log.info(TAG + "tagNameList: " + tagNameList);
+        if (CollectionUtils.isNotEmpty(tagNameList)) {
             //获取已存在的标签
-            List<Tag> existTags = tagService.list(new QueryWrapper<Tag>().in("tag_name", tagNames));
+            List<Tag> existTags = tagService.list(new QueryWrapper<Tag>().in("tag_name", tagNameList));
             log.info(TAG + "existTags: " + existTags);
             //获取已存在的标签名称
             //Java8新增用法
-            List<String> existTagNames = existTags.stream()
+            List<String> existTagList = existTags.stream()
                     .map(Tag::getTagName)
                     .collect(Collectors.toList());
-            log.info(TAG + "existTagNames: " + existTagNames);
+            log.info(TAG + "existTagList: " + existTagList);
             //获取已存在的标签id
             List<Long> existTagIds = existTags.stream()
                     .map(Tag::getId)
@@ -294,14 +301,14 @@ public class ArticleServiceImpl implements ArticleService {
             log.info(TAG + "existTagIds: " + existTagIds);
 
             //移除请求数据中已存在的标签名称
-            tagNames.removeAll(existTagNames);
-            log.info(TAG + "tagNames: " + tagNames);
+            tagNameList.removeAll(existTagList);
+            log.info(TAG + "tagNameList: " + tagNameList);
             //第一次出现的标签，新建
-            if (CollectionUtils.isNotEmpty(tagNames)) {
+            if (CollectionUtils.isNotEmpty(tagNameList)) {
                 ArrayList<Tag> tags = new ArrayList<>();
-                for (int i = 0; i < tagNames.size(); i++) {
+                for (int i = 0; i < tagNameList.size(); i++) {
                     Tag tag = new Tag();
-                    tag.setTagName(tagNames.get(i));
+                    tag.setTagName(tagNameList.get(i));
                     tags.add(tag);
                 }
                 //新建标签

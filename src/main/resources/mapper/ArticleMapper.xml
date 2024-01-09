@@ -68,17 +68,39 @@
         <!-- <otherwise></otherwise> -->
     </select>
 
+    <select id="getArticleById" resultMap="BaseResultMap" parameterType="Integer">
+        SELECT a.*,
+        atag.article_id,
+        atag.tag_id,
+        tag.id AS t_id,
+        tag.tag_name AS t_name,
+        tag.create_time AS t_create_time,
+        tag.update_time AS t_update_time,
+        c.category_name AS c_name
+        FROM t_article a
+        LEFT JOIN tb_category c ON c.id = a.category_id
+        LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
+        LEFT JOIN tb_tag tag ON tag.id = atag.tag_id
+        <where>
+            <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
+            <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
+            <if test="id != null">
+                a.id = #{id}
+            </if>
+        </where>
+    </select>
+
     <select id="getArticleByTagId" resultMap="BaseResultMap" parameterType="com.sea.model.vo.ConditionVO">
         SELECT a.*,
-        at.article_id,
-        at.tag_id,
-        tag.id AS tid,
-        tag.tag_name AS tname,
-        c.category_name AS cname
+        atag.article_id,
+        atag.tag_id,
+        tag.id AS t_id,
+        tag.tag_name AS t_name,
+        c.category_name AS c_name
         FROM tb_article a
         LEFT JOIN tb_category c ON c.id = a.category_id
-        LEFT JOIN tb_article_tag at ON at.article_id = a.id
-        LEFT JOIN tb_tag tag ON tag.id = at.tag_id
+        LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
+        LEFT JOIN tb_tag tag ON tag.id = atag.tag_id
         <where>
             <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
             <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
