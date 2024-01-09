@@ -21,12 +21,13 @@
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="c_name" jdbcType="VARCHAR" property="categoryName"/>
         <collection property="tagList" ofType="com.sea.entity.Tag">
             <!--此处使用<collection>，联表查询，得到该文章的所有标签list-->
-            <id column="id" property="id"/>
-            <result column="tag_name" property="tagName"/>
-            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+            <id column="t_id" property="id"/>
+            <result column="t_name" property="tagName"/>
+            <result column="t_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="t_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         </collection>
     </resultMap>
 
@@ -35,9 +36,11 @@
         SELECT a.*,
                atag.article_id,
                atag.tag_id,
-               tag.id AS tid,
-               tag.tag_name AS tname,
-               c.category_name AS cname
+               tag.id AS t_id,
+               tag.tag_name AS t_name,
+               tag.create_time AS t_create_time,
+               tag.update_time AS t_update_time,
+               c.category_name AS c_name
         FROM tb_article a
             LEFT JOIN tb_category c ON c.id = a.category_id
             LEFT JOIN tb_article_tag atag ON atag.article_id = a.id

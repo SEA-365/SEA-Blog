@@ -95,7 +95,10 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
 
         List<Article> articleList = articleDao.getArticlePage(conditionVO); // 此时查询的记录为所有记录
-        log.info(TAG + "获取文章列表 ===> " + articleList);
+        log.info(TAG + "获取文章列表 ===> ");
+        for (Article article : articleList) {
+            log.info(TAG + article);
+        }
         return articleList; // 返回文章列表
     }
 

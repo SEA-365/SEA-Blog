@@ -24,7 +24,7 @@ public class PageRequestApi<T> {
     }
 
     public static <T> PageRequestApi<T> instance(T body) {
-        return new PageRequestApi(body);
+        return new PageRequestApi<>(body);
     }
 
     public T getBody() {

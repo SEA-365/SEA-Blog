@@ -99,7 +99,7 @@ public class CategoryController {
     @PostMapping("/getCategoryByName")
     @OperationLogSys(description = "根据分类名称获取分类", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<List<Category>> getCategoryByName(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
-        log.info(TAG + "getCategoryByName()");
+        log.info(TAG + "getCategoryByName(): " + conditionVO.getBody());
         ResponseDataDTO<List<Category>> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
         List<Category> categories = categoryService.getCategoryByName(conditionVO.getBody()); // 调用CategoryService的方法根据分类名称获取分类
         if(categories != null){
