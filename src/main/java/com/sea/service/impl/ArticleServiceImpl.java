@@ -12,6 +12,7 @@ import com.sea.dao.ArticleDao;
 import com.sea.dao.ArticleTagDao;
 import com.sea.dao.CategoryDao;
 import com.sea.entity.*;
+import com.sea.enums.FilePathEnum;
 import com.sea.exception.BizException;
 import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
@@ -22,17 +23,20 @@ import com.sea.service.ArticleTagService;
 import com.sea.service.TagService;
 import com.sea.service.UserService;
 import com.sea.util.BeanCopyUtil;
+import com.sea.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.sea.enums.ArticleStatusEnum.DRAFT;
 
 /**
  * @author: sea
@@ -57,6 +61,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     UserService userService;
+
+    String imgPath = FilePathEnum.ARTICLE.getPath();
+
+    @Value("${upload.local.url}")
+    String localUrl;
+
+    @Value("${upload.local.path}")
+    String localPath;
+
+
 
     //日志打印
     public static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
@@ -335,6 +349,90 @@ public class ArticleServiceImpl implements ArticleService {
         }
         else {
 
+        }
+    }
+
+
+    @Override
+    public String uploadFile(MultipartFile file) {
+        log.info(TAG + " uploadFile() ");
+        try {
+            //1.获取文件的MD5，目的：根据文件内容生成唯一的哈希值，保证文件数据的完整性；
+            String md5 = FileUtil.getMd5(file.getInputStream());
+            //2.获取文件拓展名：如 .txt、.jpg等
+            String extName = FileUtil.getExtName(file.getOriginalFilename());
+            //3.得到新的文件名
+            String newFileName = md5 + extName;
+            //4.上传文件：即写入到服务器的指定位置
+            log.info(TAG + " localUrl: " + localUrl);
+            log.info(TAG + " localPath: " + localPath);
+            log.info(TAG + " imgPath: " + imgPath);
+            log.info(TAG + " newFileName: " + newFileName);
+            if (!exists(localPath + imgPath + newFileName)) {
+                upload(localPath + imgPath, newFileName, file.getInputStream());
+            }
+            return getFileAccessUrl(newFileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BizException("文件上传失败");
+        }
+
+    }
+
+    /**
+     * 判断文件是否存在
+     *
+     * @param filePath 文件路径
+     * @return
+     */
+    public Boolean exists(String filePath){
+        return new File(localPath + filePath).exists();
+    }
+
+    /**
+     * 获取文件访问url
+     *
+     * @param fileName 文件名
+     * @return 完整的服务器文件访问地址url
+     */
+    public String getFileAccessUrl(String fileName) {
+        return localUrl + imgPath + fileName;
+    }
+
+    private void upload(String path, String fileName, InputStream inputStream)throws IOException{
+        log.info(TAG + " upload() ");
+        log.info(TAG + " path: " + path);
+        log.info(TAG + " fileName: " + fileName);
+        //1.判断文章相关的目录是否已创建，若没有则创建
+        File directory = new File(path);
+        if(!directory.exists()){
+            log.info(TAG + "目录不存在，需要创建目录！");
+            if(!directory.mkdirs()){
+                log.error(TAG + "创建目录失败！");
+            }
+            else {
+                log.info(TAG + "目录创建成功!");
+            }
+        }
+
+        //2.写入文件
+        // 在服务器创建新的文件接收用户上传的文件数据
+        File file = new File(path + fileName);
+        if(file.createNewFile()){
+            // 文件输入流：用户上传的文件读到内存
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+            // 文件输出流：用户上传的文件写入到服务器指定目录
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file));
+            byte[] bytes = new byte[1024];
+            int len;
+            while((len = bufferedInputStream.read(bytes)) != -1){
+                bufferedOutputStream.write(bytes, 0, len);
+            }
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
+            bufferedInputStream.close();
+            inputStream.close();
         }
     }
 

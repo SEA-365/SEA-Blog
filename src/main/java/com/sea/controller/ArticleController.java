@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -144,5 +145,15 @@ public class ArticleController {
         log.info(TAG + "deleteArticles_logic()");
         Integer result = articleService.deleteArticles_logic(articleIds); // 调用ArticleService的方法删除文章
         return new ResponseDataDTO<>(result >= 0 ? SUCCESS.getCode() : FAIL.getCode(), result); // 返回响应数据
+    }
+
+
+
+    @ApiOperation(value = "文章封面上传")
+    @PostMapping("/uploadImg")
+    public ResponseDataDTO<String> uploadImg(@RequestParam(value = "file")MultipartFile file){
+        String url = articleService.uploadFile(file);
+
+        return new ResponseDataDTO<>(SUCCESS.getCode(), url, "文件上传成功！");
     }
 }

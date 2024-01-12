@@ -5,6 +5,7 @@ import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
 import com.sea.model.vo.ConditionVO;
 import com.sea.model.vo.DeleteVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -78,5 +79,14 @@ public interface ArticleService {
      * @return
      */
     Integer deleteArticles_real(List<Long> articleIds);
+
+    /**
+     * 文件上传：
+     *      （1）MultipartFile类：是 Spring Framework 中用于表示文件上传的接口，提供了一系列获取文件信息的方法，可以获取文件的InputStream，将文件保存到本地磁盘；
+     *      （2）支持多文件上传，通过数组或集合方式接受；
+     * @param file 上传的文件
+     * @return 文件访问路径
+     */
+    String uploadFile(MultipartFile file);
 
 }

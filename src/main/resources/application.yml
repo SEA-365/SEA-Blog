@@ -17,6 +17,11 @@ spring:
     redis:
       repositories:
         enabled: false
+  servlet: # 限制上传文件的大小
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 server:
   servlet:
@@ -40,5 +45,9 @@ mybatis-plus:
 #日志调试级别：此处仅配了Shiro安全框架的日志输出级别
 logging:
   level:
-    org.apache.shiro: DEBUG
+    org.apache.shiro: TRACE
 
+upload:
+  local:
+    url: http://localhost:8080/SEA-Blog/
+    path: src/main/resources/

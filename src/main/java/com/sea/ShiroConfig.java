@@ -112,10 +112,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/users/logout", "logout");
 
         // "anon"表示不需要认证即可访问，即配置不会被拦截的链接 顺序判断
+        filterChainDefinitionMap.put("/articles/uploadImg/**", "anon");
+        filterChainDefinitionMap.put("/uploadFile/article/**", "anon");
         filterChainDefinitionMap.put("/users/login", "anon");
-
         filterChainDefinitionMap.put("/users/unLogin", "anon");
         filterChainDefinitionMap.put("/users/unAuth", "anon");
+
 
         //"authc"表示需要认证（登录）才能访问
         filterChainDefinitionMap.put("/**", "authc");
