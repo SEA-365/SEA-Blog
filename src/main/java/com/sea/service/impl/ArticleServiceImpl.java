@@ -396,6 +396,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return 完整的服务器文件访问地址url
      */
     public String getFileAccessUrl(String fileName) {
+        log.info(TAG + " accessUrl: " + localUrl + imgPath + fileName);
         return localUrl + imgPath + fileName;
     }
 

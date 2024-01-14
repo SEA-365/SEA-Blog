@@ -45,7 +45,7 @@ mybatis-plus:
 #日志调试级别：此处仅配了Shiro安全框架的日志输出级别
 logging:
   level:
-    org.apache.shiro: TRACE
+    org.apache.shiro: DEBUG
 
 upload:
   local:

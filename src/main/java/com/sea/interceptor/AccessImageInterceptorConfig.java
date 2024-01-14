@@ -14,8 +14,8 @@ public class AccessImageInterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploadFile/article/**")//前端url访问的路径，若有访问前缀，在访问时添加即可，这里不需添加。
-//                .addResourceLocations("file:" + "/Volumes/BJFU/JavaProject/SEA-Blog/uploadFile/article/");//映射的服务器存放图片目录。【这里必须是绝对路径，否则前端访问不到！！！】
-                .addResourceLocations("classpath:/uploadFile/article/");//映射的服务器存放图片目录。【这里必须是绝对路径，否则前端访问不到！！！】
+//                .addResourceLocations("file:src/main/resources/uploadFile/article/");//映射的服务器存放图片目录。【这里的file就是项目根目录,相当于绝对路径，不建议使用】
+                .addResourceLocations("classpath:uploadFile/article/");//映射的服务器存放图片目录。【这里的classpath是项目resources目录等价于=> src/main/resources/】
     }
 
 }
