@@ -49,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getCategoryByName(ConditionVO conditionVO) {
+        log.info(TAG + "conditionVO: " + conditionVO );
         QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
         categoryQueryWrapper.like("category_name", "%"+conditionVO.getCategoryName()+"%");
         List<Category> categories = categoryDao.selectList(categoryQueryWrapper);
