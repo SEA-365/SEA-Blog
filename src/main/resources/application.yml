@@ -51,3 +51,10 @@ upload:
   local:
     url: http://localhost:8080/SEA-Blog/
     path: src/main/resources/
+
+send:
+  mail:
+    host: smtp.qq.com
+    port: 465
+    from: 2472767932@qq.com
+    password: aknwcohmuqwodifj

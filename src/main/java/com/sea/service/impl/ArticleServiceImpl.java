@@ -24,6 +24,7 @@ import com.sea.service.TagService;
 import com.sea.service.UserService;
 import com.sea.util.BeanCopyUtil;
 import com.sea.util.FileUtil;
+import com.sea.util.TotalWordsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Value("${upload.local.path}")
     String localPath;
 
+    private
+    SendMailConfig mailConfig = new SendMailConfig();
 
 
     //日志打印
@@ -145,6 +148,8 @@ public class ArticleServiceImpl implements ArticleService {
         if (Objects.nonNull(category)) {
             article.setCategoryId(category.getId());
         }
+
+        article.setTotalWords(TotalWordsUtil.wordCount(articleVO.getContent()));
         articleDao.insert(article);
         saveArticleTag(articleVO, article.getId());
 
@@ -164,7 +169,7 @@ public class ArticleServiceImpl implements ArticleService {
                     .title("test文章发布")
                     .content(MessageFormat.format(mailContent, curUser.getUsername(), article.getTitle()))
                     .build();
-            SendMailConfig.sendMail(mailInfo);
+            mailConfig.sendMail(mailInfo);
         }
 
 
@@ -187,6 +192,9 @@ public class ArticleServiceImpl implements ArticleService {
         if (Objects.nonNull(category)) {
             article.setCategoryId(category.getId());
         }
+
+        article.setTotalWords(TotalWordsUtil.wordCount(articleVO.getContent()));
+
         QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
         articleQueryWrapper.eq("id", articleVO.getId());
         articleDao.update(article, articleQueryWrapper);
