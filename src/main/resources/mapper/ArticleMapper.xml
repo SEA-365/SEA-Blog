@@ -54,8 +54,20 @@
             <if test="conditionVO.isDelete != null">
                 and a.is_delete = #{conditionVO.isDelete}
             </if>
+            <if test="conditionVO.categoryId != null">
+                and a.category_id = #{conditionVO.categoryId}
+            </if>
+            <if test="conditionVO.tagId != null">
+                and tag.id = #{conditionVO.tagId}
+            </if>
+            <if test="conditionVO.status != null">
+                and a.status = #{conditionVO.status}
+            </if>
             <if test="conditionVO.keywords != null">
-                and a.title LIKE CONCAT('%', #{conditionVO.keywords}, '%')
+                and a.keywords LIKE CONCAT('%', #{conditionVO.keywords}, '%')
+            </if>
+            <if test="conditionVO.title != null">
+                and a.title LIKE CONCAT('%', #{conditionVO.title}, '%')
             </if>
         </where>
         <!--分页参数由MyBatis自动指定-->
