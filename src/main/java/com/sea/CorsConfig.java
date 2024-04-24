@@ -43,7 +43,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
         corsConfiguration.setAllowCredentials(true);
 
-        log.info(TAG + corsConfiguration.checkOrigin("http://localhost:7070"));
+//        log.info(TAG + corsConfiguration.checkOrigin("http://localhost:7070"));
 
         return corsConfiguration;
     }

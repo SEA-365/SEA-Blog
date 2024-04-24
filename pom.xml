@@ -151,6 +151,11 @@
             <version>1.15</version>
         </dependency>
 
+        <!--添加Spring Data Redis依赖项-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

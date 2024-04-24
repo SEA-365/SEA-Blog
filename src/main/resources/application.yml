@@ -2,14 +2,14 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sea_blog?useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: 12345678
+    url: jdbc:mysql://101.42.0.224:3306/sea_blog?useSSL=false&serverTimezone=Asia/Shanghai
+    username: sea_blog
+    password: sea12345678
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #解决Swagger2 和 SpringBoot版本之间的冲突
   redis: # Redis数据库连接配置
-    host: 127.0.0.1
+    host: 172.25.0.3
     port: 6379
     timeout: 1800
     password:
@@ -26,7 +26,15 @@ spring:
 server:
   servlet:
     context-path: /SEA-Blog
-  port: 8080
+  port: 9090
+  ssl:
+    key-alias: sea-365.site
+    key-store-password: mqle3bu3pv
+    key-store-type: PKCS12
+    key-store: classpath:cert/sea-365.site.pfx
+    # classpath: 指的是项目的src/main/java和src/main/resources路径。
+    # 存放在这两个路径下的文件都可以使用classpath 作为路径来引用。
+
 
 #PageHelper分页插件配置
 pagehelper:
@@ -49,7 +57,7 @@ logging:
 
 upload:
   local:
-    url: http://localhost:8080/SEA-Blog/
+    url: http://localhost:9090/SEA-Blog/
     path: src/main/resources/
 
 send:

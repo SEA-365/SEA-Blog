@@ -32,6 +32,7 @@ public class User {
     private String gender;//性别
     private String intro;//个人介绍
     private String avatarUrl;//头像url
+    private Integer loginStatus;//登录状态
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")

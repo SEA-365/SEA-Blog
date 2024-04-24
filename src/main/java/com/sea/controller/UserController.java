@@ -4,6 +4,7 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
+import com.sea.annotation.RequireLogin;
 import com.sea.common.PageRequestApi;
 import com.sea.entity.User;
 import com.sea.enums.OperationTypeEnum;
@@ -17,6 +18,7 @@ import com.sea.service.UserService;
 import com.sea.model.dto.ResponseDataDTO;
 import static com.sea.enums.StatusCodeEnum.*;
 
+import com.sea.util.BeanCopyUtil;
 import com.sea.util.IpUtil;
 import com.sea.util.PageUtil;
 import io.swagger.annotations.Api;
@@ -68,6 +70,7 @@ public class UserController {
      */
     @ApiOperation(value = "获取指定页用户列表") // Swagger注解，用于给接口添加描述信息
     @PostMapping("/list")// 需要使用Post请求
+    @RequireLogin
     @OperationLogSys(description = "获取指定页用户列表", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getUserList(@RequestBody PageRequestApi<ConditionVO> conditionVO){
         log.info(TAG + "getUserList()" + conditionVO.getBody());
@@ -97,6 +100,7 @@ public class UserController {
      */
     @ApiOperation(value = "根据id获取指定用户") // Swagger注解，用于给接口添加描述信息
     @GetMapping("/{userId}") // 处理HTTP GET请求，并将路径参数userId映射到方法参数
+    @RequireLogin
     @OperationLogSys(description = "根据id获取指定用户", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<User> getUserById(@PathVariable Long userId){
         log.info(TAG + "getUserById()");
@@ -146,6 +150,7 @@ public class UserController {
      */
     @ApiOperation(value = "修改用户") // Swagger注解，用于给接口添加描述信息
     @PutMapping // 处理HTTP PUT请求
+    @RequireLogin
     @OperationLogSys(description = "修改用户", operationType = OperationTypeEnum.UPDATE)
     public ResponseDataDTO<Boolean> updateUser(@RequestBody @Valid UserVO userVO, BindingResult bindingResult){
         log.info(TAG + "updateUser()");
@@ -172,6 +177,7 @@ public class UserController {
      */
     @ApiOperation(value = "删除用户") // Swagger注解，用于给接口添加描述信息
     @DeleteMapping("/{userId}") // 处理HTTP DELETE请求，并将路径参数userId映射到方法参数
+    @RequireLogin
     @OperationLogSys(description = "删除用户", operationType = OperationTypeEnum.DELETE)
     public ResponseDataDTO<Boolean> deleteUser(@PathVariable Long userId){
         log.info(TAG + "deleteUser()");
@@ -213,6 +219,8 @@ public class UserController {
 
             saveLoginLog(userLoginVO, 0);
 
+            // 更新用户登录状态
+            updateLoginStatus(userLoginVO.getUsername(), 1);
             return new ResponseDataDTO<>(SUCCESS.getCode(), responseData, "登录成功!");
         } catch (IncorrectCredentialsException e) {
             log.info("login fail: " + e.getMessage());
@@ -237,6 +245,7 @@ public class UserController {
      */
     @ApiOperation(value = "获取用户登录信息")
     @GetMapping("/info")
+    @RequireLogin
     @OperationLogSys(description = "获取用户登录信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<Object> info(){
         log.info(TAG + "获取用户登录信息");
@@ -273,6 +282,7 @@ public class UserController {
      */
     @ApiOperation(value = "登出操作")
     @RequestMapping("/logout")
+    @RequireLogin
     @OperationLogSys(description = "登出操作", operationType = OperationTypeEnum.LOGOUT)
     public ResponseDataDTO<Object> logout(){
         log.info(TAG + "users/logout: 登出操作");
@@ -281,6 +291,10 @@ public class UserController {
             subject.logout();
         else
             return new ResponseDataDTO<>(FAIL.getCode(), TAG + " /users/logout: " + ((User)subject.getPrincipal()).getUsername() + " 未登录/未认证！");
+
+        //更新用户登录状态
+        String username = (String) subject.getSession().getAttribute("username");
+        updateLoginStatus(username, 0);
         return new ResponseDataDTO<>(SUCCESS.getCode(), "登出成功！");
     }
 
@@ -332,5 +346,24 @@ public class UserController {
         loginLogService.addLoginLog(loginLogVO);
     }
 
+
+    public void updateLoginStatus(String username, Integer status){
+        User user = userService.getUserByUsername(username); // 根据用户名查询用户信息
+        if (user != null) {
+            String originalPassword = user.getPassword(); // 保存原始密码
+
+            // 更新用户登录状态
+            user.setLoginStatus(status);
+            // 设置用户密码为原始密码，避免密码被重新加密
+            user.setPassword(originalPassword);
+
+            // 将更新后的用户信息持久化到数据库中
+            UserVO userVO = BeanCopyUtil.copyObject(user, UserVO.class);
+            log.info(TAG + " userVO: " + userVO);
+            userService.updateUser(userVO); // 调用UserService的方法更新用户信息
+        } else {
+            log.warn("用户不存在或查询用户失败：{}", username);
+        }
+    }
 
 }

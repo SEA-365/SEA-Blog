@@ -56,7 +56,14 @@ public class OperationLogAspect {
      */
     @Before("operationLogPointCut()")
     public void before(JoinPoint joinPoint){
-        log.info(TAG + " 准备执行方法： " + joinPoint.getTarget().getClass().getName() + "()");
+        // 获取目标类名
+        String className = joinPoint.getTarget().getClass().getName();
+
+        // 获取目标方法名
+        String methodName = joinPoint.getSignature().getName();
+
+        // 打印日志
+        log.info(TAG + " 正在执行方法： " + className + "." + methodName + "()");
     }
 
     @Async

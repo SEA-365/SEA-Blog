@@ -45,7 +45,8 @@ public class UserVO {
     private String gender;//性别
     private String intro;//个人介绍
 
-    @NotBlank(message = "头像Url不能为空！")
     @ApiModelProperty(name = "avatarUrl", value = "头像Url", dataType = "String")
     private String avatarUrl;//头像url
+
+    private Integer loginStatus;//登录状态
 }

@@ -72,8 +72,12 @@ public class MyShiroRealm extends AuthorizingRealm {
         //2.通过username查询数据库
         User user = userService.getUserByUsername(username);
 
+
+
         //3.验证用户名和密码是否匹配
         if(user == null || !manualPasswordCheck(password, user.getPassword())){
+            if(user != null)
+                log.info(TAG + user.getUsername() + " ===== " + user.getPassword());
             throw new BizException("用户名或密码不正确！");
         }
         //4.验证成功后，构建身份验证信息，包括：用户名【身份信息】，加密的密码【凭证信息】，盐值，Realm名称
@@ -91,6 +95,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     // 手动验证密码的方法
     private boolean manualPasswordCheck(String rawPassword, String hashedPassword) {
         // 在这里使用 BCrypt 进行密码比较
+        log.info(TAG + " rawPassword: " + rawPassword + " hashedPassword: " + hashedPassword);
         return new BCryptPasswordEncoder().matches(rawPassword, hashedPassword);
     }
 }

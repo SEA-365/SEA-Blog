@@ -60,15 +60,41 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(UserVO userVO) {
         // 密码加密存储到数据库
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        userVO.setPassword(passwordEncoder.encode(userVO.getPassword())); // 对密码进行加密
-        Long id = userVO.getId();
-        User user = BeanCopyUtil.copyObject(userVO, User.class);
-        // 使用条件构造器。指定更新条件
-        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
-        // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = userVO.id
-        userUpdateWrapper.eq("id", id);
-        userDao.update(user, userUpdateWrapper); // 更新用户
-        return true;
+        // 先从数据库中获取对应用户的原始信息，包括密码
+        User existingUser = userDao.selectById(userVO.getId()); // 根据用户ID查询用户的方法
+
+        if (existingUser != null) {
+            // 检查传入的 userVO 中的密码是否已经加密过
+            String newPassword = userVO.getPassword();
+            if (!newPassword.equals(existingUser.getPassword())) {
+                // 如果密码未加密，则进行加密处理
+                String encryptedPassword = passwordEncoder.encode(newPassword);
+                existingUser.setPassword(encryptedPassword);
+            }
+
+            // 其他字段的更新处理，例如用户名、邮箱、电话等
+            existingUser.setUsername(userVO.getUsername());
+            existingUser.setEmail(userVO.getEmail());
+            existingUser.setPhone(userVO.getPhone());
+            existingUser.setLoginStatus(userVO.getLoginStatus());
+            existingUser.setGender(userVO.getGender());
+            existingUser.setIntro(userVO.getIntro());
+            existingUser.setAvatarUrl(userVO.getAvatarUrl());
+
+            // 更新用户信息
+            Long id = userVO.getId();
+            // 使用条件构造器。指定更新条件
+            UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
+            // 此处第一个参数为列名，第二个参数为值，相当于子句：where id = userVO.id
+            userUpdateWrapper.eq("id", id);
+
+            int rowsAffected = userDao.update(existingUser, userUpdateWrapper); // 假设使用更新用户信息的方法
+
+            return rowsAffected > 0; // 返回更新结果
+        } else {
+            // 用户不存在，更新失败
+            return false;
+        }
     }
 
     @Override
