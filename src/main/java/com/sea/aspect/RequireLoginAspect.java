@@ -6,6 +6,7 @@ import com.sea.model.vo.UserVO;
 import com.sea.service.UserService;
 import com.sea.util.BeanCopyUtil;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,7 +42,7 @@ public class RequireLoginAspect {
     }
 
     @Before("requireLoginPointCut()")
-    public void checkLoggedIn(JoinPoint joinPoint){
+    public void checkLoggedIn(JoinPoint joinPoint) {
         // 获取目标类名
         String className = joinPoint.getTarget().getClass().getName();
 
@@ -52,8 +53,18 @@ public class RequireLoginAspect {
         log.info(TAG + " 正在执行方法： " + className + "." + methodName + "()");
 
         Subject subject = SecurityUtils.getSubject();
+        if (subject == null) {
+            throw new BizException("无法获取用户信息");
+        }
         log.info(TAG + " subject: " + subject.toString());
-        String username = (String) subject.getSession().getAttribute("username");
+        Session session = subject.getSession();
+        if (session == null) {
+            throw new BizException("用户会话已失效");
+        }
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new BizException("用户未登录");
+        }
         log.info(TAG + " username: " + username);
         User user = userService.getUserByUsername(username);
         log.info(TAG + " user: " + user);

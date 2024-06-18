@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://101.42.0.224:3306/sea_blog?useSSL=false&serverTimezone=Asia/Shanghai
+    username: sea_blog
+    password: sea12345678
+  redis:
+    host: 172.31.0.5
+    port: 6379
+    timeout: 1800000
+    password:
+  # 其他生产环境配置
+server:
+  servlet:
+    context-path: /SEA-Blog
+  port: 9090
+  ssl:
+    key-alias: sea-365.site
+    key-store-password: mqle3bu3pv
+    key-store-type: PKCS12
+    key-store: classpath:cert/sea-365.site.pfx
+
+
+upload:
+  local:
+    url: http://localhost:9090/SEA-Blog/
+    path: src/main/resources/
+
+logging:
+  level:
+    org.apache.shiro: DEBUG

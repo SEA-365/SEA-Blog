@@ -73,7 +73,7 @@ public class UserController {
     @RequireLogin
     @OperationLogSys(description = "获取指定页用户列表", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getUserList(@RequestBody PageRequestApi<ConditionVO> conditionVO){
-        log.info(TAG + "getUserList()" + conditionVO.getBody());
+        log.info(TAG + "getUserList() ===> " + conditionVO.getBody());
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
         List<User> userPage = userService.getUserList(conditionVO.getBody()); // 调用userService的方法获取全部评论信息
@@ -290,7 +290,7 @@ public class UserController {
         if(subject.isAuthenticated())
             subject.logout();
         else
-            return new ResponseDataDTO<>(FAIL.getCode(), TAG + " /users/logout: " + ((User)subject.getPrincipal()).getUsername() + " 未登录/未认证！");
+            return new ResponseDataDTO<>(FAIL.getCode(), " /users/logout: " + ((User)subject.getPrincipal()).getUsername() + " 未登录/未认证！");
 
         //更新用户登录状态
         String username = (String) subject.getSession().getAttribute("username");

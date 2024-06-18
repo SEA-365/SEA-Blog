@@ -54,6 +54,9 @@
             <if test="conditionVO.isDelete != null">
                 and a.is_delete = #{conditionVO.isDelete}
             </if>
+            <if test="conditionVO.isTop != null">
+                and a.is_top = #{conditionVO.isTop}
+            </if>
             <if test="conditionVO.categoryId != null">
                 and a.category_id = #{conditionVO.categoryId}
             </if>
@@ -89,7 +92,7 @@
         tag.create_time AS t_create_time,
         tag.update_time AS t_update_time,
         c.category_name AS c_name
-        FROM t_article a
+        FROM tb_article a
         LEFT JOIN tb_category c ON c.id = a.category_id
         LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
         LEFT JOIN tb_tag tag ON tag.id = atag.tag_id

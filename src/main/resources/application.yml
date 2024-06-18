@@ -1,64 +1,29 @@
 spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://101.42.0.224:3306/sea_blog?useSSL=false&serverTimezone=Asia/Shanghai
-    username: sea_blog
-    password: sea12345678
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher #解决Swagger2 和 SpringBoot版本之间的冲突
-  redis: # Redis数据库连接配置
-    host: 172.25.0.3
-    port: 6379
-    timeout: 1800
-    password:
-  data:
-    redis:
-      repositories:
-        enabled: false
-  servlet: # 限制上传文件的大小
+      matching-strategy: ant_path_matcher
+  servlet:
     multipart:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
-
-server:
-  servlet:
-    context-path: /SEA-Blog
-  port: 9090
-  ssl:
-    key-alias: sea-365.site
-    key-store-password: mqle3bu3pv
-    key-store-type: PKCS12
-    key-store: classpath:cert/sea-365.site.pfx
-    # classpath: 指的是项目的src/main/java和src/main/resources路径。
-    # 存放在这两个路径下的文件都可以使用classpath 作为路径来引用。
+  profiles:
+    active: dev
 
 
-#PageHelper分页插件配置
 pagehelper:
-  helperDialect: mysql #指定分页插件使用哪种方言进行数据库链接
-  reasonable: true #分页合理化参数，为true时，pageNum<=0时默认查询第一页，pageNum
-  supportMethodsArguments: true #PageHelper 将尝试从 Mapper 接口方法的参数中解析出 pageNum 和 pageSize 参数，而不需要手动指定这些参数。
-  params: count=countSql #为了支持startPage(Object params)方法，增加了该参数来配置参数映射，用于从对象中根据属性名取值
-
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 
 mybatis-plus:
-  mapper-locations: classpath:mapper/*.xml # xml文件扫描路径
+  mapper-locations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    map-underscore-to-camel-case: true #大小写 映射到 驼峰命名
+    map-underscore-to-camel-case: true
 
-#日志调试级别：此处仅配了Shiro安全框架的日志输出级别
-logging:
-  level:
-    org.apache.shiro: DEBUG
 
-upload:
-  local:
-    url: http://localhost:9090/SEA-Blog/
-    path: src/main/resources/
 
 send:
   mail:

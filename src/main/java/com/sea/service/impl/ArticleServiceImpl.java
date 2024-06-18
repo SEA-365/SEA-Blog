@@ -116,9 +116,9 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<Article> articleList = articleDao.getArticlePage(conditionVO); // 此时查询的记录为所有记录
         log.info(TAG + "获取文章列表 ===> ");
-        for (Article article : articleList) {
-            log.info(TAG + article);
-        }
+//        for (Article article : articleList) {
+//            log.info(TAG + article);
+//        }
         return articleList; // 返回文章列表
     }
 
@@ -127,10 +127,10 @@ public class ArticleServiceImpl implements ArticleService {
         //todo: 需要鉴权
         Article article = articleMap.get(articleId);//先查缓存
         log.info(TAG + " articleMap: " + articleMap.size());
-        log.info(TAG + " article: " + article);
+//        log.info(TAG + " article: " + article);
         if(article == null)//缓存没有再查数据库
             return articleDao.getArticleById(articleId); // 根据文章ID查询文章
-        log.info(TAG + "根据id获取文章 ===> " + article);
+//        log.info(TAG + "根据id获取文章 ===> " + article);
         return article;
     }
 
@@ -153,7 +153,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleDao.insert(article);
         saveArticleTag(articleVO, article.getId());
 
-        log.info(TAG + "新增文章 ===> " + article);
+//        log.info(TAG + "新增文章 ===> " + article);
 
 
 

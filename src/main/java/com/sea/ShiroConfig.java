@@ -114,12 +114,12 @@ public class ShiroConfig {
         // "anon"表示不需要认证即可访问，即配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/articles/uploadImg/**", "anon");
         filterChainDefinitionMap.put("/uploadFile/article/**", "anon");
-        filterChainDefinitionMap.put("/users/*", "anon");
+        filterChainDefinitionMap.put("/users/**", "anon");
         filterChainDefinitionMap.put("/users", "anon");
 
 
         //"authc"表示需要认证（登录）才能访问
-        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**", "anon");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         log.info(TAG + "Shiro拦截器注入成功！");
@@ -159,7 +159,7 @@ public class ShiroConfig {
         RedisManager redisManager = new RedisManager();
         redisManager.setHost(host);
         redisManager.setPort(port);// 配置端口，但是好像没有这个方法[2.4.2.1-RELEASE版本的shiro-redis里面有这个方法]
-        redisManager.setExpire(1800);// 配置缓存过期时间，但是好像没有这个方法[2.4.2.1-RELEASE旧版本的shiro-redis里面有这个方法]
+        redisManager.setExpire(timeout);// 配置缓存过期时间，但是好像没有这个方法[2.4.2.1-RELEASE旧版本的shiro-redis里面有这个方法]
         redisManager.setTimeout(timeout);
         redisManager.setPassword(password);
 

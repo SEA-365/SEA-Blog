@@ -1,5 +1,6 @@
 package com.sea.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
 import com.sea.common.PageRequestApi;
@@ -46,7 +47,7 @@ public class ArticleController {
     @PostMapping("list") // 需要换成Post请求
     @OperationLogSys(description = "请求指定页的文章信息", operationType = OperationTypeEnum.SELECT)
     public ResponseDataDTO<PageResultDTO> getArticlePage(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO){
-        log.info(TAG + "getArticlePage()");
+        log.info(TAG + "getArticlePage() ===> params: " + conditionVO.getBody());
         ResponseDataDTO<PageResultDTO> resultData = new ResponseDataDTO<>(); // 创建响应数据对象
 
         List<Article> articlePage = articleService.getArticleList(conditionVO.getBody()); // 调用articleService的方法获取全部文章信息
