@@ -4,7 +4,7 @@
 <!-- todo:根据条件查询文章列表 -->
     <!--定义查询结果集-->
     <resultMap id="BaseResultMap" type="com.sea.entity.Article">
-        <result column="id" jdbcType="BIGINT" property="id"/>
+        <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="author" jdbcType="VARCHAR" property="author"/>
         <result column="category_id" jdbcType="BIGINT" property="categoryId"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
@@ -33,18 +33,17 @@
 
     <!--编写查询语句-->
     <select id="getArticlePage" resultMap="BaseResultMap" parameterType="com.sea.model.vo.ConditionVO">
-        SELECT a.*,
-               atag.article_id,
-               atag.tag_id,
-               tag.id AS t_id,
-               tag.tag_name AS t_name,
-               tag.create_time AS t_create_time,
-               tag.update_time AS t_update_time,
-               c.category_name AS c_name
-        FROM tb_article a
-            LEFT JOIN tb_category c ON c.id = a.category_id
-            LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
-            LEFT JOIN tb_tag tag ON tag.id = atag.tag_id
+        SELECT
+        a.*,
+        GROUP_CONCAT(DISTINCT tag.tag_name ORDER BY tag.tag_name SEPARATOR ', ') AS tags,
+        c.category_name AS c_name
+        FROM
+        tb_article a
+        LEFT JOIN tb_category c ON c.id = a.category_id
+        LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
+        LEFT JOIN tb_tag tag ON tag.id = atag.tag_id
+        GROUP BY
+        a.id
         <where>
             <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
             <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
@@ -73,6 +72,10 @@
                 and a.title LIKE CONCAT('%', #{conditionVO.title}, '%')
             </if>
         </where>
+
+        <!--<if test="conditionVO.pageNum != null and conditionVO.pageSize != null">-->
+        <!--    LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}-->
+        <!--</if>-->
         <!--分页参数由MyBatis自动指定-->
         <!--<choose>-->
         <!--    <when test="conditionVO.pageNum != null and conditionVO.pageSize != null">-->

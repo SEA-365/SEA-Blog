@@ -115,10 +115,12 @@ public class ArticleServiceImpl implements ArticleService {
         //todo: 此处应该先根据其他条件进行查询，然后基于该结果分页，其他涉及多条件查询的实体类List同理
         PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
         List<Article> articleList = articleDao.getArticlePage(conditionVO); // 此时查询的记录为所有记录
-        log.info(TAG + "获取文章列表 ===> ");
-//        for (Article article : articleList) {
-//            log.info(TAG + article);
-//        }
+        log.info(TAG + "获取文章列表 ===> size: " + articleList.size());
+
+        // 输出每一条记录的详细信息
+        for (Article article : articleList) {
+            log.info(TAG + article.getTitle());
+        }
         return articleList; // 返回文章列表
     }
 
