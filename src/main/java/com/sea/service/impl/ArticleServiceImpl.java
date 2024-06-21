@@ -1,11 +1,10 @@
 package com.sea.service.impl;
 
-import cn.hutool.extra.mail.MailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sea.config.mail.MailInfo;
 import com.sea.config.mail.SendMailConfig;
 import com.sea.dao.ArticleDao;
@@ -14,16 +13,19 @@ import com.sea.dao.CategoryDao;
 import com.sea.entity.*;
 import com.sea.enums.FilePathEnum;
 import com.sea.exception.BizException;
+import com.sea.model.dto.ArchiveDTO;
+import com.sea.model.dto.ArticleCardDTO;
+import com.sea.model.dto.PageResultDTO;
 import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
 import com.sea.model.vo.ConditionVO;
-import com.sea.model.vo.DeleteVO;
 import com.sea.service.ArticleService;
 import com.sea.service.ArticleTagService;
 import com.sea.service.TagService;
 import com.sea.service.UserService;
 import com.sea.util.BeanCopyUtil;
 import com.sea.util.FileUtil;
+import com.sea.util.PageUtil;
 import com.sea.util.TotalWordsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +35,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.validation.Valid;
 import java.io.*;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -296,6 +298,51 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
 
+
+    @Override
+    public PageResultDTO listArchives(ConditionVO conditionVO) {
+
+        log.info(TAG + " conditionVO: " + conditionVO);
+
+        PageHelper.startPage(conditionVO.getPageNum(), conditionVO.getPageSize());//设置分页查询参数
+        List<ArticleCardDTO> articles = articleDao.listArchives(conditionVO);
+        log.info(TAG + " articles.size: " + articles.size());
+
+        HashMap<String, List<ArticleCardDTO>> map = new HashMap<>();
+        for (ArticleCardDTO article : articles) {
+            LocalDateTime createTime = article.getCreateTime();
+            int month = createTime.getMonth().getValue();
+            int year = createTime.getYear();
+            String key = year + "-" + month;
+            if (Objects.isNull(map.get(key))) {
+                List<ArticleCardDTO> articleCardDTOS = new ArrayList<>();
+                articleCardDTOS.add(article);
+                map.put(key, articleCardDTOS);
+            } else {
+                map.get(key).add(article);
+            }
+        }
+        List<ArchiveDTO> archiveDTOs = new ArrayList<>();
+        map.forEach((key, value) -> archiveDTOs.add(ArchiveDTO.builder().time(key).articles(value).build()));
+        archiveDTOs.sort((o1, o2) -> {
+            String[] o1s = o1.getTime().split("-");
+            String[] o2s = o2.getTime().split("-");
+            int o1Year = Integer.parseInt(o1s[0]);
+            int o1Month = Integer.parseInt(o1s[1]);
+            int o2Year = Integer.parseInt(o2s[0]);
+            int o2Month = Integer.parseInt(o2s[1]);
+            if (o1Year > o2Year) {
+                return -1;
+            } else if (o1Year < o2Year) {
+                return 1;
+            } else return Integer.compare(o2Month, o1Month);
+        });
+
+        PageInfo<ArchiveDTO> articlePageInfo = new PageInfo<>(archiveDTOs);
+        PageResultDTO pageResultDTO = PageUtil.getPageResultDTO(conditionVO, articlePageInfo);
+        return pageResultDTO;
+    }
+
     public void saveArticleTag(ArticleVO articleVO, Long articleId) {
         log.info(TAG + "文章标签关联关系保存 ===> " + articleVO + "====" + articleId);
         if (Objects.nonNull(articleVO.getId())) {//1.文章标签关联表已存在该文章的一些记录，则先删除
@@ -446,5 +493,7 @@ public class ArticleServiceImpl implements ArticleService {
             inputStream.close();
         }
     }
+
+
 
 }

@@ -1,10 +1,12 @@
 package com.sea.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.sea.controller.NoticeController;
 import com.sea.dao.WebsiteConfigDao;
 import com.sea.model.dto.*;
 import com.sea.entity.*;
 import com.sea.dao.*;
+import com.sea.model.vo.AboutVO;
 import com.sea.service.SEABlogInfoService;
 //import com.sea.service.RedisService;
 //import com.sea.service.UniqueViewService;
@@ -13,6 +15,9 @@ import com.sea.model.vo.WebsiteConfigVO;
 //import eu.bitwalker.useragentutils.Browser;
 //import eu.bitwalker.useragentutils.OperatingSystem;
 //import eu.bitwalker.useragentutils.UserAgent;
+import com.sea.util.BeanCopyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,10 @@ import static com.sea.constant.RedisConstant.*;
 
 @Service
 public class SEABlogInfoServiceImpl implements SEABlogInfoService {
+
+    //日志打印
+    private static final Logger log = LoggerFactory.getLogger(SEABlogInfoServiceImpl.class);
+    private static final String TAG = "SEABlogInfoServiceImpl ====> ";
 
     @Autowired
     private WebsiteConfigDao websiteConfigDao;
@@ -48,8 +57,8 @@ public class SEABlogInfoServiceImpl implements SEABlogInfoService {
 //    @Autowired
 //    private UserInfoMapper userInfoMapper;
 //
-//    @Autowired
-//    private AboutMapper aboutMapper;
+    @Autowired
+    private AboutDao aboutDao;
 //
 //    @Autowired
 //    private RedisService redisService;
@@ -157,30 +166,32 @@ public class SEABlogInfoServiceImpl implements SEABlogInfoService {
         return websiteConfigDTO;
     }
 
-//    @Override
-//    @Transactional(rollbackFor = Exception.class)
-//    public void updateAbout(AboutVO aboutVO) {
-//        About about = About.builder()
-//                .id(DEFAULT_ABOUT_ID)
-//                .content(JSON.toJSONString(aboutVO))
-//                .build();
-//        aboutMapper.updateById(about);
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAbout(AboutVO aboutVO) {
+        About about = About.builder()
+                .id(DEFAULT_ABOUT_ID)
+                .content(JSON.toJSONString(aboutVO))
+                .build();
+        aboutDao.updateById(about);
 //        redisService.del(ABOUT);
-//    }
-//
-//    @Override
-//    public AboutDTO getAbout() {
-//        AboutDTO aboutDTO;
+    }
+
+    @Override
+    public AboutDTO getAbout() {
+        AboutDTO aboutDTO;
 //        Object about = redisService.get(ABOUT);
 //        if (Objects.nonNull(about)) {
 //            aboutDTO = JSON.parseObject(about.toString(), AboutDTO.class);
 //        } else {
-//            String content = aboutMapper.selectById(DEFAULT_ABOUT_ID).getContent();
-//            aboutDTO = JSON.parseObject(content, AboutDTO.class);
+            String content = aboutDao.selectById(DEFAULT_ABOUT_ID).getContent();
+            log.info(TAG + " content: " + content);
+            aboutDTO = new AboutDTO(content);
+            log.info(TAG + " aboutDTO: " + aboutDTO);
 //            redisService.set(ABOUT, content);
 //        }
-//        return aboutDTO;
-//    }
+        return aboutDTO;
+    }
 //
 //    private List<ArticleRankDTO> listArticleRank(Map<Object, Double> articleMap) {
 //        List<Integer> articleIds = new ArrayList<>(articleMap.size());

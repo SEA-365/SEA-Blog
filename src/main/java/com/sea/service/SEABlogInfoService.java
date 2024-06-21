@@ -1,6 +1,8 @@
 package com.sea.service;
 
+import com.sea.model.dto.AboutDTO;
 import com.sea.model.dto.WebsiteConfigDTO;
+import com.sea.model.vo.AboutVO;
 import com.sea.model.vo.WebsiteConfigVO;
 
 public interface SEABlogInfoService {
@@ -15,8 +17,8 @@ public interface SEABlogInfoService {
 
     WebsiteConfigDTO getWebsiteConfig();
 
-//    void updateAbout(AboutVO aboutVO);
-//
-//    AboutDTO getAbout();
+    void updateAbout(AboutVO aboutVO);
+
+    AboutDTO getAbout();
 
 }

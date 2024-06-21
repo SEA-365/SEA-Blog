@@ -1,10 +1,11 @@
 package com.sea.service;
 
 import com.sea.entity.Article;
+import com.sea.model.dto.ArchiveDTO;
+import com.sea.model.dto.PageResultDTO;
 import com.sea.model.vo.ArticlePasswordVO;
 import com.sea.model.vo.ArticleVO;
 import com.sea.model.vo.ConditionVO;
-import com.sea.model.vo.DeleteVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -63,6 +64,9 @@ public interface ArticleService {
     /**
      * todo: 归档操作，目前还不知道怎么做，先往后写，后面回来补
      */
+
+    PageResultDTO listArchives(ConditionVO conditionVO);
+
 
     /**
      * 逻辑删除文章

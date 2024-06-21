@@ -1,11 +1,11 @@
 package com.sea.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.sea.annotation.OperationLogSys;
 import com.sea.common.PageRequestApi;
 import com.sea.entity.Article;
 import com.sea.enums.OperationTypeEnum;
+import com.sea.model.dto.ArchiveDTO;
 import com.sea.model.dto.PageResultDTO;
 import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.vo.ArticleVO;
@@ -157,4 +157,12 @@ public class ArticleController {
 
         return new ResponseDataDTO<>(SUCCESS.getCode(), url, "文件上传成功！");
     }
+
+
+    @ApiOperation("获取所有文章归档")
+    @PostMapping("/archives/all")
+    public ResponseDataDTO<PageResultDTO> listArchives(@RequestBody @Valid PageRequestApi<ConditionVO> conditionVO) {
+        return new ResponseDataDTO<>(SUCCESS.getCode(), articleService.listArchives(conditionVO.getBody()));
+    }
+
 }

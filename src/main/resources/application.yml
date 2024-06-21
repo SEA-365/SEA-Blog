@@ -12,9 +12,9 @@ spring:
 
 
 pagehelper:
-  helperDialect: mysql
+  helper-dialect: mysql
   reasonable: true
-  supportMethodsArguments: true
+  support-methods-arguments: true
   params: count=countSql
 
 mybatis-plus:

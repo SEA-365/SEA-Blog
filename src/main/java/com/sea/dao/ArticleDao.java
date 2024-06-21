@@ -2,6 +2,7 @@ package com.sea.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sea.entity.Article;
+import com.sea.model.dto.ArticleCardDTO;
 import com.sea.model.vo.ConditionVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -40,5 +41,8 @@ public interface ArticleDao extends BaseMapper<Article> {
 
     @Select("SELECT * FROM tb_article")
     List<Article> getAllArticle();
+
+
+    List<ArticleCardDTO> listArchives(@Param("conditionVO") ConditionVO conditionVO);
 
 }

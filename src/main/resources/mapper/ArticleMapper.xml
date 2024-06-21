@@ -42,8 +42,6 @@
         LEFT JOIN tb_category c ON c.id = a.category_id
         LEFT JOIN tb_article_tag atag ON atag.article_id = a.id
         LEFT JOIN tb_tag tag ON tag.id = atag.tag_id
-        GROUP BY
-        a.id
         <where>
             <!-- "#"表示预编译参数，相当于占位符，MyBatis会自动为其添加单引号''，可以预防SQL注入-->
             <!-- "$"表示直接传值参数，以文本形式插入SQL语句，有SQL注入风险-->
@@ -72,6 +70,8 @@
                 and a.title LIKE CONCAT('%', #{conditionVO.title}, '%')
             </if>
         </where>
+        GROUP BY
+        a.id
 
         <!--<if test="conditionVO.pageNum != null and conditionVO.pageSize != null">-->
         <!--    LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}-->
@@ -133,6 +133,20 @@
             </if>
         </where>
 
+    </select>
+
+    <select id="listArchives" parameterType="com.sea.model.vo.ConditionVO" resultType="com.sea.model.dto.ArticleCardDTO">
+        SELECT id,
+               title,
+               SUBSTR(content, 1, 500) AS content,
+               create_time
+        FROM tb_article
+        WHERE is_delete = 0
+          and status = 1
+        ORDER BY create_time DESC
+        <!--<if test="conditionVO.pageNum != null and conditionVO.pageSize != null">-->
+        <!--    LIMIT #{conditionVO.pageNum}, #{conditionVO.pageSize}-->
+        <!--</if>-->
     </select>
 
 

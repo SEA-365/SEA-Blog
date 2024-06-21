@@ -1,10 +1,14 @@
 package com.sea.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.sea.enums.StatusCodeEnum;
+import com.sea.model.dto.AboutDTO;
 import com.sea.model.dto.ResponseDataDTO;
 import com.sea.model.dto.WebsiteConfigDTO;
+import com.sea.model.vo.AboutVO;
 import com.sea.service.SEABlogInfoService;
+import com.sea.util.BeanCopyUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -60,20 +64,20 @@ public class SEABlogInfoController {
     public ResponseDataDTO<WebsiteConfigDTO> getWebsiteConfig() {
         return new ResponseDataDTO<>(StatusCodeEnum.SUCCESS.getCode(), seaBlogInfoService.getWebsiteConfig());
     }
-//
-//    @ApiOperation(value = "查看关于我信息")
-//    @GetMapping("/about")
-//    public ResultVO<AboutDTO> getAbout() {
-//        return ResultVO.ok(seaBlogInfoService.getAbout());
-//    }
 
-//    @OptLog(optType = UPDATE)
-//    @ApiOperation(value = "修改关于我信息")
-//    @PutMapping("/admin/about")
-//    public ResultVO<?> updateAbout(@Valid @RequestBody AboutVO aboutVO) {
-//        auroraInfoService.updateAbout(aboutVO);
-//        return ResultVO.ok();
-//    }
+    @ApiOperation(value = "查看关于我信息")
+    @GetMapping("/about")
+    public ResponseDataDTO<AboutDTO> getAbout() {
+
+        return new ResponseDataDTO<>(StatusCodeEnum.SUCCESS.getCode(), seaBlogInfoService.getAbout());
+    }
+
+    @ApiOperation(value = "修改关于我信息")
+    @PutMapping("/admin/about")
+    public ResponseDataDTO<?> updateAbout(@Valid @RequestBody AboutVO aboutVO) {
+        seaBlogInfoService.updateAbout(aboutVO);
+        return new ResponseDataDTO<>(StatusCodeEnum.SUCCESS.getCode(), "更新about内容成功！");
+    }
 
 //    @OptLog(optType = UPLOAD)
 //    @ApiOperation(value = "上传博客配置图片")
